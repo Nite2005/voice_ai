@@ -15,6 +15,15 @@ from typing import Dict, Optional, List, Tuple
 from collections import deque
 from sqlalchemy.orm import Session
 import logging
+import torch
+
+# RAG stack
+import chromadb
+from sentence_transformers import SentenceTransformer
+import ollama
+
+import httpx
+
 from logging.handlers import RotatingFileHandler
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, HTTPException, Depends, Security
 from fastapi.responses import Response, PlainTextResponse
