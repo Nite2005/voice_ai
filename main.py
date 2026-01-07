@@ -40,11 +40,11 @@ from dotenv import load_dotenv
 from database import get_db,Agent,Conversation,WebhookConfig,PhoneNumber,KnowledgeBase,AgentTool
 from models import AgentCreate,AgentUpdate,OutboundCallRequest,WebhookResponse,WebhookCreate,ToolCreate,CallRequest
 from gpu_detection_llm import detect_gpu,public_ws_host,end_call_tool,transfer_call_tool,clean_markdown_for_tts,detect_intent,detect_confirmation_response,parse_llm_response,call_webhook_tool,execute_detected_tool,query_rag_streaming,calculate_audio_energy
-from interrupt_detection import update_baseline
+# from interrupt_detection import update_baseline
 from gpu_detection_llm import twilio_client,collection,embedder
 from connection_manager import manager, handle_call_end,pending_call_data,save_conversation_transcript
 from database import SessionLocal
-from tts_stt import setup_streaming_stt
+from connection_manager import setup_streaming_stt
 load_dotenv()
 # ----------------------------
 # Environment and configuration
