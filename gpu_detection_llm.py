@@ -172,13 +172,13 @@ def detect_gpu():
     return device
 
 
-# DEVICE = detect_gpu()
+DEVICE = detect_gpu()
 
-# _logger.info("🚀 Config: PUBLIC_URL=%s DEVICE=%s", PUBLIC_URL, DEVICE)
-# _logger.info("🎯 Interrupt: ENABLED=%s MIN_SPEECH=%dms MIN_ENERGY=%d BASELINE_FACTOR=%.1f",
-#              INTERRUPT_ENABLED, INTERRUPT_MIN_SPEECH_MS, INTERRUPT_MIN_ENERGY, INTERRUPT_BASELINE_FACTOR)
-# _logger.info("â±ï¸  Silence Threshold: %.1fs (utterance_end=%dms)",
-#              SILENCE_THRESHOLD_SEC, UTTERANCE_END_MS)
+_logger.info("🚀 Config: PUBLIC_URL=%s DEVICE=%s", PUBLIC_URL, DEVICE)
+_logger.info("🎯 Interrupt: ENABLED=%s MIN_SPEECH=%dms MIN_ENERGY=%d BASELINE_FACTOR=%.1f",
+             INTERRUPT_ENABLED, INTERRUPT_MIN_SPEECH_MS, INTERRUPT_MIN_ENERGY, INTERRUPT_BASELINE_FACTOR)
+_logger.info("â±ï¸  Silence Threshold: %.1fs (utterance_end=%dms)",
+             SILENCE_THRESHOLD_SEC, UTTERANCE_END_MS)
 
 
 def public_ws_host() -> str:
