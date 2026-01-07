@@ -1,7 +1,7 @@
 # ----------------------------
 # 🎯 SMART VOICE-BASED INTERRUPT DETECTION
 # ----------------------------
-
+from connection_manager import WSConn
 
 def update_baseline(conn: WSConn, energy: int):
     """Update background noise baseline with improved adaptivity"""
