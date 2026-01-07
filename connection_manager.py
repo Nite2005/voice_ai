@@ -26,6 +26,7 @@ from gpu_detection_llm import detect_gpu,public_ws_host,end_call_tool,transfer_c
 from database import get_db,Agent,Conversation,WebhookConfig,PhoneNumber,KnowledgeBase,AgentTool
 from models import AgentCreate,AgentUpdate,OutboundCallRequest,WebhookResponse,WebhookCreate,ToolCreate,CallRequest
 from tts_stt import setup_streaming_stt
+
 # PyTorch (for GPU detection)
 import torch
 
@@ -49,7 +50,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import create_engine, Column, String, Text, Integer, Float, Boolean, DateTime, JSON
 from sqlalchemy.orm import sessionmaker, Session, declarative_base
 from datetime import datetime as dt
-
+from database import SessionLocal
 load_dotenv()
 # ----------------------------
 # Environment and configuration
