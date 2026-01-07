@@ -48,7 +48,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import create_engine, Column, String, Text, Integer, Float, Boolean, DateTime, JSON
 from sqlalchemy.orm import sessionmaker, Session, declarative_base
 from datetime import datetime as dt
-
+from connection_manager import manager
 load_dotenv()
 
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
