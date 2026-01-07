@@ -26,6 +26,8 @@ from sqlalchemy import create_engine, Column, String, Text, Integer, Float, Bool
 from sqlalchemy.orm import sessionmaker, Session, declarative_base
 from datetime import datetime as dt
 from dotenv import load_dotenv
+from database import get_db,Agent,Conversation,WebhookConfig,PhoneNumber,KnowledgeBase,AgentTool,
+from models import AgentCreate,AgentUpdate,OutboundCallRequest,WebhookResponse,WebhookCreate,ToolCreate,CallRequest
 
 # PyTorch (for GPU detection)
 import torch
