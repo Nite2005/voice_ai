@@ -108,6 +108,24 @@ WEBHOOK_EVENTS = [
     "user.interrupted"
 ]
 
+LOG_LEVEL = os.getenv("LOG_LEVEL", "WARNING").upper()
+LOG_FILE = os.getenv("LOG_FILE", "server.log")
+
+_logger = logging.getLogger("new")
+_logger.setLevel(getattr(logging, LOG_LEVEL, logging.WARNING))
+
+_fmt = logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s")
+_ch = logging.StreamHandler()
+_ch.setFormatter(_fmt)
+_logger.addHandler(_ch)
+
+try:
+    _fh = RotatingFileHandler(LOG_FILE, maxBytes=5_000_000, backupCount=2)
+    _fh.setFormatter(_fmt)
+    _logger.addHandler(_fh)
+except Exception:
+    pass
+
 
 class WSConn:
     def __init__(self, ws: WebSocket):
