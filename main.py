@@ -44,6 +44,7 @@ from interrupt_detection import update_baseline
 from gpu_detection_llm import twilio_client,collection,embedder
 from connection_manager import manager, handle_call_end,pending_call_data,save_conversation_transcript
 from database import SessionLocal
+from tts_stt import setup_streaming_stt
 load_dotenv()
 # ----------------------------
 # Environment and configuration
