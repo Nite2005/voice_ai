@@ -1,623 +1,3251 @@
-# main.py
+# # main.py
+# import os
+# import io
+# import json
+# import uuid
+# import base64
+# import asyncio
+# import wave
+# import audioop
+# import hashlib
+# import time
+# import re
+# import struct
+# from typing import Dict, Optional, List, Tuple
+# from collections import deque
+# from sqlalchemy.orm import Session
+# import logging
+# import torch
+
+# # RAG stack
+# import chromadb
+# from sentence_transformers import SentenceTransformer
+# import ollama
+
+# import httpx
+
+# from logging.handlers import RotatingFileHandler
+# from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, HTTPException, Depends, Security
+# from fastapi.responses import Response, PlainTextResponse
+# from fastapi.security import APIKeyHeader
+# from fastapi.middleware.cors import CORSMiddleware
+# from twilio.twiml.voice_response import VoiceResponse, Connect
+# from twilio.rest import Client as TwilioClient
+# from pydantic import BaseModel, Field
+# from sqlalchemy import create_engine, Column, String, Text, Integer, Float, Boolean, DateTime, JSON
+# from sqlalchemy.orm import sessionmaker, Session, declarative_base
+# from datetime import datetime as dt
+# from dotenv import load_dotenv
+
+# from database import get_db,Agent,Conversation,WebhookConfig,PhoneNumber,KnowledgeBase,AgentTool
+# from models import AgentCreate,AgentUpdate,OutboundCallRequest,WebhookResponse,WebhookCreate,ToolCreate,CallRequest
+# from gpu_detection_llm import detect_gpu,public_ws_host,end_call_tool,transfer_call_tool,clean_markdown_for_tts,detect_intent,detect_confirmation_response,parse_llm_response,call_webhook_tool,execute_detected_tool,query_rag_streaming,calculate_audio_energy
+# from interrupt_detection import update_baseline,handle_interrupt
+# from gpu_detection_llm import twilio_client,collection,embedder
+# from connection_manager import  handle_call_end,pending_call_data,save_conversation_transcript
+# from database import SessionLocal
+# # from tts_stt import setup_streaming_stt,speak_text_streaming,stream_tts_worker
+# from connection_manager import ConnectionManager
+# load_dotenv()
+# # ----------------------------
+# # Environment and configuration
+# # ----------------------------
+# TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+# TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+# TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
+# PUBLIC_URL = os.getenv("PUBLIC_URL")
+# DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
+# DEEPGRAM_VOICE = os.getenv("DEEPGRAM_VOICE", "aura-2-thalia-en")
+# DATA_FILE = os.getenv("DATA_FILE", "./data/data.json")
+# CHROMA_PATH = os.getenv("CHROMA_PATH", "./chroma_db")
+# EMBED_MODEL = os.getenv(
+#     "EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
+# OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "mixtral:8x7b")
+# CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "384"))
+# TOP_K = int(os.getenv("TOP_K", "3"))
+
+# # 🎯 SMART INTERRUPT SETTINGS - ALL CONFIGURABLE
+# INTERRUPT_ENABLED = os.getenv("INTERRUPT_ENABLED", "true").lower() == "true"
+# INTERRUPT_MIN_ENERGY = int(os.getenv("INTERRUPT_MIN_ENERGY", "1000"))
+# INTERRUPT_DEBOUNCE_MS = int(os.getenv("INTERRUPT_DEBOUNCE_MS", "1000"))
+# INTERRUPT_BASELINE_FACTOR = float(
+#     os.getenv("INTERRUPT_BASELINE_FACTOR", "3.5"))
+# INTERRUPT_MIN_SPEECH_MS = int(os.getenv("INTERRUPT_MIN_SPEECH_MS", "300"))
+# INTERRUPT_REQUIRE_TEXT = os.getenv(
+#     "INTERRUPT_REQUIRE_TEXT", "false").lower() == "true"
+
+# # âœ… SILENCE DETECTION (matches Deepgram utterance_end_ms)
+# SILENCE_THRESHOLD_SEC = float(os.getenv("SILENCE_THRESHOLD_SEC", "0.8"))
+# UTTERANCE_END_MS = int(SILENCE_THRESHOLD_SEC * 1000)
+
+# REQUIRE_ENV = [TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN,
+#                TWILIO_PHONE_NUMBER, PUBLIC_URL, DEEPGRAM_API_KEY]
+# if not all(REQUIRE_ENV):
+#     raise RuntimeError(
+#         "Missing required env: TWILIO_*, PUBLIC_URL, DEEPGRAM_API_KEY")
+
+# # JWT Secret for signed URLs
+# JWT_SECRET = os.getenv("JWT_SECRET", "your-secret-key-change-in-production")
+
+# # API Key Authentication
+# API_KEY_HEADER = APIKeyHeader(name="xi-api-key", auto_error=False)
+# API_KEYS = os.getenv("API_KEYS", "").split(",") if os.getenv("API_KEYS") else []
+
+# # Webhook Events
+# WEBHOOK_EVENTS = [
+#     "call.initiated",
+#     "call.started", 
+#     "call.ended",
+#     "call.failed",
+#     "transcript.partial",
+#     "transcript.final",
+#     "agent.response",
+#     "tool.called",
+#     "user.interrupted"
+# ]
+
+
+# LOG_LEVEL = os.getenv("LOG_LEVEL", "WARNING").upper()
+# LOG_FILE = os.getenv("LOG_FILE", "server.log")
+
+# _logger = logging.getLogger("new")
+# _logger.setLevel(getattr(logging, LOG_LEVEL, logging.WARNING))
+
+# _fmt = logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s")
+# _ch = logging.StreamHandler()
+# _ch.setFormatter(_fmt)
+# _logger.addHandler(_ch)
+
+# try:
+#     _fh = RotatingFileHandler(LOG_FILE, maxBytes=5_000_000, backupCount=2)
+#     _fh.setFormatter(_fmt)
+#     _logger.addHandler(_fh)
+# except Exception:
+#     pass
+
+
+# async def verify_api_key(api_key: str = Security(API_KEY_HEADER)):
+#     """Verify API key - returns None if no API_KEYS configured (dev mode)"""
+#     # If no API keys configured, allow all requests (dev mode)
+#     if not API_KEYS or API_KEYS == ['']:
+#         return None
+    
+#     if not api_key or api_key not in API_KEYS:
+#         raise HTTPException(status_code=401, detail="Invalid API key")
+    
+#     return api_key
+
+# DEVICE = detect_gpu()
+
+# _logger.info("🚀 Config: PUBLIC_URL=%s DEVICE=%s", PUBLIC_URL, DEVICE)
+# _logger.info("🎯 Interrupt: ENABLED=%s MIN_SPEECH=%dms MIN_ENERGY=%d BASELINE_FACTOR=%.1f",
+#              INTERRUPT_ENABLED, INTERRUPT_MIN_SPEECH_MS, INTERRUPT_MIN_ENERGY, INTERRUPT_BASELINE_FACTOR)
+# _logger.info("â±ï¸  Silence Threshold: %.1fs (utterance_end=%dms)",
+#              SILENCE_THRESHOLD_SEC, UTTERANCE_END_MS)
+
+# manager = ConnectionManager()
+# # ----------------------------
+# # âš¡ STREAMING TTS
+# # ----------------------------
+# async def stream_tts_worker(call_sid: str):
+#     """âš¡ OPTIMIZED TTS - Fast first response + smooth playback + no clicks"""
+#     conn = manager.get(call_sid)
+#     if not conn:
+#         return
+
+#     # Single resampler for entire session (critical for smoothness)
+#     # persistent_resampler_state = None
+
+#     try:
+#         while True:
+#             # âœ… SINGLE SENTENCE: Process one sentence at a time
+#             _logger.info("ðŸ’» TTS Worker waiting for text...")
+#             text = await conn.tts_queue.get()
+#             _logger.info("ðŸ’» TTS Worker got text (%d chars)", len(text) if text else 0)
+#             if text is None:
+#                 conn.tts_queue.task_done()
+#                 break
+#             _logger.info("ðŸ’» TTS Worker processing text: '%s...'", text[:80])
+#             conn.tts_queue.task_done()
+#             _logger.info("ðŸ’» TTS Worker started processing")
+#             if not text or not text.strip():
+#                 continue
+#             _logger.info("ðŸ’» TTS Worker processing valid text")
+#             if conn.interrupt_requested:
+#                 _logger.info("ðŸ›‘ Skipping batch due to interrupt")
+#                 while not conn.tts_queue.empty():
+#                     try:
+#                         conn.tts_queue.get_nowait()
+#                         conn.tts_queue.task_done()
+#                     except:
+#                         break
+#                 conn.currently_speaking = False
+#                 conn.interrupt_requested = False
+#                 # persistent_resampler_state = None
+#                 break
+
+#             _logger.info("ðŸŽ¤ TTS sentence (%d chars): '%s...'",
+#                          len(text), text[:80])
+
+#             t_start = time.time()
+#             _logger.info("ðŸ’» TTS Worker starting stream...")
+#             conn.currently_speaking = True
+#             _logger.info("ðŸ’» TTS Worker set currently_speaking=True")
+#             conn.speech_energy_buffer.clear()
+
+#             conn.speech_start_time = None
+#             is_first_chunk = True  # Track first chunk of sentence
+#             audio_chunks_buffer = []  # Buffer to apply fade-out to last chunk
+#             _logger.info("ðŸ’» TTS Worker initialized variables")
+#             try:
+#                 url = "https://api.deepgram.com/v1/speak"
+#                 headers = {
+#                     "Authorization": f"Token {DEEPGRAM_API_KEY}",
+#                     "Content-Type": "application/json"
+#                 }
+#                 payload = {"text": text}
+#                 _logger.info("ðŸ’» TTS Worker prepared request payload")
+                
+#                 # ✨ Use custom voice if provided, otherwise agent default, otherwise env default
+#                 _logger.info("ðŸ’» TTS Worker determining voice to use")
+#                 voice_to_use = DEEPGRAM_VOICE  # Default from env
+#                 voice_source = "env_default"
+#                 _logger.info("ðŸ’» TTS Worker default voice: %s", voice_to_use)
+                
+#                 # 🔍 DEBUG: Log raw values for debugging
+#                 _logger.debug(f"🔍 TTS Voice Debug - conn.custom_voice_id: '{conn.custom_voice_id}'")
+#                 _logger.debug(f"🔍 TTS Voice Debug - conn.agent_config: {conn.agent_config}")
+                
+#                 if conn.custom_voice_id and str(conn.custom_voice_id).strip():
+#                     voice_to_use = conn.custom_voice_id
+#                     voice_source = "api_override"
+#                 elif conn.agent_config and conn.agent_config.get("voice_id"):
+#                     voice_to_use = conn.agent_config["voice_id"]
+#                     voice_source = "agent_config"
+                
+#                 # Log voice selection for EVERY sentence (to debug first message issue)
+#                 _logger.info(f"🎤 TTS Voice: {voice_to_use} (source: {voice_source}) for text: '{text[:50]}...'")
+                
+#                 params = {
+#                     "model": voice_to_use,
+#                     "encoding": "linear16",
+#                     "sample_rate": "16000"
+#                 }
+
+#                 interrupted = False
+#                 chunk_count = 0
+
+#                 async with httpx.AsyncClient(timeout=30.0) as client:
+#                     async with client.stream("POST", url, json=payload,
+#                                              headers=headers, params=params) as response:
+#                         response.raise_for_status()
+
+#                         async for audio_chunk in response.aiter_bytes(chunk_size=3200):
+#                             if conn.interrupt_requested:
+#                                 _logger.info(
+#                                     "ðŸ›' TTS interrupted at chunk %d", chunk_count)
+#                                 interrupted = True
+#                                 break
+
+#                             if len(audio_chunk) == 0:
+#                                 continue
+
+#                             try:
+#                                 # ✅ CRITICAL: Ensure resampler is initialized before first chunk
+#                                 if conn.resampler_state is None:
+#                                     # Initialize resampler with silence
+#                                     _, conn.resampler_state = audioop.ratecv(
+#                                         b'\x00' * 160, 2, 1, 16000, 8000, None
+#                                     )
+
+#                                 # ✅ CRITICAL: Reuse same resampler state across all sentences
+#                                 pcm_8k, conn.resampler_state = audioop.ratecv(
+#                                     audio_chunk, 2, 1, 16000, 8000,
+#                                     conn.resampler_state
+#                                 )
+
+#                                 # ✅ FIX: Apply fade-in to first chunk to prevent clicks
+#                                 if is_first_chunk and len(pcm_8k) >= 320:
+#                                     # Convert to list for manipulation
+#                                     samples = list(struct.unpack(
+#                                         f'<{len(pcm_8k)//2}h', pcm_8k))
+
+#                                     # Apply fade-in to first 160 samples (20ms at 8kHz)
+#                                     fade_samples = min(160, len(samples))
+#                                     for i in range(fade_samples):
+#                                         fade_factor = (i + 1) / fade_samples
+#                                         samples[i] = int(
+#                                             samples[i] * fade_factor)
+
+#                                     # Repack
+#                                     pcm_8k = struct.pack(
+#                                         f'<{len(samples)}h', *samples)
+#                                     is_first_chunk = False
+
+#                                 # Buffer the chunk for potential fade-out processing
+#                                 audio_chunks_buffer.append(pcm_8k)
+                                
+#                                 # Convert and send buffered chunks (keep last 2 for fade-out)
+#                                 while len(audio_chunks_buffer) > 2:
+#                                     chunk_to_convert = audio_chunks_buffer.pop(0)
+#                                     mulaw = audioop.lin2ulaw(chunk_to_convert, 2)
+
+#                                     for i in range(0, len(mulaw), 160):
+#                                         if conn.interrupt_requested:
+#                                             interrupted = True
+#                                             break
+
+#                                         chunk_to_send = mulaw[i:i+160]
+#                                         if len(chunk_to_send) < 160:
+#                                             chunk_to_send += b'\xff' * \
+#                                                 (160 - len(chunk_to_send))
+
+#                                         success = await manager.send_media_chunk(
+#                                             call_sid, conn.stream_sid, chunk_to_send
+#                                         )
+#                                         if not success:
+#                                             interrupted = True
+#                                             break
+
+#                                         conn.last_tts_send_time = time.time()
+#                                         chunk_count += 1
+#                                         await asyncio.sleep(0.018)
+
+#                                     if interrupted:
+#                                         break
+
+#                             except Exception as e:
+#                                 continue
+                
+#                 # ✅ Process remaining buffered chunks with fade-out on the last one
+#                 if not interrupted and audio_chunks_buffer:
+#                     for idx, chunk_to_convert in enumerate(audio_chunks_buffer):
+#                         is_last_chunk = (idx == len(audio_chunks_buffer) - 1)
+                        
+#                         # Apply fade-out to last chunk to prevent clicks between sentences
+#                         if is_last_chunk and len(chunk_to_convert) >= 320:
+#                             try:
+#                                 samples = list(struct.unpack(
+#                                     f'<{len(chunk_to_convert)//2}h', chunk_to_convert))
+                                
+#                                 # Apply fade-out to last 160 samples (20ms at 8kHz)
+#                                 fade_samples = min(160, len(samples))
+#                                 start_idx = len(samples) - fade_samples
+#                                 for i in range(fade_samples):
+#                                     fade_factor = 1.0 - ((i + 1) / fade_samples)
+#                                     samples[start_idx + i] = int(
+#                                         samples[start_idx + i] * fade_factor)
+                                
+#                                 chunk_to_convert = struct.pack(
+#                                     f'<{len(samples)}h', *samples)
+#                             except Exception as e:
+#                                 _logger.warning(f"⚠️ Fade-out failed: {e}")
+                        
+#                         mulaw = audioop.lin2ulaw(chunk_to_convert, 2)
+                        
+#                         for i in range(0, len(mulaw), 160):
+#                             if conn.interrupt_requested:
+#                                 interrupted = True
+#                                 break
+
+#                             chunk_to_send = mulaw[i:i+160]
+#                             if len(chunk_to_send) < 160:
+#                                 chunk_to_send += b'\xff' * \
+#                                     (160 - len(chunk_to_send))
+
+#                             success = await manager.send_media_chunk(
+#                                 call_sid, conn.stream_sid, chunk_to_send
+#                             )
+#                             if not success:
+#                                 interrupted = True
+#                                 break
+
+#                             conn.last_tts_send_time = time.time()
+#                             chunk_count += 1
+#                             await asyncio.sleep(0.018)
+
+#                         if interrupted:
+#                             break
+                    
+#                     # Clear buffer after processing
+#                     audio_chunks_buffer.clear()
+
+#                 t_end = time.time()
+
+#                 if interrupted:
+#                     await handle_interrupt(call_sid)
+#                     # Keep resampler state - don't reset on interrupt
+#                     while not conn.tts_queue.empty():
+#                         try:
+#                             conn.tts_queue.get_nowait()
+#                             conn.tts_queue.task_done()
+#                         except:
+#                             break
+#                 else:
+#                     _logger.info("âœ… Sentence completed in %.0fms (%d chunks, %.1f chars/sec)",
+#                                  (t_end - t_start)*1000, chunk_count,
+#                                  len(text) / (t_end - t_start) if (t_end - t_start) > 0 else 0)
+
+#             except Exception as e:
+#                 # ✅ Only reset resampler on serious conversion errors
+#                 if "resampler" in str(e).lower() or "audio" in str(e).lower():
+#                     conn.resampler_state = None
+
+#             # Only clear state when truly done
+#             if conn.tts_queue.empty():
+#                 conn.currently_speaking = False
+#                 conn.interrupt_requested = False
+#                 conn.speech_energy_buffer.clear()
+#                 conn.speech_start_time = None
+#                 conn.user_speech_detected = False
+#                 # Keep resampler for next turn
+
+#     except asyncio.CancelledError:
+#         pass
+#     except Exception as e:
+#         pass
+#     finally:
+#         conn.currently_speaking = False
+#         conn.interrupt_requested = False
+
+
+# async def speak_text_streaming(call_sid: str, text: str):
+#     """âš¡ Queue text with smart sentence splitting"""
+#     conn = manager.get(call_sid)
+#     if not conn or not conn.stream_sid:
+#         return
+
+#     try:
+#         if conn.stream_sid:  # ✅ Validate stream_sid exists
+#             await conn.ws.send_json({
+#                 "event": "clear",
+#                 "streamSid": conn.stream_sid
+#             })
+#     except:
+#         pass
+
+#     conn.currently_speaking = True
+#     conn.interrupt_requested = False
+#     conn.speech_energy_buffer.clear()
+#     conn.user_speech_detected = False
+
+#     # âœ… Split into sentences for queue
+#     sentences = []
+#     current = ""
+#     for char in text:
+#         current += char
+#         if char in '.!?' and len(current.strip()) > 10:
+#             sentences.append(current.strip())
+#             current = ""
+#     if current.strip():
+#         sentences.append(current.strip())
+
+#     # Queue all sentences (worker will batch them automatically)
+#     for sentence in sentences:
+#         if sentence:
+#             try:
+#                 await asyncio.wait_for(conn.tts_queue.put(sentence), timeout=2.0)
+#             except asyncio.TimeoutError:
+#                 break
+#             except Exception as e:
+#                 break
+
+#     await conn.tts_queue.join()
+#     conn.currently_speaking = False
+
+# # âš¡ STREAMING STT WITH IMPROVED VAD - Deepgram live + final-guard
+
+
+# async def setup_streaming_stt(call_sid: str):
+#     """âš¡ Setup Deepgram streaming STT with improved VAD"""
+#     conn = manager.get(call_sid)
+#     if not conn:
+#         return
+
+#     try:
+#         dg_connection = deepgram.listen.live.v("1")
+
+#         def on_message(self, result, **kwargs):
+#             try:
+#                 if not result or not result.channel:
+#                     return
+#                 alt = result.channel.alternatives[0]
+#                 transcript = alt.transcript
+#                 if not transcript:
+#                     return
+
+#                 is_final = result.is_final
+#                 now = time.time()
+
+#                 _logger.info("ðŸŽ™ï¸ STT %s: '%s'",
+#                              "FINAL" if is_final else "interim", transcript)
+
+#                 # âœ… Always update speech time when we receive text
+#                 conn.last_speech_time = now
+
+#                 if is_final:
+#                     # ========================================
+#                     # âœ… FINAL RESULT - ALWAYS ACCUMULATE
+#                     # ========================================
+#                     current_buffer = conn.stt_transcript_buffer.strip()
+
+#                     if current_buffer:
+#                         # Check if this continues the current thought
+#                         if (not current_buffer.endswith((".", "!", "?")) and
+#                                 len(transcript) > 3):
+#                             # Continue the sentence
+#                             conn.stt_transcript_buffer += " " + transcript
+#                             _logger.info(
+#                                 f"âž• Appending to sentence: '{transcript}'")
+#                         else:
+#                             # New thought or refinement
+#                             conn.stt_transcript_buffer = transcript
+#                             _logger.info(f"ðŸ”„ New sentence: '{transcript}'")
+#                     else:
+#                         # First content
+#                         conn.stt_transcript_buffer = transcript
+
+#                     # Mark that we have FINAL text
+#                     conn.stt_is_final = True
+
+#                     _logger.info(
+#                         f"ðŸ“ Complete buffer: '{conn.stt_transcript_buffer.strip()}'")
+
+#                 else:
+#                     # ========================================
+#                     # âœ… INTERIM RESULT - TRACK BUT DON'T OVERWRITE
+#                     # ========================================
+
+#                     # Track interim time for activity detection
+#                     conn.last_interim_time = now
+#                     conn.last_interim_text = transcript
+
+#                     # Only use interim if we have no FINAL content yet
+#                     if not conn.stt_transcript_buffer or not conn.stt_is_final:
+#                         conn.stt_transcript_buffer = transcript
+#                         _logger.info(f"ðŸ“ Interim as buffer: '{transcript}'")
+
+#             except Exception as e:
+#                 pass
+
+#         def on_open(self, open, **kwargs):
+#             pass
+
+#         def on_error(self, error, **kwargs):
+#             pass
+
+#         def on_close(self, close_msg, **kwargs):
+#             pass
+
+#         def on_speech_started(self, speech_started, **kwargs):
+#             """âœ… FIXED: Mark VAD trigger but require validation"""
+#             conn.vad_triggered_time = time.time()
+#             conn.user_speech_detected = True  # Tentatively set
+#             conn.speech_start_time = time.time()
+#             _logger.info("ðŸŽ¤ VAD: Speech trigger (needs validation)")
+
+#         def on_utterance_end(self, utterance_end, **kwargs):
+#             """âœ… FIXED: Clear VAD when Deepgram confirms utterance ended"""
+#             now = time.time()
+
+#             # Check if we got interim text very recently (within 200ms)
+#             if conn.last_interim_time and (now - conn.last_interim_time) < 0.2:
+#                 _logger.info(
+#                     "â­ï¸ UtteranceEnd ignored - recent interim detected")
+#                 return
+
+#             # âœ… Clear VAD state when Deepgram confirms end
+#             if conn.user_speech_detected:
+#                 _logger.info(
+#                     "âœ… UtteranceEnd - clearing VAD (Deepgram confirmed)")
+#                 conn.user_speech_detected = False
+#                 conn.speech_start_time = None
+#                 conn.vad_triggered_time = None
+#                 conn.vad_validated = False
+#                 conn.energy_drop_time = None
+
+#             conn.last_speech_time = now
+#             _logger.info(f"ðŸ•’ UtteranceEnd - last_speech_time: {now}")
+
+#         dg_connection.on(LiveTranscriptionEvents.Open, on_open)
+#         dg_connection.on(LiveTranscriptionEvents.Transcript, on_message)
+#         dg_connection.on(
+#             LiveTranscriptionEvents.SpeechStarted, on_speech_started)
+#         dg_connection.on(LiveTranscriptionEvents.UtteranceEnd,
+#                          on_utterance_end)
+#         dg_connection.on(LiveTranscriptionEvents.Error, on_error)
+#         dg_connection.on(LiveTranscriptionEvents.Close, on_close)
+
+#         # Minimal, safe options for Twilio mu-law 8k (works on deepgram-sdk 3.2)
+#         options = LiveOptions(
+#             model=os.getenv("DEEPGRAM_STT_MODEL", "nova-2"),
+#             language="en-US",
+#             smart_format=True,
+#             interim_results=True,
+#             vad_events=True,
+#             encoding="mulaw",
+#             sample_rate=8000,
+#             channels=1,
+#             # If you want Deepgram to emit UtteranceEnd reliably, try enabling endpointing:
+#             # uncomment to try (if your project supports it)
+#             endpointing=UTTERANCE_END_MS,
+#         )
+
+#         # start() is synchronous and returns bool in SDK 3.2
+#         start_ok = False
+#         try:
+#             start_ok = dg_connection.start(options)
+#         except Exception as e:
+#             pass
+
+#         if not start_ok:
+#             fallback = LiveOptions(
+#                 model=os.getenv("DEEPGRAM_STT_FALLBACK_MODEL",
+#                                 "nova-2-general"),
+#                 encoding="mulaw",
+#                 sample_rate=8000,
+#                 interim_results=True,
+#                 # utterance_end_ms=UTTERANCE_END_MS,  # optional legacy param if endpointing not supported
+#             )
+#             try:
+#                 start_ok = dg_connection.start(fallback)
+#             except Exception as e2:
+#                 return
+
+#         if start_ok:
+#             conn.deepgram_live = dg_connection
+#             _logger.info("âœ… Streaming STT initialized")
+#         else:
+#             _logger.error(
+#                 "âŒ Deepgram start() returned False (model/options/API key)")
+
+#     except Exception as e:
+#         pass
+
+
+
+# # FastAPI app
+# # ----------------------------
+# app = FastAPI(
+#     title="AI Voice Call System - ElevenLabs Compatible",
+#     description="Self-hosted voice AI with agent management, webhooks, and dynamic variables",
+#     version="1.0.0"
+# )
+
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["*"],
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+
+
+# # ================================
+# # HELPER FUNCTIONS
+# # ================================
+
+# def generate_agent_id() -> str:
+#     """Generate unique agent ID"""
+#     return f"agent_{uuid.uuid4().hex[:16]}"
+
+
+# def generate_conversation_id() -> str:
+#     """Generate unique conversation ID"""
+#     return f"conv_{uuid.uuid4().hex[:16]}"
+
+
+# async def send_webhook(webhook_url: str, event: str, data: Dict):
+#     """Send webhook notification to registered webhook URLs (fire-and-forget)"""
+#     try:
+#         # Webhook URL must be absolute (http:// or https://)
+#         if not webhook_url.startswith(("http://", "https://")):
+#             _logger.error(f"❌ Invalid webhook URL: {webhook_url} - must start with http:// or https://")
+#             return False
+        
+#         async with httpx.AsyncClient() as client:
+#             payload = {
+#                 "event": event,
+#                 "timestamp": dt.utcnow().isoformat(),
+#                 "data": data
+#             }
+#             response = await client.post(
+#                 webhook_url,
+#                 json=payload,
+#                 timeout=10
+#             )
+#             _logger.info(f"📤 Webhook sent: {event} to {webhook_url} (status: {response.status_code})")
+#             return response.status_code == 200
+#     except Exception as e:
+#         _logger.error(f"❌ Webhook failed: {event} to {webhook_url} - {e}")
+#         return False
+
+
+# async def send_webhook_and_get_response(webhook_url: str, event: str, data: Dict) -> Optional[Dict]:
+#     """Send webhook and wait for response data (for inbound call configuration)"""
+#     try:
+#         # Webhook URL must be absolute (http:// or https://)
+#         if not webhook_url.startswith(("http://", "https://")):
+#             _logger.error(f"❌ Invalid webhook URL: {webhook_url} - must start with http:// or https://")
+#             return None
+        
+#         async with httpx.AsyncClient() as client:
+#             payload = {
+#                 "event": event,
+#                 "timestamp": dt.utcnow().isoformat(),
+#                 "data": data
+#             }
+#             response = await client.post(
+#                 webhook_url,
+#                 json=payload,
+#                 timeout=10
+#             )
+#             _logger.info(f"📤 Webhook sent: {event} to {webhook_url} (status: {response.status_code})")
+            
+#             if response.status_code == 200:
+#                 response_data = response.json()
+#                 _logger.info(f"📥 Webhook response received: {list(response_data.keys())}")
+#                 return response_data
+#             else:
+#                 _logger.warning(f"⚠️ Webhook returned non-200 status: {response.status_code}")
+#                 return None
+#     except Exception as e:
+#         _logger.error(f"❌ Webhook failed: {event} to {webhook_url} - {e}")
+#         return None
+
+
+# # ================================
+# # AGENT MANAGEMENT API
+# # ================================
+
+# @app.post("/v1/convai/agents", tags=["Agent Management"])
+# async def create_agent(
+#     agent: AgentCreate, 
+#     db: Session = Depends(get_db),
+#     api_key: str = Depends(verify_api_key)
+# ):
+#     """
+#     Create a new agent with custom configuration
+    
+#     Like ElevenLabs: Each agent has system prompt, voice, model settings
+#     """
+#     try:
+#         agent_id = generate_agent_id()
+        
+#         db_agent = Agent(
+#             agent_id=agent_id,
+#             name=agent.name,
+#             system_prompt=agent.system_prompt,
+#             first_message=agent.first_message,
+#             voice_provider=agent.voice_provider,
+#             voice_id=agent.voice_id,
+#             model_provider=agent.model_provider,
+#             model_name=agent.model_name,
+#             interrupt_enabled=agent.interrupt_enabled,
+#             silence_threshold_sec=agent.silence_threshold_sec
+#         )
+        
+#         db.add(db_agent)
+#         db.commit()
+#         db.refresh(db_agent)
+        
+#         _logger.info(f"✅ Created agent: {agent_id} - {agent.name}")
+        
+#         return {
+#             "success": True,
+#             "agent_id": agent_id,
+#             "name": agent.name,
+#             "created_at": db_agent.created_at.isoformat()
+#         }
+#     except Exception as e:
+#         db.rollback()
+#         _logger.error(f"❌ Failed to create agent: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))
+
+
+# @app.get("/v1/convai/agents/{agent_id}", tags=["Agent Management"])
+# async def get_agent(agent_id: str, db: Session = Depends(get_db)):
+#     """Get agent configuration"""
+#     agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
+    
+#     if not agent:
+#         raise HTTPException(status_code=404, detail="Agent not found")
+    
+#     return {
+#         "agent_id": agent.agent_id,
+#         "name": agent.name,
+#         "system_prompt": agent.system_prompt,
+#         "first_message": agent.first_message,
+#         "voice_provider": agent.voice_provider,
+#         "voice_id": agent.voice_id,
+#         "model_provider": agent.model_provider,
+#         "model_name": agent.model_name,
+#         "interrupt_enabled": agent.interrupt_enabled,
+#         "silence_threshold_sec": agent.silence_threshold_sec,
+#         "is_active": agent.is_active,
+#         "created_at": agent.created_at.isoformat(),
+#         "updated_at": agent.updated_at.isoformat()
+#     }
+
+
+# @app.get("/v1/convai/agents", tags=["Agent Management"])
+# async def list_agents(
+#     skip: int = 0,
+#     limit: int = 100,
+#     db: Session = Depends(get_db)
+# ):
+#     """List all agents"""
+#     agents = db.query(Agent).filter(Agent.is_active == True).offset(skip).limit(limit).all()
+    
+#     return {
+#         "agents": [
+#             {
+#                 "agent_id": agent.agent_id,
+#                 "name": agent.name,
+#                 "voice_id": agent.voice_id,
+#                 "model_name": agent.model_name,
+#                 "created_at": agent.created_at.isoformat()
+#             }
+#             for agent in agents
+#         ],
+#         "total": len(agents)
+#     }
+
+
+# @app.patch("/v1/convai/agents/{agent_id}", tags=["Agent Management"])
+# async def update_agent(
+#     agent_id: str,
+#     updates: AgentUpdate,
+#     db: Session = Depends(get_db),
+#     api_key: str = Depends(verify_api_key)
+# ):
+#     """Update agent configuration"""
+#     agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
+    
+#     if not agent:
+#         raise HTTPException(status_code=404, detail="Agent not found")
+    
+#     # Update only provided fields
+#     update_data = updates.dict(exclude_unset=True)
+#     for key, value in update_data.items():
+#         setattr(agent, key, value)
+    
+#     agent.updated_at = dt.utcnow()
+#     db.commit()
+#     db.refresh(agent)
+    
+#     _logger.info(f"✅ Updated agent: {agent_id}")
+    
+#     return {
+#         "success": True,
+#         "agent_id": agent_id,
+#         "updated_fields": list(update_data.keys())
+#     }
+
+
+# @app.delete("/v1/convai/agents/{agent_id}", tags=["Agent Management"])
+# async def delete_agent(
+#     agent_id: str, 
+#     db: Session = Depends(get_db),
+#     api_key: str = Depends(verify_api_key)
+# ):
+#     """Delete (deactivate) agent"""
+#     agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
+    
+#     if not agent:
+#         raise HTTPException(status_code=404, detail="Agent not found")
+    
+#     agent.is_active = False
+#     db.commit()
+    
+#     _logger.info(f"✅ Deleted agent: {agent_id}")
+    
+#     return {"success": True, "message": "Agent deleted"}
+
+
+# # ================================
+# # ELEVENLABS-COMPATIBLE CALL API
+# # ================================
+
+# @app.post("/v1/convai/twilio/outbound-call", tags=["Call Operations"])
+# async def initiate_outbound_call(
+#     request: OutboundCallRequest,
+#     db: Session = Depends(get_db)
+# ):
+#     """
+#     ✨ ELEVENLABS-COMPATIBLE ENDPOINT
+    
+#     Initiate outbound call with agent configuration and dynamic variables
+    
+#     Request format (matches ElevenLabs):
+#     {
+#         "agent_id": "agent_xxx",
+#         "to_number": "+1234567890",
+#         "conversation_initiation_client_data": {
+#             "dynamic_variables": {
+#                 "customer_name": "John",
+#                 "company": "Acme Corp",
+#                 ...
+#             },
+#             "conversation_config_override": {
+#                 "tts": {"voice_id": "custom_voice"},
+#                 "agent": {"prompt": {"llm": "custom_model"}}
+#             }
+#         }
+#     }
+#     """
+#     try:
+#         # Validate agent exists
+#         agent = db.query(Agent).filter(
+#             Agent.agent_id == request.agent_id,
+#             Agent.is_active == True
+#         ).first()
+        
+#         if not agent:
+#             raise HTTPException(status_code=404, detail=f"Agent not found: {request.agent_id}")
+        
+#         # Extract dynamic variables and overrides
+#         client_data = request.conversation_initiation_client_data or {}
+#         dynamic_variables = client_data.get("dynamic_variables", {})
+#         config_override = client_data.get("conversation_config_override", {})
+        
+#         # 🔍 DEBUG: Log raw extraction
+#         _logger.info(f"🔍 API Debug - client_data keys: {list(client_data.keys())}")
+#         _logger.info(f"🔍 API Debug - config_override: {config_override}")
+#         _logger.info(f"🔍 API Debug - tts section: {config_override.get('tts', {})}")
+        
+#         # Extract voice and model overrides
+#         custom_voice_id = config_override.get("tts", {}).get("voice_id")
+#         custom_model = config_override.get("agent", {}).get("prompt", {}).get("llm")
+#         custom_first_message = request.first_message or config_override.get("agent", {}).get("first_message")
+
+#         _logger.info(f"📞 Initiating call to {request.to_number} with agent {request.agent_id}")
+#         _logger.info(f"📊 Dynamic variables: {len(dynamic_variables)} fields")
+        
+#         # 🔍 DEBUG: Log extracted values
+#         _logger.info(f"🔍 API Extracted - custom_voice_id: '{custom_voice_id}'")
+#         _logger.info(f"🔍 API Extracted - custom_model: '{custom_model}'")
+#         _logger.info(f"🔍 API Extracted - custom_first_message: '{custom_first_message[:50] if custom_first_message else None}...'")
+
+#         if custom_voice_id:
+#             _logger.info(f"🎤 Voice override: {custom_voice_id}")
+#         if custom_model:
+#             _logger.info(f"🤖 Model override: {custom_model}")
+        
+#         # ✨ Look up phone number from database (priority order)
+#         phone_number_to_use = TWILIO_PHONE_NUMBER  # Default fallback from env
+        
+#         # Priority 1: Use agent_phone_number_id from request (if provided)
+#         if request.agent_phone_number_id:
+#             phone_record = db.query(PhoneNumber).filter(
+#                 PhoneNumber.id == request.agent_phone_number_id,
+#                 PhoneNumber.is_active == True
+#             ).first()
+#             if phone_record:
+#                 phone_number_to_use = phone_record.phone_number
+#                 _logger.info(f"📞 Using phone number from database (ID: {request.agent_phone_number_id}): {phone_number_to_use}")
+#             else:
+#                 _logger.warning(f"⚠️ Phone number ID '{request.agent_phone_number_id}' not found in database, using fallback")
+        
+#         # Priority 2: Try to get phone number linked to agent
+#         if phone_number_to_use == TWILIO_PHONE_NUMBER and agent.agent_id:
+#             phone_record = db.query(PhoneNumber).filter(
+#                 PhoneNumber.agent_id == agent.agent_id,
+#                 PhoneNumber.is_active == True
+#             ).first()
+#             if phone_record:
+#                 phone_number_to_use = phone_record.phone_number
+#                 _logger.info(f"📞 Using agent's linked phone number: {phone_number_to_use}")
+        
+#         # Priority 3: Use TWILIO_PHONE_NUMBER from env (already set as default)
+#         if phone_number_to_use == TWILIO_PHONE_NUMBER:
+#             _logger.info(f"📞 Using default phone number from env: {phone_number_to_use}")
+        
+#         # Make Twilio call
+#         _logger.info("api voice outbound api called")
+#         webhook_url = f"{PUBLIC_URL.rstrip('/')}/voice/outbound"
+
+#         status_callback_url = f"{PUBLIC_URL.rstrip('/')}/voice/status"
+        
+#         call = twilio_client.calls.create(
+#             to=request.to_number,
+#             from_=phone_number_to_use,  # ✅ From database lookup or env fallback
+#             url=webhook_url,
+#             method="POST",
+#             status_callback=status_callback_url,
+#             status_callback_event=["initiated", "ringing", "answered", "completed"],
+#             status_callback_method="POST"
+#         )
+        
+#         call_sid = call.sid
+#         conversation_id = call_sid  # Use Twilio call_sid as conversation_id
+        
+#         # Store call data for when WebSocket connects
+#         pending_call_data[call_sid] = {
+#             "agent_id": request.agent_id,
+#             "dynamic_variables": dynamic_variables,
+#             "custom_voice_id": custom_voice_id,
+#             "custom_model": custom_model,
+#             "custom_first_message": custom_first_message,
+#             "to_number": request.to_number,
+#             "enable_recording": request.enable_recording,
+#             "direction": "outbound"
+#         }
+        
+#         _logger.info(f"💾 Stored call data for: {call_sid}")
+#         _logger.info(f"💾 - Agent ID: {request.agent_id}")
+#         _logger.info(f"💾 - Custom voice: {custom_voice_id}")
+#         _logger.info(f"💾 - Custom model: {custom_model}")
+#         _logger.info(f"💾 - Dynamic vars: {len(dynamic_variables)} fields")
+        
+#         # Create conversation record in database
+#         conversation = Conversation(
+#             conversation_id=conversation_id,
+#             agent_id=request.agent_id,
+#             phone_number=request.to_number,
+#             status="initiated",
+#             dynamic_variables=dynamic_variables,
+#             call_metadata={"overrides": config_override,
+#             "custom_first_message": custom_first_message}
+#         )
+#         db.add(conversation)
+#         db.commit()
+        
+#         _logger.info(f"✅ Call initiated: {conversation_id}")
+        
+#         # Send webhook notification (if configured)
+#         webhooks = db.query(WebhookConfig).filter(
+#             WebhookConfig.is_active == True
+#         ).filter(
+#             (WebhookConfig.agent_id == request.agent_id) | (WebhookConfig.agent_id == None)
+#         ).all()
+        
+#         for webhook in webhooks:
+#             if "call.initiated" in webhook.events or not webhook.events:
+#                 await send_webhook(
+#                     webhook.webhook_url,
+#                     "call.initiated",
+#                     {
+#                         "conversation_id": conversation_id,
+#                         "agent_id": request.agent_id,
+#                         "to_number": request.to_number,
+#                         "status": "initiated"
+#                     }
+#                 )
+        
+#         # Return ElevenLabs-compatible response
+#         return {
+#             "conversation_id": conversation_id,
+#             "agent_id": request.agent_id,
+#             "status": "initiated",
+#             "phone_number": request.to_number,
+#             "first_message": custom_first_message or agent.first_message  
+#         }
+        
+#     except HTTPException:
+#         raise
+#     except Exception as e:
+#         _logger.error(f"❌ Call initiation failed: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))
+
+
+# # ================================
+# # CONVERSATION RETRIEVAL API
+# # ================================
+
+# @app.get("/v1/convai/conversations/{conversation_id}", tags=["Conversations"])
+# async def get_conversation(conversation_id: str, db: Session = Depends(get_db)):
+#     """
+#     ✨ ELEVENLABS-COMPATIBLE ENDPOINT
+    
+#     Get conversation details including transcript
+#     """
+#     conversation = db.query(Conversation).filter(
+#         Conversation.conversation_id == conversation_id
+#     ).first()
+    
+#     if not conversation:
+#         raise HTTPException(status_code=404, detail="Conversation not found")
+    
+#     # Extract direction from call_metadata
+#     call_direction = "outbound"
+#     if conversation.call_metadata and isinstance(conversation.call_metadata, dict):
+#         call_direction = conversation.call_metadata.get("direction", "outbound")
+    
+#     # Get agent name if exists
+#     agent_name = None
+#     if conversation.agent_id:
+#         agent = db.query(Agent).filter(Agent.agent_id == conversation.agent_id).first()
+#         if agent:
+#             agent_name = agent.name
+    
+#     return {
+#         "conversation_id": conversation.conversation_id,
+#         "agent_id": conversation.agent_id,
+#         "agent_name": agent_name,
+#         "status": conversation.status,
+#         "transcript": conversation.transcript,
+#         "started_at": conversation.started_at.isoformat() if conversation.started_at else None,
+#         "ended_at": conversation.ended_at.isoformat() if conversation.ended_at else None,
+#         "created_at": conversation.created_at.isoformat() if conversation.created_at else None,
+#         "metadata": {
+#             "call_duration_secs": conversation.duration_secs,
+#             "termination_reason": conversation.ended_reason,
+#             "phone_number": conversation.phone_number,
+#             "direction": call_direction,
+#             "recording_url": conversation.recording_url
+#         },
+#         "analysis": {
+#             "transcript_length": len(conversation.transcript) if conversation.transcript else 0,
+#             "has_recording": bool(conversation.recording_url)
+#         },
+#         "dynamic_variables": conversation.dynamic_variables,
+#         "call_metadata": conversation.call_metadata
+#     }
+
+
+# @app.get("/v1/convai/conversations", tags=["Conversations"])
+# async def list_conversations(
+#     agent_id: Optional[str] = None,
+#     status: Optional[str] = None,
+#     direction: Optional[str] = None,
+#     skip: int = 0,
+#     limit: int = 100,
+#     db: Session = Depends(get_db)
+# ):
+#     """
+#     List conversations (optionally filtered by agent_id, status, direction)
+    
+#     ✨ ELEVENLABS-COMPATIBLE: Supports filtering and pagination
+#     """
+#     query = db.query(Conversation)
+    
+#     if agent_id:
+#         query = query.filter(Conversation.agent_id == agent_id)
+    
+#     if status:
+#         query = query.filter(Conversation.status == status)
+    
+#     conversations = query.order_by(Conversation.created_at.desc()).offset(skip).limit(limit).all()
+    
+#     # Filter by direction if specified (direction is in call_metadata)
+#     if direction:
+#         conversations = [
+#             conv for conv in conversations
+#             if conv.call_metadata and isinstance(conv.call_metadata, dict) 
+#             and conv.call_metadata.get("direction") == direction
+#         ]
+    
+#     # Get total count (without filters for pagination info)
+#     total_query = db.query(Conversation)
+#     if agent_id:
+#         total_query = total_query.filter(Conversation.agent_id == agent_id)
+#     if status:
+#         total_query = total_query.filter(Conversation.status == status)
+#     total_count = total_query.count()
+    
+#     return {
+#         "conversations": [
+#             {
+#                 "conversation_id": conv.conversation_id,
+#                 "agent_id": conv.agent_id,
+#                 "status": conv.status,
+#                 "phone_number": conv.phone_number,
+#                 "duration_secs": conv.duration_secs,
+#                 "direction": conv.call_metadata.get("direction", "outbound") if conv.call_metadata and isinstance(conv.call_metadata, dict) else "outbound",
+#                 "ended_reason": conv.ended_reason,
+#                 "has_transcript": bool(conv.transcript),
+#                 "has_recording": bool(conv.recording_url),
+#                 "started_at": conv.started_at.isoformat() if conv.started_at else None,
+#                 "ended_at": conv.ended_at.isoformat() if conv.ended_at else None,
+#                 "created_at": conv.created_at.isoformat() if conv.created_at else None
+#             }
+#             for conv in conversations
+#         ],
+#         "total": total_count,
+#         "page_size": limit,
+#         "offset": skip
+#     }
+
+
+# # ================================
+# # WEBHOOK MANAGEMENT API
+# # ================================
+
+# @app.post("/v1/convai/webhooks", tags=["Webhooks"], response_model=WebhookResponse)
+# async def create_webhook(
+#     request: WebhookCreate,
+#     db: Session = Depends(get_db),
+#     api_key: str = Depends(verify_api_key)
+# ):
+#     """
+#     Register webhook for call events
+    
+#     **Available Events:**
+#     - `call.initiated` - When a call is initiated
+#     - `call.started` - When a call connects
+#     - `call.ended` - When a call ends
+#     - `call.failed` - When a call fails
+#     - `transcript.partial` - Partial transcript updates
+#     - `transcript.final` - Final transcript
+#     - `agent.response` - Agent responds
+#     - `tool.called` - When a tool is called
+#     - `user.interrupted` - When user interrupts
+    
+#     **Examples:**
+#     ```json
+#     {
+#       "webhook_url": "https://your-app.com/webhook",
+#       "events": ["call.started", "call.ended"],
+#       "agent_id": "agent_123"
+#     }
+#     ```
+    
+#     Set `agent_id` to `null` for global webhooks (all agents).
+#     """
+#     try:
+#         # Validate webhook URL
+#         if not request.webhook_url.startswith(("http://", "https://")):
+#             raise HTTPException(
+#                 status_code=400, 
+#                 detail="Webhook URL must start with http:// or https://"
+#             )
+        
+#         # Validate events
+#         if request.events:
+#             invalid_events = [e for e in request.events if e not in WEBHOOK_EVENTS]
+#             if invalid_events:
+#                 raise HTTPException(
+#                     status_code=400,
+#                     detail=f"Invalid events: {invalid_events}. Valid events: {WEBHOOK_EVENTS}"
+#                 )
+        
+#         # If agent_id provided, verify agent exists
+#         if request.agent_id:
+#             agent = db.query(Agent).filter(Agent.agent_id == request.agent_id).first()
+#             if not agent:
+#                 raise HTTPException(status_code=404, detail=f"Agent not found: {request.agent_id}")
+        
+#         webhook = WebhookConfig(
+#             agent_id=request.agent_id,
+#             webhook_url=request.webhook_url,
+#             events=request.events or WEBHOOK_EVENTS
+#         )
+        
+#         db.add(webhook)
+#         db.commit()
+#         db.refresh(webhook)
+        
+#         _logger.info(
+#             f"✅ Webhook registered: {request.webhook_url} "
+#             f"for agent: {request.agent_id or 'GLOBAL'} "
+#             f"with events: {request.events}"
+#         )
+        
+#         return WebhookResponse(
+#             success=True,
+#             webhook_id=webhook.id,
+#             webhook_url=request.webhook_url,
+#             events=webhook.events,
+#             agent_id=request.agent_id
+#         )
+        
+#     except HTTPException:
+#         raise
+#     except Exception as e:
+#         _logger.error(f"❌ Webhook creation failed: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))
+
+
+# @app.get("/v1/convai/webhooks", tags=["Webhooks"])
+# async def list_webhooks(
+#     agent_id: Optional[str] = None,
+#     db: Session = Depends(get_db)
+# ):
+#     """
+#     List all registered webhooks
+    
+#     **Query Parameters:**
+#     - `agent_id` (optional): Filter by agent ID. Omit to see all webhooks.
+    
+#     **Returns:**
+#     - List of webhooks with their configuration
+#     - Includes global webhooks (agent_id = null)
+#     """
+#     query = db.query(WebhookConfig).filter(WebhookConfig.is_active == True)
+    
+#     if agent_id:
+#         query = query.filter(WebhookConfig.agent_id == agent_id)
+    
+#     webhooks = query.all()
+    
+#     return {
+#         "webhooks": [
+#             {
+#                 "id": w.id,
+#                 "agent_id": w.agent_id or "GLOBAL",
+#                 "webhook_url": w.webhook_url,
+#                 "events": w.events,
+#                 "created_at": w.created_at.isoformat() if w.created_at else None
+#             }
+#             for w in webhooks
+#         ],
+#         "total": len(webhooks)
+#     }
+
+
+# @app.delete("/v1/convai/webhooks/{webhook_id}", tags=["Webhooks"])
+# async def delete_webhook(
+#     webhook_id: int,
+#     db: Session = Depends(get_db),
+#     api_key: str = Depends(verify_api_key)
+# ):
+#     """
+#     Delete a webhook by ID
+    
+#     **Path Parameters:**
+#     - `webhook_id`: The numeric ID of the webhook to delete
+    
+#     **Returns:**
+#     - Success confirmation
+#     """
+#     webhook = db.query(WebhookConfig).filter(WebhookConfig.id == webhook_id).first()
+    
+#     if not webhook:
+#         raise HTTPException(status_code=404, detail="Webhook not found")
+    
+#     webhook_url = webhook.webhook_url
+#     agent_id = webhook.agent_id
+    
+#     webhook.is_active = False
+#     db.commit()
+    
+#     _logger.info(f"✅ Webhook deleted: ID={webhook_id}, URL={webhook_url}, Agent={agent_id or 'GLOBAL'}")
+    
+#     return {
+#         "success": True,
+#         "message": "Webhook deleted successfully",
+#         "webhook_id": webhook_id
+#     }
+
+
+# # ================================
+# # PHONE NUMBER MANAGEMENT API
+# # ================================
+
+# @app.post("/v1/convai/phone-numbers", tags=["Phone Numbers"])
+# async def register_phone_number(
+#     phone_number: str,
+#     agent_id: Optional[str] = None,
+#     label: Optional[str] = None,
+#     db: Session = Depends(get_db),
+#     api_key: str = Depends(verify_api_key)
+# ):
+#     """Register a phone number and optionally link to agent"""
+#     # Check if phone number already exists
+#     existing = db.query(PhoneNumber).filter(
+#         PhoneNumber.phone_number == phone_number
+#     ).first()
+    
+#     if existing:
+#         raise HTTPException(status_code=400, detail="Phone number already registered")
+    
+#     # Verify agent exists if provided
+#     if agent_id:
+#         agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
+#         if not agent:
+#             raise HTTPException(status_code=404, detail="Agent not found")
+    
+#     phone = PhoneNumber(
+#         id=f"pn_{uuid.uuid4().hex[:16]}",
+#         phone_number=phone_number,
+#         agent_id=agent_id,
+#         label=label
+#     )
+#     db.add(phone)
+#     db.commit()
+#     db.refresh(phone)
+    
+#     _logger.info(f"✅ Registered phone number: {phone_number} -> agent: {agent_id}")
+    
+#     return {
+#         "phone_number_id": phone.id,
+#         "phone_number": phone_number,
+#         "agent_id": agent_id,
+#         "label": label
+#     }
+
+
+# @app.get("/v1/convai/phone-numbers", tags=["Phone Numbers"])
+# async def list_phone_numbers(db: Session = Depends(get_db)):
+#     """List all registered phone numbers"""
+#     phones = db.query(PhoneNumber).filter(PhoneNumber.is_active == True).all()
+    
+#     return {
+#         "phone_numbers": [
+#             {
+#                 "id": p.id,
+#                 "phone_number": p.phone_number,
+#                 "agent_id": p.agent_id,
+#                 "label": p.label,
+#                 "provider": p.provider,
+#                 "created_at": p.created_at.isoformat()
+#             }
+#             for p in phones
+#         ]
+#     }
+
+
+# @app.patch("/v1/convai/phone-numbers/{phone_id}", tags=["Phone Numbers"])
+# async def update_phone_number(
+#     phone_id: str,
+#     agent_id: Optional[str] = None,
+#     label: Optional[str] = None,
+#     db: Session = Depends(get_db),
+#     api_key: str = Depends(verify_api_key)
+# ):
+#     """Update phone number configuration (link to different agent)"""
+#     phone = db.query(PhoneNumber).filter(PhoneNumber.id == phone_id).first()
+    
+#     if not phone:
+#         raise HTTPException(status_code=404, detail="Phone number not found")
+    
+#     if agent_id is not None:
+#         if agent_id:  # Not empty string
+#             agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
+#             if not agent:
+#                 raise HTTPException(status_code=404, detail="Agent not found")
+#         phone.agent_id = agent_id if agent_id else None
+    
+#     if label is not None:
+#         phone.label = label
+    
+#     db.commit()
+    
+#     return {"success": True, "phone_number_id": phone_id}
+
+
+# @app.delete("/v1/convai/phone-numbers/{phone_id}", tags=["Phone Numbers"])
+# async def delete_phone_number(
+#     phone_id: str,
+#     db: Session = Depends(get_db),
+#     api_key: str = Depends(verify_api_key)
+# ):
+#     """Delete a phone number"""
+#     phone = db.query(PhoneNumber).filter(PhoneNumber.id == phone_id).first()
+    
+#     if not phone:
+#         raise HTTPException(status_code=404, detail="Phone number not found")
+    
+#     phone.is_active = False
+#     db.commit()
+    
+#     return {"success": True, "message": "Phone number deleted"}
+
+
+# # ================================
+# # KNOWLEDGE BASE PER AGENT API
+# # ================================
+
+# @app.post("/v1/convai/agents/{agent_id}/knowledge-base", tags=["Knowledge Base"])
+# async def add_knowledge(
+#     agent_id: str,
+#     content: str,
+#     metadata: Optional[Dict] = None,
+#     db: Session = Depends(get_db),
+#     api_key: str = Depends(verify_api_key)
+# ):
+#     """Add knowledge to agent's knowledge base"""
+#     # Verify agent exists
+#     agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
+#     if not agent:
+#         raise HTTPException(status_code=404, detail="Agent not found")
+    
+#     doc_id = f"doc_{uuid.uuid4().hex[:16]}"
+    
+#     # Add to database
+#     kb = KnowledgeBase(
+#         agent_id=agent_id,
+#         document_id=doc_id,
+#         content=content,
+#         kb_metadata=metadata
+#     )
+#     db.add(kb)
+#     db.commit()
+    
+#     # Add to ChromaDB with agent prefix
+#     chunks = _chunk_text(content, CHUNK_SIZE, overlap=50)
+    
+#     with torch.no_grad():
+#         embeddings = embedder.encode(
+#             chunks, 
+#             device=DEVICE, 
+#             convert_to_numpy=True,
+#             normalize_embeddings=True
+#         ).tolist()
+    
+#     # Use agent-specific collection
+#     agent_collection = chroma_client.get_or_create_collection(f"agent_{agent_id}")
+    
+#     agent_collection.add(
+#         documents=chunks,
+#         embeddings=embeddings,
+#         ids=[f"{doc_id}_{i}" for i in range(len(chunks))],
+#         metadatas=[{"agent_id": agent_id, "doc_id": doc_id} for _ in chunks]
+#     )
+    
+#     _logger.info(f"✅ Added knowledge to agent {agent_id}: {len(chunks)} chunks")
+    
+#     return {
+#         "document_id": doc_id,
+#         "agent_id": agent_id,
+#         "chunks_created": len(chunks)
+#     }
+
+
+# @app.get("/v1/convai/agents/{agent_id}/knowledge-base", tags=["Knowledge Base"])
+# async def list_agent_knowledge(
+#     agent_id: str,
+#     db: Session = Depends(get_db)
+# ):
+#     """List knowledge base documents for an agent"""
+#     # Verify agent exists
+#     agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
+#     if not agent:
+#         raise HTTPException(status_code=404, detail="Agent not found")
+    
+#     documents = db.query(KnowledgeBase).filter(
+#         KnowledgeBase.agent_id == agent_id
+#     ).all()
+    
+#     return {
+#         "agent_id": agent_id,
+#         "documents": [
+#             {
+#                 "document_id": doc.document_id,
+#                 "content_preview": doc.content[:200] + "..." if len(doc.content) > 200 else doc.content,
+#                 "metadata": doc.kb_metadata,
+#                 "created_at": doc.created_at.isoformat()
+#             }
+#             for doc in documents
+#         ],
+#         "total": len(documents)
+#     }
+
+
+# @app.delete("/v1/convai/agents/{agent_id}/knowledge-base/{document_id}", tags=["Knowledge Base"])
+# async def delete_agent_knowledge(
+#     agent_id: str,
+#     document_id: str,
+#     db: Session = Depends(get_db),
+#     api_key: str = Depends(verify_api_key)
+# ):
+#     """Delete a knowledge base document"""
+#     doc = db.query(KnowledgeBase).filter(
+#         KnowledgeBase.agent_id == agent_id,
+#         KnowledgeBase.document_id == document_id
+#     ).first()
+    
+#     if not doc:
+#         raise HTTPException(status_code=404, detail="Document not found")
+    
+#     # Remove from database
+#     db.delete(doc)
+#     db.commit()
+    
+#     # Remove from ChromaDB
+#     try:
+#         agent_collection = chroma_client.get_or_create_collection(f"agent_{agent_id}")
+#         # Get all IDs that start with this document_id
+#         results = agent_collection.get(where={"doc_id": document_id})
+#         if results and results.get("ids"):
+#             agent_collection.delete(ids=results["ids"])
+#     except Exception as e:
+#         _logger.warning(f"⚠️ Could not delete from ChromaDB: {e}")
+    
+#     return {"success": True, "message": "Document deleted"}
+
+
+# # ================================
+# # CUSTOM TOOLS PER AGENT API
+# # ================================
+
+# @app.post("/v1/convai/agents/{agent_id}/tools", tags=["Tools"])
+# async def add_agent_tool(
+#     agent_id: str,
+#     tool_data: ToolCreate,
+#     db: Session = Depends(get_db),
+#     api_key: str = Depends(verify_api_key)
+# ):
+#     """
+#     Add custom tool to agent
+    
+#     Example request body:
+#     ```json
+#     {
+#         "tool_name": "weather",
+#         "description": "Get weather information for a location",
+#         "webhook_url": "https://your-api.com/weather",
+#         "parameters": {
+#             "location": {
+#                 "type": "string",
+#                 "required": true,
+#                 "description": "City name"
+#             }
+#         }
+#     }
+#     ```
+#     """
+#     # Verify agent exists
+#     agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
+#     if not agent:
+#         raise HTTPException(status_code=404, detail="Agent not found")
+    
+#     tool = AgentTool(
+#         agent_id=agent_id,
+#         tool_name=tool_data.tool_name,
+#         description=tool_data.description,
+#         webhook_url=tool_data.webhook_url,
+#         parameters=tool_data.parameters or {}
+#     )
+#     db.add(tool)
+#     db.commit()
+#     db.refresh(tool)
+    
+#     _logger.info(f"✅ Added tool '{tool_data.tool_name}' to agent {agent_id}")
+    
+#     return {
+#         "success": True,
+#         "tool_id": tool.id,
+#         "tool_name": tool_data.tool_name,
+#         "agent_id": agent_id,
+#         "webhook_url": tool_data.webhook_url
+#     }
+
+
+# @app.get("/v1/convai/agents/{agent_id}/tools", tags=["Tools"])
+# async def list_agent_tools(
+#     agent_id: str,
+#     db: Session = Depends(get_db)
+# ):
+#     """List custom tools for an agent"""
+#     tools = db.query(AgentTool).filter(
+#         AgentTool.agent_id == agent_id,
+#         AgentTool.is_active == True
+#     ).all()
+    
+#     return {
+#         "agent_id": agent_id,
+#         "tools": [
+#             {
+#                 "id": t.id,
+#                 "tool_name": t.tool_name,
+#                 "description": t.description,
+#                 "webhook_url": t.webhook_url,
+#                 "parameters": t.parameters,
+#                 "created_at": t.created_at.isoformat()
+#             }
+#             for t in tools
+#         ]
+#     }
+
+
+# @app.delete("/v1/convai/agents/{agent_id}/tools/{tool_id}", tags=["Tools"])
+# async def delete_agent_tool(
+#     agent_id: str,
+#     tool_id: int,
+#     db: Session = Depends(get_db),
+#     api_key: str = Depends(verify_api_key)
+# ):
+#     """Delete a custom tool"""
+#     tool = db.query(AgentTool).filter(
+#         AgentTool.id == tool_id,
+#         AgentTool.agent_id == agent_id
+#     ).first()
+    
+#     if not tool:
+#         raise HTTPException(status_code=404, detail="Tool not found")
+    
+#     tool.is_active = False
+#     db.commit()
+    
+#     return {"success": True, "message": "Tool deleted"}
+
+
+# # ================================
+# # CALL RECORDING API
+# # ================================
+
+# @app.post("/recording-callback", tags=["Recording"])
+# async def recording_callback(request: Request):
+#     """Handle recording completion from Twilio"""
+#     form = await request.form()
+#     call_sid = form.get("CallSid")
+#     recording_url = form.get("RecordingUrl")
+#     recording_sid = form.get("RecordingSid")
+#     recording_duration = form.get("RecordingDuration")
+    
+#     _logger.info(f"🎙️ Recording completed: {call_sid} - {recording_url}")
+    
+#     db = SessionLocal()
+#     try:
+#         conversation = db.query(Conversation).filter(
+#             Conversation.conversation_id == call_sid
+#         ).first()
+        
+#         if conversation:
+#             conversation.recording_url = recording_url
+#             # Store additional recording metadata
+#             if conversation.call_metadata:
+#                 conversation.call_metadata["recording_sid"] = recording_sid
+#                 conversation.call_metadata["recording_duration"] = recording_duration
+#             else:
+#                 conversation.call_metadata = {
+#                     "recording_sid": recording_sid,
+#                     "recording_duration": recording_duration
+#                 }
+#             db.commit()
+#             _logger.info(f"✅ Recording URL saved for {call_sid}")
+#     except Exception as e:
+#         _logger.error(f"❌ Failed to save recording URL: {e}")
+#     finally:
+#         db.close()
+    
+#     return PlainTextResponse("OK")
+
+
+# @app.get("/v1/convai/conversations/{conversation_id}/recording", tags=["Recording"])
+# async def get_recording(
+#     conversation_id: str,
+#     db: Session = Depends(get_db)
+# ):
+#     """Get recording URL for a conversation"""
+#     conversation = db.query(Conversation).filter(
+#         Conversation.conversation_id == conversation_id
+#     ).first()
+    
+#     if not conversation:
+#         raise HTTPException(status_code=404, detail="Conversation not found")
+    
+#     if not conversation.recording_url:
+#         raise HTTPException(status_code=404, detail="No recording available")
+    
+#     return {
+#         "conversation_id": conversation_id,
+#         "recording_url": conversation.recording_url,
+#         "recording_metadata": conversation.call_metadata
+#     }
+
+
+# # ================================
+# # SIGNED URL FOR WIDGETS (JWT)
+# # ================================
+
+# @app.get("/v1/convai/conversation/get-signed-url", tags=["Widgets"])
+# async def get_signed_url(
+#     agent_id: str,
+#     db: Session = Depends(get_db)
+# ):
+#     """Generate signed URL for embedding widget"""
+#     import jwt
+#     from datetime import timedelta
+    
+#     # Verify agent exists
+#     agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
+#     if not agent:
+#         raise HTTPException(status_code=404, detail="Agent not found")
+    
+#     payload = {
+#         "agent_id": agent_id,
+#         "exp": dt.utcnow() + timedelta(hours=24),
+#         "iat": dt.utcnow()
+#     }
+    
+#     token = jwt.encode(payload, JWT_SECRET, algorithm="HS256")
+    
+#     return {
+#         "signed_url": f"{PUBLIC_URL}/widget?token={token}",
+#         "expires_in": 86400,  # 24 hours in seconds
+#         "agent_id": agent_id
+#     }
+
+
+# @app.get("/widget", tags=["Widgets"])
+# async def widget_page(
+#     token: str,
+#     db: Session = Depends(get_db)
+# ):
+#     """Widget endpoint that validates JWT token"""
+#     import jwt
+    
+#     try:
+#         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+#         agent_id = payload.get("agent_id")
+        
+#         # Verify agent exists
+#         agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
+#         if not agent:
+#             raise HTTPException(status_code=404, detail="Agent not found")
+        
+#         return {
+#             "valid": True,
+#             "agent_id": agent_id,
+#             "agent_name": agent.name,
+#             "message": "Widget authentication successful"
+#         }
+#     except jwt.ExpiredSignatureError:
+#         raise HTTPException(status_code=401, detail="Token expired")
+#     except jwt.InvalidTokenError:
+#         raise HTTPException(status_code=401, detail="Invalid token")
+
+
+# @app.post("/test-end-call")
+# async def test_end_call(request: Request):
+#     """Test end call tool"""
+#     try:
+#         data = await request.json()
+#         call_sid = data.get("call_sid", "test_call_123")
+#         reason = data.get("reason", "test")
+
+#         result = await end_call_tool(call_sid, reason)
+#         return result
+#     except Exception as e:
+#         return {"success": False, "error": str(e)}
+
+
+# @app.post("/test-transfer")
+# async def test_transfer(request: Request):
+#     """Test transfer tool"""
+#     try:
+#         data = await request.json()
+#         call_sid = data.get("call_sid", "test_call_123")
+#         department = data.get("department", "sales")
+
+#         result = await transfer_call_tool(call_sid, department)
+#         return result
+#     except Exception as e:
+#         return {"success": False, "error": str(e)}
+
+
+# @app.get("/tools/status")
+# async def tools_status():
+#     """Check tool configuration"""
+#     return {
+#         "tools_available": ["end_call", "transfer_call"],
+#         "departments": {
+#             "sales": os.getenv("SALES_PHONE_NUMBER", "NOT_SET"),
+#             "support": os.getenv("SUPPORT_PHONE_NUMBER", "NOT_SET"),
+#             "technical": os.getenv("TECH_PHONE_NUMBER", "NOT_SET"),
+#         },
+#         "confirmation_system": "enabled",
+#         "transfer_requires_confirmation": True,
+#         "end_call_requires_confirmation": False,
+#         "silence_threshold_sec": SILENCE_THRESHOLD_SEC,
+#         "utterance_end_ms": UTTERANCE_END_MS
+
+
+#     }
+
+
+# @app.websocket("/media-stream")
+# async def media_ws(websocket: WebSocket):
+#     try:
+#         await websocket.accept()
+#     except RuntimeError as e:
+#         return
+
+#     async def send_heartbeat():
+#         while True:
+#             try:
+#                 await asyncio.sleep(5)
+#                 if websocket.client_state.name == "CONNECTED":
+#                     await websocket.send_json({"event": "heartbeat"})
+#             except Exception as e:
+#                 break
+
+#     heartbeat_task = asyncio.create_task(send_heartbeat())
+
+#     current_call_sid: Optional[str] = None
+
+#     processing_task: Optional[asyncio.Task] = None
+
+    
+#     try:
+#         while True:
+#             try:
+#                 data = await websocket.receive_json()
+#             except RuntimeError as e:
+#                 break
+#             except Exception as e:
+#                 break
+
+#             event = data.get("event")
+
+#             if event == "start":
+#                 start_info = data.get("start", {})
+#                 current_call_sid = start_info.get("callSid")
+#                 stream_sid = start_info.get("streamSid")
+
+#                 if not current_call_sid:
+#                     break
+
+#                 await manager.connect(current_call_sid, websocket)
+#                 conn = manager.get(current_call_sid)
+#                 if conn:
+#                     conn.stream_sid = stream_sid
+#                     conn.stream_ready = True
+#                     conn.conversation_id = current_call_sid
+
+#                     # ✨ Load agent configuration and call data
+#                     call_data = pending_call_data.get(current_call_sid, {})
+#                     agent_id = call_data.get("agent_id")
+#                     call_direction = call_data.get("direction", "outbound")
+                    
+#                     _logger.info(f"🔍 WebSocket Debug - call_sid: {current_call_sid}")
+#                     _logger.info(f"🔍 Pending call data found: {bool(call_data)}")
+#                     _logger.info(f"🔍 Agent ID: {agent_id}")
+#                     _logger.info(f"🔍 Direction: {call_direction}")
+#                     _logger.info(f"🔍 Custom voice_id: {call_data.get('custom_voice_id')}")
+#                     _logger.info(f"🔍 Custom model: {call_data.get('custom_model')}")
+                    
+#                     # ✨ ALWAYS load dynamic variables (like ElevenLabs)
+#                     conn.dynamic_variables = call_data.get("dynamic_variables", {})
+#                     conn.custom_voice_id = call_data.get("custom_voice_id")
+#                     conn.custom_model = call_data.get("custom_model")
+#                     conn.custom_first_message = call_data.get("custom_first_message")
+                    
+#                     # ✨ Log all overrides for debugging
+#                     _logger.info(f"🔧 Overrides loaded:")
+#                     _logger.info(f"   - custom_voice_id: {conn.custom_voice_id or 'None (will use agent/default)'}")
+#                     _logger.info(f"   - custom_model: {conn.custom_model or 'None (will use agent/default)'}")
+#                     _logger.info(f"   - custom_first_message: {'Yes (' + conn.custom_first_message[:30] + '...)' if conn.custom_first_message else 'None (will use agent/default)'}")
+                    
+#                     db = SessionLocal()
+#                     try:
+#                         # Load agent if specified
+#                         if agent_id:
+#                             agent = db.query(Agent).filter(
+#                                 Agent.agent_id == agent_id
+#                             ).first()
+                            
+#                             if agent:
+#                                 conn.agent_id = agent_id
+#                                 conn.agent_config = {
+#                                     "system_prompt": agent.system_prompt,
+#                                     "first_message": agent.first_message,
+#                                     "voice_id": agent.voice_id,
+#                                     "model_name": agent.model_name,
+#                                     "silence_threshold_sec": agent.silence_threshold_sec
+#                                 }
+                                
+#                                 _logger.info(f"✅ Loaded agent: {agent_id} ({agent.name})")
+#                                 _logger.info(f"📊 Dynamic variables: {len(conn.dynamic_variables)} fields")
+
+#                                 if call_data.get("custom_first_message"):
+#                                     conn.agent_config["first_message"] = call_data["custom_first_message"]
+#                                     _logger.info(f"💬 Using custom first message: {call_data['custom_first_message'][:50]}...")
+#                             else:
+#                                 _logger.warning(f"⚠️ Agent not found: {agent_id}")
+#                         else:
+#                             _logger.info("ℹ️ No agent specified, using default behavior")
+                        
+#                         # ✨ ALWAYS update conversation status to "in-progress" (like ElevenLabs)
+#                         conversation = db.query(Conversation).filter(
+#                             Conversation.conversation_id == current_call_sid
+#                         ).first()
+                        
+#                         if conversation:
+#                             conversation.status = "in-progress"
+#                             conversation.started_at = dt.utcnow()
+#                             db.commit()
+#                             _logger.info(f"✅ Conversation status updated to 'in-progress': {current_call_sid}")
+#                         else:
+#                             # Create conversation record if it doesn't exist (fallback)
+#                             _logger.warning(f"⚠️ Conversation not found, creating new record: {current_call_sid}")
+#                             # ✅ For inbound: use from_number (caller), for outbound: use to_number (recipient)
+#                             phone_for_record = call_data.get("from_number") if call_direction == "inbound" else call_data.get("to_number")
+#                             new_conversation = Conversation(
+#                                 conversation_id=current_call_sid,
+#                                 agent_id=agent_id,
+#                                 phone_number=phone_for_record,
+#                                 status="in-progress",
+#                                 started_at=dt.utcnow(),
+#                                 dynamic_variables=conn.dynamic_variables,
+#                                 call_metadata={"direction": call_direction}
+#                             )
+#                             db.add(new_conversation)
+#                             db.commit()
+                        
+#                         # ✨ ALWAYS send "call.started" webhook (like ElevenLabs)
+#                         webhooks = db.query(WebhookConfig).filter(
+#                             WebhookConfig.is_active == True
+#                         ).all()
+                        
+#                         for webhook in webhooks:
+#                             should_send = False
+#                             if webhook.agent_id is None:
+#                                 should_send = True  # Global webhook
+#                             elif agent_id and webhook.agent_id == agent_id:
+#                                 should_send = True  # Agent-specific webhook
+                            
+#                             if should_send and ("call.started" in webhook.events or not webhook.events):
+#                                 # ✅ For inbound: send caller's number (from_number in call_data)
+#                                 # ✅ For outbound: send recipient's number (to_number in call_data)
+#                                 caller_phone = call_data.get("from_number") if call_direction == "inbound" else call_data.get("to_number")
+                                
+#                                 # ✅ For INBOUND calls: Wait for webhook response to get dynamic variables
+#                                 if call_direction == "inbound":
+#                                     _logger.info(f"🔄 Sending call.started webhook to {webhook.webhook_url} and waiting for response...")
+#                                     webhook_response = await send_webhook_and_get_response(
+#                                         webhook.webhook_url,
+#                                         "call.started",
+#                                         {
+#                                             "conversation_id": current_call_sid,
+#                                             "agent_id": agent_id,
+#                                             "direction": call_direction,
+#                                             "status": "in-progress",
+#                                             "phone_number": caller_phone
+#                                         }
+#                                     )
+                                    
+#                                     _logger.info(f"📥 Webhook response received: {webhook_response is not None}, has dynamic_variables: {webhook_response and 'dynamic_variables' in webhook_response if webhook_response else False}")
+                                    
+#                                     # Apply dynamic variables from webhook response
+#                                     if webhook_response and "dynamic_variables" in webhook_response:
+#                                         response_vars = webhook_response["dynamic_variables"]
+#                                         _logger.info(f"📥 Applying {len(response_vars)} dynamic variables from webhook response")
+                                        
+#                                         # Merge with existing dynamic variables
+#                                         if conn.dynamic_variables:
+#                                             conn.dynamic_variables.update(response_vars)
+#                                         else:
+#                                             conn.dynamic_variables = response_vars
+                                        
+#                                         # Apply first_message if provided
+#                                         if "first_message" in response_vars:
+#                                             if conn.agent_config:
+#                                                 conn.agent_config["first_message"] = response_vars["first_message"]
+#                                                 _logger.info(f"✅ Applied first_message from webhook: '{response_vars['first_message'][:50]}...'")
+#                                             else:
+#                                                 _logger.warning("⚠️ Cannot apply first_message - agent_config not loaded yet")
+#                                 else:
+#                                     # For OUTBOUND calls: Fire-and-forget webhook
+#                                     asyncio.create_task(send_webhook(
+#                                         webhook.webhook_url,
+#                                         "call.started",
+#                                         {
+#                                             "conversation_id": current_call_sid,
+#                                             "agent_id": agent_id,
+#                                             "direction": call_direction,
+#                                             "status": "in-progress",
+#                                             "phone_number": caller_phone
+#                                         }
+#                                     ))
+#                     finally:
+#                         db.close()
+
+#                     # âœ… CRITICAL: Initialize resampler ONCE per connection
+#                     dummy_state = None
+#                     try:
+#                         _, dummy_state = audioop.ratecv(
+#                             b'\x00' * 3200, 2, 1, 16000, 8000, dummy_state
+#                         )
+#                         conn.resampler_state = dummy_state
+#                         conn.resampler_initialized = True
+#                         _logger.info("ðŸŽµ Resampler pre-initialized for this connection")
+#                     except Exception as e:
+#                         _logger.warning("Failed to pre-init resampler: %s", e)
+#                     _logger.info("✅ Connection setup complete for call_sid: %s", current_call_sid)
+#                     await setup_streaming_stt(current_call_sid)
+#                     _logger.info("✅ Streaming STT setup complete for call_sid: %s", current_call_sid)
+#                     conn.tts_task = asyncio.create_task(
+#                         stream_tts_worker(current_call_sid))
+#                 _logger.info("✅ WebSocket connection started for call_sid: %s", current_call_sid)
+#                 await asyncio.sleep(0.1)
+#                 greeting = None
+
+#                 # ✨ Use agent's first_message or default greeting
+#                 if conn and conn.agent_config and conn.agent_config.get("first_message"):
+#                     # Replace {{variable}} placeholders in first_message
+#                     greeting = conn.agent_config["first_message"]
+#                     if conn.dynamic_variables:
+#                         for key, value in conn.dynamic_variables.items():
+#                             greeting = greeting.replace(f"{{{{{key}}}}}", str(value))
+#                 else:
+#                     greeting = "hello there! this is default greeting from AI assistant. How can I help you today?"
+#                 if conn and conn.dynamic_variables and greeting:
+#                     for key, value in conn.dynamic_variables.items():
+#                         greeting = greeting.replace(f"{{{{{key}}}}}", str(value))
+                
+#                 # 🔍 DEBUG: Verify overrides are still set before greeting
+#                 _logger.info(f"🎯 BEFORE GREETING - conn.custom_voice_id: '{conn.custom_voice_id}'")
+#                 _logger.info(f"🎯 BEFORE GREETING - conn.agent_config voice: '{conn.agent_config.get('voice_id') if conn.agent_config else None}'")
+                
+#                 await speak_text_streaming(current_call_sid, greeting)
+                
+#                 # ✨ CAPTURE GREETING IN TRANSCRIPT (like ElevenLabs)
+#                 # This ensures we have a transcript even if user hangs up immediately
+#                 if conn and greeting:
+#                     conn.conversation_history.append({
+#                         "user": "[Call Started]",
+#                         "assistant": greeting,
+#                         "timestamp": time.time()
+#                     })
+#                     _logger.info(f"✅ Greeting captured in conversation history")
+
+#             elif event == "media":
+#                 if not current_call_sid:
+#                     continue
+#                 _logger.debug(f"🎧 Media received for call_sid: {current_call_sid}")
+#                 media_data = data.get("media", {})
+#                 payload_b64 = media_data.get("payload")
+#                 _logger.debug(f"🔍 Payload size: {len(payload_b64) if payload_b64 else 0} bytes")
+#                 if payload_b64:
+#                     try:
+#                         chunk = base64.b64decode(payload_b64)
+#                         conn = manager.get(current_call_sid)
+
+#                         if not conn:
+#                             _logger.warning("Connection not found for call_sid: %s", current_call_sid)
+#                             continue
+
+#                         # Send to Deepgram
+#                         if conn.deepgram_live:
+#                             _logger.debug("Sending audio chunk to Deepgram for call_sid: %s", current_call_sid)
+#                             try:
+#                                 conn.deepgram_live.send(chunk)
+#                                 _logger.debug("Audio chunk sent to Deepgram for call_sid: %s", current_call_sid)
+#                             except Exception as e:
+#                                 pass
+
+#                         energy = calculate_audio_energy(chunk)
+#                         _logger.debug("Calculated audio energy: %d for call_sid: %s", energy, current_call_sid)
+#                         update_baseline(conn, energy)
+#                         _logger.debug("Updated baseline energy: %d for call_sid: %s", conn.baseline_energy, current_call_sid)
+#                         now = time.time()
+
+#                         # Calculate energy threshold
+#                         energy_threshold = max(
+#                             conn.baseline_energy * INTERRUPT_BASELINE_FACTOR,
+#                             INTERRUPT_MIN_ENERGY
+#                         )
+#                         _logger.debug("Energy threshold: %d for call_sid: %s", energy_threshold, current_call_sid)
+#                         # ========================================
+#                         # âœ… SMART VAD VALIDATION & TIMEOUT LOGIC
+#                         # ========================================
+
+#                         if conn.vad_triggered_time and conn.user_speech_detected:
+#                             time_since_vad = now - conn.vad_triggered_time
+
+#                             # Check if we're seeing actual speech energy
+#                             if energy >= energy_threshold:
+#                                 # âœ… Real speech detected
+#                                 conn.last_valid_speech_energy = energy
+#                                 conn.energy_drop_time = None  # Reset drop timer
+
+#                                 # Validate VAD after short period
+#                                 if not conn.vad_validated and time_since_vad >= conn.vad_validation_threshold:
+#                                     conn.vad_validated = True
+#                                     _logger.info(
+#                                         f"âœ… VAD validated after {time_since_vad*1000:.0f}ms (energy: {energy})")
+
+#                                 if not conn.speech_start_time:
+#                                     conn.speech_start_time = now
+
+#                             else:
+#                                 # Low energy - but is it silence or just a pause?
+
+#                                 if conn.vad_validated:
+#                                     # âœ… VAD was real - this is just low energy during speech (normal)
+#                                     # Track when energy dropped
+#                                     if conn.energy_drop_time is None:
+#                                         conn.energy_drop_time = now
+
+#                                     # Only clear VAD if energy stays low for extended period
+#                                     # AND we have FINAL or interim text (meaning Deepgram also thinks speech ended)
+#                                     low_energy_duration = now - conn.energy_drop_time
+
+#                                     if low_energy_duration >= 1.5:  # 1.5s of low energy
+#                                         # Check if Deepgram also stopped detecting speech
+#                                         time_since_last_text = now - conn.last_interim_time if conn.last_interim_time else 999
+
+#                                         if time_since_last_text > 1.0:  # No text for 1s
+#                                             _logger.info(
+#                                                 f"âœ… VAD cleared naturally (low energy: {low_energy_duration:.1f}s, no text: {time_since_last_text:.1f}s)")
+#                                             conn.user_speech_detected = False
+#                                             conn.speech_start_time = None
+#                                             conn.vad_triggered_time = None
+#                                             conn.vad_validated = False
+#                                             conn.energy_drop_time = None
+#                                 else:
+#                                     # âŒ VAD not validated yet - might be false positive
+#                                     # Give it 1s to validate (reduced from 3s)
+#                                     if time_since_vad >= 1.0:
+#                                         _logger.warning(
+#                                             f"âš ï¸ VAD timeout - false positive (duration: {time_since_vad:.1f}s)")
+#                                         conn.user_speech_detected = False
+#                                         conn.speech_start_time = None
+#                                         conn.vad_triggered_time = None
+#                                         conn.vad_validated = False
+#                                         conn.energy_drop_time = None
+
+#                         # ========================================
+#                         # âœ… INTERRUPT DETECTION (unchanged logic)
+#                         # ========================================
+
+#                         if conn.currently_speaking and conn.user_speech_detected and not conn.interrupt_requested:
+#                             # Only interrupt if VAD has been validated (real speech)
+#                             if conn.vad_validated and conn.speech_start_time:
+#                                 user_speaking_duration = (
+#                                     now - conn.speech_start_time) * 1000.0
+
+#                                 if user_speaking_duration < 500:
+#                                     continue
+
+#                                 conn.speech_energy_buffer.append((now, energy))
+
+#                                 vad_dur_ms = (
+#                                     now - conn.speech_start_time) * 1000.0
+#                                 buf = list(conn.speech_energy_buffer)
+
+#                                 window_ms = 300
+#                                 cutoff_time = now - (window_ms / 1000.0)
+#                                 recent_packets = [
+#                                     (t, e) for t, e in buf if t >= cutoff_time]
+
+#                                 high_energy_count = sum(
+#                                     1 for _, e in recent_packets if e >= energy_threshold)
+#                                 total_count = len(recent_packets)
+#                                 energy_percentage = (
+#                                     high_energy_count / total_count * 100) if total_count > 0 else 0
+
+#                                 peak_energy = max(
+#                                     (e for _, e in recent_packets), default=0)
+
+#                                 time_since_last_interrupt = now - conn.last_interrupt_time
+#                                 debounced = time_since_last_interrupt >= (
+#                                     INTERRUPT_DEBOUNCE_MS / 1000.0)
+
+#                                 vad_ok = vad_dur_ms >= INTERRUPT_MIN_SPEECH_MS
+#                                 energy_ok = energy_percentage >= 60 or peak_energy >= (
+#                                     conn.baseline_energy * INTERRUPT_BASELINE_FACTOR)
+#                                 current_energy_ok = energy >= (
+#                                     energy_threshold * 0.8)
+
+#                                 all_checks_pass = vad_ok and energy_ok and current_energy_ok and debounced
+
+#                                 if all_checks_pass:
+#                                     conn.interrupt_requested = True
+#                                     conn.last_interrupt_time = now
+#                                     _logger.info(
+#                                         "ðŸ›‘ INTERRUPT! VAD: %.0fms | Energy: %.0f%% | Peak: %d | Threshold: %d",
+#                                         vad_dur_ms, energy_percentage, peak_energy, energy_threshold
+#                                     )
+
+#                         # ========================================
+#                         # âœ… PROCESS TRANSCRIPT
+#                         # ========================================
+
+#                         if not conn.currently_speaking and not conn.interrupt_requested:
+#                             if processing_task is None or processing_task.done():
+#                                 processing_task = asyncio.create_task(
+#                                     process_streaming_transcript(
+#                                         current_call_sid)
+#                                 )
+
+#                     except Exception as e:
+#                         pass
+
+#             elif event == "stop":
+#                 break
+
+#     except WebSocketDisconnect:
+#         _logger.info(f"📞 WebSocket disconnected for call: {current_call_sid}")
+#     except Exception as e:
+#         _logger.error(f"❌ WebSocket error: {e}")
+#     finally:
+#         try:
+#             if processing_task and not processing_task.done():
+#                 processing_task.cancel()
+#         except:
+#             pass
+
+#         try:
+#             if heartbeat_task and not heartbeat_task.done():
+#                 heartbeat_task.cancel()
+#         except:
+#             pass
+
+#         # ✅ CRITICAL: Save transcript BEFORE disconnecting (in case /voice/status comes later)
+#         if current_call_sid:
+#             conn = manager.get(current_call_sid)
+#             if conn:
+#                 _logger.info(f"💾 Saving transcript on WebSocket disconnect for: {current_call_sid}")
+#                 _logger.info(f"   - conversation_history entries: {len(conn.conversation_history)}")
+#                 await save_conversation_transcript(current_call_sid, conn)
+#             else:
+#                 _logger.warning(f"⚠️ No connection found on WebSocket disconnect for: {current_call_sid}")
+            
+#             try:
+#                 await manager.disconnect(current_call_sid)
+#             except:
+#                 pass
+
+#         try:
+#             await websocket.close()
+#         except:
+#             pass
+
+#     try:
+#         await websocket.accept()
+#     except RuntimeError as e:
+#         return
+
+#     async def send_heartbeat():
+#         while True:
+#             try:
+#                 await asyncio.sleep(5)
+#                 if websocket.client_state.name == "CONNECTED":
+#                     await websocket.send_json({"event": "heartbeat"})
+#             except Exception as e:
+#                 break
+
+#     heartbeat_task = asyncio.create_task(send_heartbeat())
+
+#     current_call_sid: Optional[str] = None
+
+#     processing_task: Optional[asyncio.Task] = None
+
+#     try:
+#         while True:
+#             try:
+#                 data = await websocket.receive_json()
+#             except RuntimeError as e:
+#                 break
+#             except Exception as e:
+#                 break
+
+#             event = data.get("event")
+
+#             if event == "start":
+#                 start_info = data.get("start", {})
+#                 current_call_sid = start_info.get("callSid")
+#                 stream_sid = start_info.get("streamSid")
+
+#                 if not current_call_sid:
+#                     break
+
+#                 await manager.connect(current_call_sid, websocket)
+#                 conn = manager.get(current_call_sid)
+#                 if conn:
+#                     conn.stream_sid = stream_sid
+#                     conn.stream_ready = True
+#                     conn.conversation_id = current_call_sid
+
+#                     # ✨ Load agent configuration and call data
+#                     call_data = pending_call_data.get(current_call_sid, {})
+#                     agent_id = call_data.get("agent_id")
+#                     call_direction = call_data.get("direction", "outbound")
+                    
+#                     _logger.info(f"🔍 WebSocket Debug - call_sid: {current_call_sid}")
+#                     _logger.info(f"🔍 Pending call data found: {bool(call_data)}")
+#                     _logger.info(f"🔍 Agent ID: {agent_id}")
+#                     _logger.info(f"🔍 Direction: {call_direction}")
+#                     _logger.info(f"🔍 Custom voice_id: {call_data.get('custom_voice_id')}")
+#                     _logger.info(f"🔍 Custom model: {call_data.get('custom_model')}")
+                    
+#                     # ✨ ALWAYS load dynamic variables (like ElevenLabs)
+#                     conn.dynamic_variables = call_data.get("dynamic_variables", {})
+#                     conn.custom_voice_id = call_data.get("custom_voice_id")
+#                     conn.custom_model = call_data.get("custom_model")
+#                     conn.custom_first_message = call_data.get("custom_first_message")
+                    
+#                     # ✨ Log all overrides for debugging
+#                     _logger.info(f"🔧 Overrides loaded:")
+#                     _logger.info(f"   - custom_voice_id: {conn.custom_voice_id or 'None (will use agent/default)'}")
+#                     _logger.info(f"   - custom_model: {conn.custom_model or 'None (will use agent/default)'}")
+#                     _logger.info(f"   - custom_first_message: {'Yes (' + conn.custom_first_message[:30] + '...)' if conn.custom_first_message else 'None (will use agent/default)'}")
+                    
+#                     db = SessionLocal()
+#                     try:
+#                         # Load agent if specified
+#                         if agent_id:
+#                             agent = db.query(Agent).filter(
+#                                 Agent.agent_id == agent_id
+#                             ).first()
+                            
+#                             if agent:
+#                                 conn.agent_id = agent_id
+#                                 conn.agent_config = {
+#                                     "system_prompt": agent.system_prompt,
+#                                     "first_message": agent.first_message,
+#                                     "voice_id": agent.voice_id,
+#                                     "model_name": agent.model_name,
+#                                     "silence_threshold_sec": agent.silence_threshold_sec
+#                                 }
+                                
+#                                 _logger.info(f"✅ Loaded agent: {agent_id} ({agent.name})")
+#                                 _logger.info(f"📊 Dynamic variables: {len(conn.dynamic_variables)} fields")
+
+#                                 if call_data.get("custom_first_message"):
+#                                     conn.agent_config["first_message"] = call_data["custom_first_message"]
+#                                     _logger.info(f"💬 Using custom first message: {call_data['custom_first_message'][:50]}...")
+#                             else:
+#                                 _logger.warning(f"⚠️ Agent not found: {agent_id}")
+#                         else:
+#                             _logger.info("ℹ️ No agent specified, using default behavior")
+                        
+#                         # ✨ ALWAYS update conversation status to "in-progress" (like ElevenLabs)
+#                         conversation = db.query(Conversation).filter(
+#                             Conversation.conversation_id == current_call_sid
+#                         ).first()
+                        
+#                         if conversation:
+#                             conversation.status = "in-progress"
+#                             conversation.started_at = dt.utcnow()
+#                             db.commit()
+#                             _logger.info(f"✅ Conversation status updated to 'in-progress': {current_call_sid}")
+#                         else:
+#                             # Create conversation record if it doesn't exist (fallback)
+#                             _logger.warning(f"⚠️ Conversation not found, creating new record: {current_call_sid}")
+#                             # ✅ For inbound: use from_number (caller), for outbound: use to_number (recipient)
+#                             phone_for_record = call_data.get("from_number") if call_direction == "inbound" else call_data.get("to_number")
+#                             new_conversation = Conversation(
+#                                 conversation_id=current_call_sid,
+#                                 agent_id=agent_id,
+#                                 phone_number=phone_for_record,
+#                                 status="in-progress",
+#                                 started_at=dt.utcnow(),
+#                                 dynamic_variables=conn.dynamic_variables,
+#                                 call_metadata={"direction": call_direction}
+#                             )
+#                             db.add(new_conversation)
+#                             db.commit()
+                        
+#                         # ✨ ALWAYS send "call.started" webhook (like ElevenLabs)
+#                         webhooks = db.query(WebhookConfig).filter(
+#                             WebhookConfig.is_active == True
+#                         ).all()
+                        
+#                         for webhook in webhooks:
+#                             should_send = False
+#                             if webhook.agent_id is None:
+#                                 should_send = True  # Global webhook
+#                             elif agent_id and webhook.agent_id == agent_id:
+#                                 should_send = True  # Agent-specific webhook
+                            
+#                             if should_send and ("call.started" in webhook.events or not webhook.events):
+#                                 # ✅ For inbound: send caller's number (from_number in call_data)
+#                                 # ✅ For outbound: send recipient's number (to_number in call_data)
+#                                 caller_phone = call_data.get("from_number") if call_direction == "inbound" else call_data.get("to_number")
+                                
+#                                 # ✅ For INBOUND calls: Wait for webhook response to get dynamic variables
+#                                 if call_direction == "inbound":
+#                                     _logger.info(f"🔄 Sending call.started webhook to {webhook.webhook_url} and waiting for response...")
+#                                     webhook_response = await send_webhook_and_get_response(
+#                                         webhook.webhook_url,
+#                                         "call.started",
+#                                         {
+#                                             "conversation_id": current_call_sid,
+#                                             "agent_id": agent_id,
+#                                             "direction": call_direction,
+#                                             "status": "in-progress",
+#                                             "phone_number": caller_phone
+#                                         }
+#                                     )
+                                    
+#                                     _logger.info(f"📥 Webhook response received: {webhook_response is not None}, has dynamic_variables: {webhook_response and 'dynamic_variables' in webhook_response if webhook_response else False}")
+                                    
+#                                     # Apply dynamic variables from webhook response
+#                                     if webhook_response and "dynamic_variables" in webhook_response:
+#                                         response_vars = webhook_response["dynamic_variables"]
+#                                         _logger.info(f"📥 Applying {len(response_vars)} dynamic variables from webhook response")
+                                        
+#                                         # Merge with existing dynamic variables
+#                                         if conn.dynamic_variables:
+#                                             conn.dynamic_variables.update(response_vars)
+#                                         else:
+#                                             conn.dynamic_variables = response_vars
+                                        
+#                                         # Apply first_message if provided
+#                                         if "first_message" in response_vars:
+#                                             if conn.agent_config:
+#                                                 conn.agent_config["first_message"] = response_vars["first_message"]
+#                                                 _logger.info(f"✅ Applied first_message from webhook: '{response_vars['first_message'][:50]}...'")
+#                                             else:
+#                                                 _logger.warning("⚠️ Cannot apply first_message - agent_config not loaded yet")
+#                                 else:
+#                                     # For OUTBOUND calls: Fire-and-forget webhook
+#                                     asyncio.create_task(send_webhook(
+#                                         webhook.webhook_url,
+#                                         "call.started",
+#                                         {
+#                                             "conversation_id": current_call_sid,
+#                                             "agent_id": agent_id,
+#                                             "direction": call_direction,
+#                                             "status": "in-progress",
+#                                             "phone_number": caller_phone
+#                                         }
+#                                     ))
+#                     finally:
+#                         db.close()
+
+#                     # âœ… CRITICAL: Initialize resampler ONCE per connection
+#                     dummy_state = None
+#                     try:
+#                         _, dummy_state = audioop.ratecv(
+#                             b'\x00' * 3200, 2, 1, 16000, 8000, dummy_state
+#                         )
+#                         conn.resampler_state = dummy_state
+#                         conn.resampler_initialized = True
+#                         _logger.info("ðŸŽµ Resampler pre-initialized for this connection")
+#                     except Exception as e:
+#                         _logger.warning("Failed to pre-init resampler: %s", e)
+
+#                     await setup_streaming_stt(current_call_sid)
+#                     conn.tts_task = asyncio.create_task(
+#                         stream_tts_worker(current_call_sid))
+
+#                 await asyncio.sleep(0.1)
+#                 greeting = None
+
+#                 # ✨ Use agent's first_message or default greeting
+#                 if conn and conn.agent_config and conn.agent_config.get("first_message"):
+#                     # Replace {{variable}} placeholders in first_message
+#                     greeting = conn.agent_config["first_message"]
+#                     if conn.dynamic_variables:
+#                         for key, value in conn.dynamic_variables.items():
+#                             greeting = greeting.replace(f"{{{{{key}}}}}", str(value))
+#                 else:
+#                     greeting = "hello there! this is default greeting from AI assistant. How can I help you today?"
+#                 if conn and conn.dynamic_variables and greeting:
+#                     for key, value in conn.dynamic_variables.items():
+#                         greeting = greeting.replace(f"{{{{{key}}}}}", str(value))
+                
+#                 # 🔍 DEBUG: Verify overrides are still set before greeting
+#                 _logger.info(f"🎯 BEFORE GREETING - conn.custom_voice_id: '{conn.custom_voice_id}'")
+#                 _logger.info(f"🎯 BEFORE GREETING - conn.agent_config voice: '{conn.agent_config.get('voice_id') if conn.agent_config else None}'")
+                
+#                 await speak_text_streaming(current_call_sid, greeting)
+                
+#                 # ✨ CAPTURE GREETING IN TRANSCRIPT (like ElevenLabs)
+#                 # This ensures we have a transcript even if user hangs up immediately
+#                 if conn and greeting:
+#                     conn.conversation_history.append({
+#                         "user": "[Call Started]",
+#                         "assistant": greeting,
+#                         "timestamp": time.time()
+#                     })
+#                     _logger.info(f"✅ Greeting captured in conversation history")
+
+#             elif event == "media":
+#                 if not current_call_sid:
+#                     continue
+
+#                 media_data = data.get("media", {})
+#                 payload_b64 = media_data.get("payload")
+
+#                 if payload_b64:
+#                     try:
+#                         chunk = base64.b64decode(payload_b64)
+#                         conn = manager.get(current_call_sid)
+
+#                         if not conn:
+#                             continue
+
+#                         # Send to Deepgram
+#                         if conn.deepgram_live:
+#                             try:
+#                                 conn.deepgram_live.send(chunk)
+#                             except Exception as e:
+#                                 pass
+
+#                         energy = calculate_audio_energy(chunk)
+#                         update_baseline(conn, energy)
+
+#                         now = time.time()
+
+#                         # Calculate energy threshold
+#                         energy_threshold = max(
+#                             conn.baseline_energy * INTERRUPT_BASELINE_FACTOR,
+#                             INTERRUPT_MIN_ENERGY
+#                         )
+
+#                         # ========================================
+#                         # âœ… SMART VAD VALIDATION & TIMEOUT LOGIC
+#                         # ========================================
+
+#                         if conn.vad_triggered_time and conn.user_speech_detected:
+#                             time_since_vad = now - conn.vad_triggered_time
+
+#                             # Check if we're seeing actual speech energy
+#                             if energy >= energy_threshold:
+#                                 # âœ… Real speech detected
+#                                 conn.last_valid_speech_energy = energy
+#                                 conn.energy_drop_time = None  # Reset drop timer
+
+#                                 # Validate VAD after short period
+#                                 if not conn.vad_validated and time_since_vad >= conn.vad_validation_threshold:
+#                                     conn.vad_validated = True
+#                                     _logger.info(
+#                                         f"âœ… VAD validated after {time_since_vad*1000:.0f}ms (energy: {energy})")
+
+#                                 if not conn.speech_start_time:
+#                                     conn.speech_start_time = now
+
+#                             else:
+#                                 # Low energy - but is it silence or just a pause?
+
+#                                 if conn.vad_validated:
+#                                     # âœ… VAD was real - this is just low energy during speech (normal)
+#                                     # Track when energy dropped
+#                                     if conn.energy_drop_time is None:
+#                                         conn.energy_drop_time = now
+
+#                                     # Only clear VAD if energy stays low for extended period
+#                                     # AND we have FINAL or interim text (meaning Deepgram also thinks speech ended)
+#                                     low_energy_duration = now - conn.energy_drop_time
+
+#                                     if low_energy_duration >= 1.5:  # 1.5s of low energy
+#                                         # Check if Deepgram also stopped detecting speech
+#                                         time_since_last_text = now - conn.last_interim_time if conn.last_interim_time else 999
+
+#                                         if time_since_last_text > 1.0:  # No text for 1s
+#                                             _logger.info(
+#                                                 f"âœ… VAD cleared naturally (low energy: {low_energy_duration:.1f}s, no text: {time_since_last_text:.1f}s)")
+#                                             conn.user_speech_detected = False
+#                                             conn.speech_start_time = None
+#                                             conn.vad_triggered_time = None
+#                                             conn.vad_validated = False
+#                                             conn.energy_drop_time = None
+#                                 else:
+#                                     # âŒ VAD not validated yet - might be false positive
+#                                     # Give it 1s to validate (reduced from 3s)
+#                                     if time_since_vad >= 1.0:
+#                                         _logger.warning(
+#                                             f"âš ï¸ VAD timeout - false positive (duration: {time_since_vad:.1f}s)")
+#                                         conn.user_speech_detected = False
+#                                         conn.speech_start_time = None
+#                                         conn.vad_triggered_time = None
+#                                         conn.vad_validated = False
+#                                         conn.energy_drop_time = None
+
+#                         # ========================================
+#                         # âœ… INTERRUPT DETECTION (unchanged logic)
+#                         # ========================================
+
+#                         if conn.currently_speaking and conn.user_speech_detected and not conn.interrupt_requested:
+#                             # Only interrupt if VAD has been validated (real speech)
+#                             if conn.vad_validated and conn.speech_start_time:
+#                                 user_speaking_duration = (
+#                                     now - conn.speech_start_time) * 1000.0
+
+#                                 if user_speaking_duration < 500:
+#                                     continue
+
+#                                 conn.speech_energy_buffer.append((now, energy))
+
+#                                 vad_dur_ms = (
+#                                     now - conn.speech_start_time) * 1000.0
+#                                 buf = list(conn.speech_energy_buffer)
+
+#                                 window_ms = 300
+#                                 cutoff_time = now - (window_ms / 1000.0)
+#                                 recent_packets = [
+#                                     (t, e) for t, e in buf if t >= cutoff_time]
+
+#                                 high_energy_count = sum(
+#                                     1 for _, e in recent_packets if e >= energy_threshold)
+#                                 total_count = len(recent_packets)
+#                                 energy_percentage = (
+#                                     high_energy_count / total_count * 100) if total_count > 0 else 0
+
+#                                 peak_energy = max(
+#                                     (e for _, e in recent_packets), default=0)
+
+#                                 time_since_last_interrupt = now - conn.last_interrupt_time
+#                                 debounced = time_since_last_interrupt >= (
+#                                     INTERRUPT_DEBOUNCE_MS / 1000.0)
+
+#                                 vad_ok = vad_dur_ms >= INTERRUPT_MIN_SPEECH_MS
+#                                 energy_ok = energy_percentage >= 60 or peak_energy >= (
+#                                     conn.baseline_energy * INTERRUPT_BASELINE_FACTOR)
+#                                 current_energy_ok = energy >= (
+#                                     energy_threshold * 0.8)
+
+#                                 all_checks_pass = vad_ok and energy_ok and current_energy_ok and debounced
+
+#                                 if all_checks_pass:
+#                                     conn.interrupt_requested = True
+#                                     conn.last_interrupt_time = now
+#                                     _logger.info(
+#                                         "ðŸ›‘ INTERRUPT! VAD: %.0fms | Energy: %.0f%% | Peak: %d | Threshold: %d",
+#                                         vad_dur_ms, energy_percentage, peak_energy, energy_threshold
+#                                     )
+
+#                         # ========================================
+#                         # âœ… PROCESS TRANSCRIPT
+#                         # ========================================
+
+#                         if not conn.currently_speaking and not conn.interrupt_requested:
+#                             if processing_task is None or processing_task.done():
+#                                 processing_task = asyncio.create_task(
+#                                     process_streaming_transcript(
+#                                         current_call_sid)
+#                                 )
+
+#                     except Exception as e:
+#                         pass
+
+#             elif event == "stop":
+#                 break
+
+#     except WebSocketDisconnect:
+#         _logger.info(f"📞 WebSocket disconnected for call: {current_call_sid}")
+#     except Exception as e:
+#         _logger.error(f"❌ WebSocket error: {e}")
+#     finally:
+#         try:
+#             if processing_task and not processing_task.done():
+#                 processing_task.cancel()
+#         except:
+#             pass
+
+#         try:
+#             if heartbeat_task and not heartbeat_task.done():
+#                 heartbeat_task.cancel()
+#         except:
+#             pass
+
+#         # ✅ CRITICAL: Save transcript BEFORE disconnecting (in case /voice/status comes later)
+#         if current_call_sid:
+#             conn = manager.get(current_call_sid)
+#             if conn:
+#                 _logger.info(f"💾 Saving transcript on WebSocket disconnect for: {current_call_sid}")
+#                 _logger.info(f"   - conversation_history entries: {len(conn.conversation_history)}")
+#                 await save_conversation_transcript(current_call_sid, conn)
+#             else:
+#                 _logger.warning(f"⚠️ No connection found on WebSocket disconnect for: {current_call_sid}")
+            
+#             try:
+#                 await manager.disconnect(current_call_sid)
+#             except:
+#                 pass
+
+#         try:
+#             await websocket.close()
+#         except:
+#             pass
+
+
+# @app.api_route("/", methods=["GET", "POST"])
+# async def index_page():
+#     return {
+#         "status": "ok",
+#         "message": "Twilio RAG Voice System - GPU + SMART VOICE INTERRUPTS + TRANSFER CONFIRMATION",
+#         "device": str(DEVICE),
+#         "features": [
+#             "âœ… Transfer requires user confirmation",
+#             "âœ… End call is immediate (no confirmation)",
+#             "âœ… Interrupts on real voice (configurable)",
+#             "âœ… GPU-accelerated RAG",
+#             "âœ… Streaming STT/TTS pipeline",
+#             "âœ… Smart conversation handling",
+#             f"âœ… {SILENCE_THRESHOLD_SEC}s silence before processing"
+#         ]
+#     }
+
+
+# @app.get("/gpu-status")
+# async def gpu_status():
+#     """🚀 GPU status"""
+#     status = {
+#         "device": str(DEVICE),
+#         "torch_version": torch.__version__,
+#         "cuda_available": torch.cuda.is_available(),
+#     }
+
+#     if torch.cuda.is_available():
+#         try:
+#             status.update({
+#                 "gpu_name": torch.cuda.get_device_name(0),
+#                 "gpu_count": torch.cuda.device_count(),
+#                 "cuda_version": torch.version.cuda,
+#                 "memory": {
+#                     "total_gb": f"{torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f}",
+#                     "allocated_gb": f"{torch.cuda.memory_allocated(0) / 1024**3:.2f}",
+#                     "free_gb": f"{(torch.cuda.get_device_properties(0).total_memory - torch.cuda.memory_allocated(0)) / 1024**3:.2f}"
+#                 },
+#             })
+#         except Exception as e:
+#             status["gpu_error"] = str(e)
+
+#     try:
+#         result = ollama.list()
+#         status["ollama"] = {
+#             "models": [m["name"] for m in result.get("models", [])],
+#             "current_model": OLLAMA_MODEL
+#         }
+#     except Exception as e:
+#         status["ollama"] = {"error": str(e)}
+
+#     status["embedding"] = {
+#         "model": EMBED_MODEL,
+#         "device": str(embedder.device),
+#     }
+
+#     return status
+
+
+# @app.post("/voice/outbound")
+# @app.get("/voice/outbound")
+# async def voice_outbound(request: Request):
+#     form = await request.form()
+#     call_sid = form.get("CallSid", "")
+    
+#     # Check if recording is enabled for this call
+#     call_data = pending_call_data.get(call_sid, {})
+#     _logger.info("voice outbound call")
+#     enable_recording = call_data.get("enable_recording", False)
+    
+#     response = VoiceResponse()
+    
+#     # Enable recording if requested
+#     if enable_recording:
+#         response.record(
+#             recording_status_callback=f"{PUBLIC_URL}/recording-callback",
+#             recording_status_callback_method="POST",
+#             recording_status_callback_event="completed"
+#         )
+#         _logger.info(f"🎙️ Recording enabled for call: {call_sid}")
+    
+#     response.say(" ")
+#     response.pause(length=0)
+
+#     connect = Connect()
+#     _logger.info("media_stream_websocket_called")
+#     connect.stream(url=f"wss://{public_ws_host()}/media-stream")
+#     response.append(connect)
+#     _logger.info("response appended")
+#     return Response(content=str(response), media_type="application/xml")
+
+
+# @app.post("/voice/inbound")
+# @app.get("/voice/inbound")
+# async def voice_inbound(request: Request):
+#     """
+#     Handle incoming calls - route to appropriate agent
+    
+#     ✨ ELEVENLABS-COMPATIBLE: Always creates conversation record and tracks status
+#     """
+#     form = await request.form()
+#     from_number = form.get("From", "")
+#     to_number = form.get("To", "")
+#     call_sid = form.get("CallSid", "")
+    
+#     _logger.info(f"📞 Inbound call: from={from_number}, to={to_number}, call_sid={call_sid}")
+    
+#     db = SessionLocal()
+#     try:
+#         # Try to find agent linked to this phone number
+#         phone_record = db.query(PhoneNumber).filter(
+#             PhoneNumber.phone_number == to_number,
+#             PhoneNumber.is_active == True
+#         ).first()
+        
+#         agent = None
+#         if phone_record and phone_record.agent_id:
+#             agent = db.query(Agent).filter(
+#                 Agent.agent_id == phone_record.agent_id,
+#                 Agent.is_active == True
+#             ).first()
+        
+#         # Fallback to first active agent if no phone number mapping
+#         if not agent:
+#             agent = db.query(Agent).filter(Agent.is_active == True).first()
+        
+#         # ✨ ALWAYS store call data for WebSocket (like ElevenLabs)
+#         pending_call_data[call_sid] = {
+#             "agent_id": agent.agent_id if agent else None,
+#             "dynamic_variables": {"caller_number": from_number},
+#             "custom_voice_id": None,
+#             "custom_model": None,
+#             "custom_first_message": None,
+#             "from_number": from_number,  # ✅ Caller's phone number
+#             "to_number": to_number,      # Agent's phone number
+#             "enable_recording": False,
+#             "direction": "inbound"
+#         }
+        
+#         # ✨ ALWAYS create conversation record (like ElevenLabs)
+#         conversation = Conversation(
+#             conversation_id=call_sid,
+#             agent_id=agent.agent_id if agent else None,
+#             phone_number=from_number,
+#             status="initiated",
+#             dynamic_variables={"caller_number": from_number, "direction": "inbound"},
+#             call_metadata={"direction": "inbound", "to_number": to_number}
+#         )
+#         db.add(conversation)
+#         db.commit()
+        
+#         if agent:
+#             _logger.info(f"✅ Inbound call routed to agent: {agent.agent_id} ({agent.name})")
+#         else:
+#             _logger.warning("⚠️ No active agent found for inbound call - using default behavior")
+        
+#         # ✨ ALWAYS send webhooks (like ElevenLabs)
+#         webhooks = db.query(WebhookConfig).filter(
+#             WebhookConfig.is_active == True
+#         ).all()
+        
+#         # Filter webhooks by agent_id or global (agent_id == None)
+#         for webhook in webhooks:
+#             should_send = False
+#             if webhook.agent_id is None:
+#                 should_send = True  # Global webhook
+#             elif agent and webhook.agent_id == agent.agent_id:
+#                 should_send = True  # Agent-specific webhook
+            
+#             if should_send and ("call.initiated" in webhook.events or not webhook.events):
+#                 asyncio.create_task(send_webhook(
+#                     webhook.webhook_url,
+#                     "call.initiated",
+#                     {
+#                         "conversation_id": call_sid,
+#                         "agent_id": agent.agent_id if agent else None,
+#                         "from_number": from_number,
+#                         "to_number": to_number,
+#                         "direction": "inbound",
+#                         "status": "initiated"
+#                     }
+#                 ))
+#     finally:
+#         db.close()
+    
+#     response = VoiceResponse()
+#     response.say(" ")
+#     response.pause(length=0)
+    
+#     connect = Connect()
+#     connect.stream(url=f"wss://{public_ws_host()}/media-stream")
+#     response.append(connect)
+    
+#     return Response(content=str(response), media_type="application/xml")
+
+
+# @app.post("/make-call")
+# async def make_call(request: CallRequest):
+#     try:
+#         to_number = request.to_number
+
+#         _logger.info(f"📞 Starting outbound call: to={to_number}")  
+#         webhook = f"{PUBLIC_URL.rstrip('/')}/voice/outbound"
+#         status_callback_url = f"{PUBLIC_URL.rstrip('/')}/voice/status"
+
+#         call_sid = twilio_client.calls.create(
+#             to=to_number,
+#             from_=+15108963495,  # your fixed Twilio number
+#             url=webhook,
+#             method="POST",
+#             status_callback=status_callback_url,
+#             status_callback_event=["initiated", "ringing", "answered", "completed"],
+#             status_callback_method="POST"
+#         )
+
+#         return {
+#             "success": True,
+#             "message": "Call initiated successfully",
+#             "call_sid": call_sid.sid,
+#             "to": to_number
+#         }
+
+#     except Exception as e:
+#         _logger.exception("âŒ Call initiation failed")
+#         raise HTTPException(status_code=500, detail=str(e))
+
+
+# @app.post("/voice/status")
+# async def voice_status(request: Request):
+#     """Enhanced voice status handler with transcript saving and webhooks"""
+#     form = await request.form()
+#     call_sid = form.get("CallSid")
+#     call_status = form.get("CallStatus")
+    
+#     _logger.info(f"📞 Call status update: {call_sid} -> {call_status}")
+    
+#     if call_status in {"completed", "failed", "busy", "no-answer", "canceled"} and call_sid:
+#         conn = manager.get(call_sid)
+        
+#         # Save transcript before disconnecting
+#         if conn:
+#             await save_conversation_transcript(call_sid, conn)
+        
+#         # Handle call end (update DB and send webhooks)
+#         await handle_call_end(call_sid, call_status)
+        
+#         # Disconnect
+#         await manager.disconnect(call_sid)
+        
+#         # Clean up pending call data
+#         if call_sid in pending_call_data:
+#             del pending_call_data[call_sid]
+
+#     return PlainTextResponse("OK")
+
+
+# @app.get("/health")
+# async def health():
+#     """Health check"""
+#     health_data = {
+#         "status": "ok",
+#         "mode": "GPU + FIXED_INTERRUPTS + CONFIRMATION + 1s_SILENCE",
+#         "device": str(DEVICE),
+#         "docs_count": collection.count(),
+#         "active_connections": len(manager._conns),
+#         "confirmation_enabled": True,
+#         "silence_threshold_sec": SILENCE_THRESHOLD_SEC,
+#         "interrupt_settings": {
+#             "enabled": INTERRUPT_ENABLED,
+#             "min_energy": INTERRUPT_MIN_ENERGY,
+#             "baseline_factor": INTERRUPT_BASELINE_FACTOR,
+#             "min_speech_ms": INTERRUPT_MIN_SPEECH_MS,
+#             "require_text": INTERRUPT_REQUIRE_TEXT
+#         }
+#     }
+
+#     if torch.cuda.is_available():
+#         health_data["gpu_memory_allocated_gb"] = f"{torch.cuda.memory_allocated(0) / 1024**3:.2f}"
+
+#     return health_data
+
+
+# def _chunk_text(text: str, size: int = CHUNK_SIZE, overlap: int = 50) -> List[str]:
+#     """
+#     Advanced semantic chunking with overlap for context preservation
+#     """
+#     # Clean text
+#     text = re.sub(r'\s+', ' ', text.strip())
+
+#     # Split into sentences
+#     sentences = re.split(r'(?<=[.!?])\s+', text)
+#     sentences = [s.strip() for s in sentences if s.strip()]
+
+#     chunks = []
+#     current_chunk = ""
+
+#     for i, sentence in enumerate(sentences):
+#         # If adding this sentence would exceed chunk size
+#         if current_chunk and len(current_chunk) + len(sentence) + 1 > size:
+#             chunks.append(current_chunk.strip())
+
+#             # Start new chunk with overlap from previous chunk
+#             if overlap > 0:
+#                 # Take last few sentences from current chunk for overlap
+#                 prev_sentences = current_chunk.split('. ')
+#                 overlap_sentences = prev_sentences[-2:] if len(
+#                     prev_sentences) > 2 else prev_sentences[-1:]
+#                 current_chunk = '. '.join(overlap_sentences) + '. ' + sentence
+#             else:
+#                 current_chunk = sentence
+#         else:
+#             # Add sentence to current chunk
+#             if current_chunk:
+#                 current_chunk += " " + sentence
+#             else:
+#                 current_chunk = sentence
+
+#     # Add final chunk
+#     if current_chunk.strip():
+#         chunks.append(current_chunk.strip())
+
+#     # Filter and deduplicate
+#     final_chunks = []
+#     seen = set()
+#     for chunk in chunks:
+#         if len(chunk) < 25:
+#             continue
+#         chunk_hash = hashlib.md5(chunk.encode()).hexdigest()[:12]
+#         if chunk_hash not in seen:
+#             seen.add(chunk_hash)
+#             final_chunks.append(chunk)
+
+#     _logger.info(
+#         f"ðŸ“ Created {len(final_chunks)} overlapping chunks (size: {size}, overlap: {overlap})")
+#     return final_chunks
+
+
+# def build_index_from_file(path: str = DATA_FILE) -> Tuple[int, int]:
+#     """Build ChromaDB index using contextual chunking"""
+
+#     if not os.path.exists(path):
+#         raise FileNotFoundError(f"DATA_FILE not found: {path}")
+
+#     _logger.info(f"ðŸ“– Reading data from: {path}")
+
+#     with open(path, "r", encoding="utf-8") as f:
+#         raw_text = f.read().strip()
+
+#     if not raw_text:
+#         _logger.warning("âš  DATA_FILE is empty.")
+#         return (0, 0)
+
+#     # Use the new chunking with overlap
+#     # 50 character overlap
+#     docs = _chunk_text(raw_text, CHUNK_SIZE, overlap=50)
+
+#     # Clear existing collection
+#     try:
+#         chroma_client.delete_collection("docs")
+#     except:
+#         pass
+#     collection = chroma_client.get_or_create_collection("docs")
+
+#     metadatas = []
+#     ids = []
+
+#     for i, doc in enumerate(docs):
+#         metadatas.append({
+#             "chunk_id": i,
+#             "length": len(doc),
+#             "word_count": len(doc.split()),
+#             "type": "contextual_chunk"
+#         })
+#         ids.append(f"ctx_{i}_{uuid.uuid4().hex[:8]}")
+
+#     total = len(docs)
+#     if total == 0:
+#         _logger.warning("âš  No valid chunks found.")
+#         return (0, 0)
+
+#     _logger.info(f"ðŸ”„ Generating {total} embeddings...")
+
+#     start = time.time()
+
+#     with torch.no_grad():
+#         embeddings = embedder.encode(
+#             docs,
+#             device=DEVICE,
+#             batch_size=64 if DEVICE == "cuda" else 32,
+#             convert_to_numpy=True,
+#             show_progress_bar=True,
+#             normalize_embeddings=True
+#         ).tolist()
+
+#     duration = time.time() - start
+#     _logger.info(f"âœ… Embeddings done in {duration:.2f}s")
+
+#     # Batch insertion
+#     CHROMA_MAX_BATCH = 5000
+
+#     for start_idx in range(0, total, CHROMA_MAX_BATCH):
+#         end_idx = start_idx + CHROMA_MAX_BATCH
+#         collection.add(
+#             documents=docs[start_idx:end_idx],
+#             embeddings=embeddings[start_idx:end_idx],
+#             metadatas=metadatas[start_idx:end_idx],
+#             ids=ids[start_idx:end_idx]
+#         )
+
+#     _logger.info(f"âœ… Contextual index built: {total} meaningful chunks")
+#     return (total, total)
+
+# if __name__ == "__main__":
+#     import argparse
+#     import uvicorn
+
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument("mode", choices=["server", "build", "test"])
+#     parser.add_argument("--host", default="0.0.0.0")
+#     parser.add_argument("--port", default=9001, type=int)
+#     args = parser.parse_args()
+
+#     if args.mode == "build":
+#         docs, chunks = build_index_from_file(DATA_FILE)
+#         print(f"âœ… Built index: {docs} docs, {chunks} chunks")
+#         print(f"🚀 Device used: {DEVICE}")
+#     elif args.mode == "test":
+#         print(f"Test mode (device: {DEVICE}):")
+
+#         async def test_query():
+#             while True:
+#                 q = input("> ").strip()
+#                 if q.lower() in {"exit", "quit"}:
+#                     break
+#                 result = ""
+#                 print("Response: ", end="", flush=True)
+#                 async for token in query_rag_streaming(q):
+#                     result += token
+#                     print(token, end="", flush=True)
+#                 print("\n")
+
+#         asyncio.run(test_query())
+#     else:
+#         _logger.info("🚀 Starting server on %s:%s", args.host, args.port)
+#         _logger.info(f"🔥 GPU: {DEVICE}")
+#         _logger.info("âœ… Transfer confirmation: ENABLED")
+#         _logger.info(
+#             f"â±ï¸  Silence threshold: {SILENCE_THRESHOLD_SEC}s (utterance_end={UTTERANCE_END_MS}ms)")
+#         _logger.info(
+#             f"🎯 Interrupt: enabled={INTERRUPT_ENABLED}, min_speech={INTERRUPT_MIN_SPEECH_MS}ms, "
+#             f"min_energy={INTERRUPT_MIN_ENERGY}, baseline_factor={INTERRUPT_BASELINE_FACTOR}, "
+#             f"require_text={INTERRUPT_REQUIRE_TEXT}"
+#         )
+#         uvicorn.run("new:app",
+#                     host=args.host,
+#                     port=args.port,
+#                     reload=False,
+#                     timeout_keep_alive=60,
+#                     timeout_graceful_shutdown=30,
+#                     ws_ping_interval=10.0,    # Add WebSocket ping
+#                     ws_ping_timeout=10.0
+#                     )
+
+
+
+
 import os
-import io
-import json
 import uuid
-import base64
-import asyncio
-import wave
-import audioop
-import hashlib
 import time
-import re
-import struct
-from typing import Dict, Optional, List, Tuple
-from collections import deque
-from sqlalchemy.orm import Session
-import logging
 import torch
+import asyncio
+from typing import Optional
 
-# RAG stack
-import chromadb
-from sentence_transformers import SentenceTransformer
-import ollama
-
-import httpx
-
-from logging.handlers import RotatingFileHandler
-from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, HTTPException, Depends, Security
+from fastapi import FastAPI, Request, WebSocket, HTTPException, Depends, Security
 from fastapi.responses import Response, PlainTextResponse
 from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
 from twilio.twiml.voice_response import VoiceResponse, Connect
 from twilio.rest import Client as TwilioClient
-from pydantic import BaseModel, Field
-from sqlalchemy import create_engine, Column, String, Text, Integer, Float, Boolean, DateTime, JSON
-from sqlalchemy.orm import sessionmaker, Session, declarative_base
-from datetime import datetime as dt
-from dotenv import load_dotenv
 
-from database import get_db,Agent,Conversation,WebhookConfig,PhoneNumber,KnowledgeBase,AgentTool
-from models import AgentCreate,AgentUpdate,OutboundCallRequest,WebhookResponse,WebhookCreate,ToolCreate,CallRequest
-from gpu_detection_llm import detect_gpu,public_ws_host,end_call_tool,transfer_call_tool,clean_markdown_for_tts,detect_intent,detect_confirmation_response,parse_llm_response,call_webhook_tool,execute_detected_tool,query_rag_streaming,calculate_audio_energy
-from interrupt_detection import update_baseline,handle_interrupt
-from gpu_detection_llm import twilio_client,collection,embedder
-from connection_manager import  handle_call_end,pending_call_data,save_conversation_transcript
-from database import SessionLocal
-# from tts_stt import setup_streaming_stt,speak_text_streaming,stream_tts_worker
-from connection_manager import ConnectionManager
-load_dotenv()
+import ollama
+import chromadb
+import pytz
+from sentence_transformers import SentenceTransformer
+
+from models import (
+    Agent, Conversation, WebhookConfig, PhoneNumber, KnowledgeBase, AgentTool,
+    AgentCreate, AgentUpdate, OutboundCallRequest, WebhookCreate, ToolCreate,
+    get_db, SessionLocal
+)
+from config import (
+    logger, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER,
+    PUBLIC_URL, DEEPGRAM_API_KEY, DEEPGRAM_VOICE, EMBED_MODEL, OLLAMA_MODEL,
+    CHROMA_PATH, CHUNK_SIZE, TOP_K, API_KEY_HEADER_NAME, API_KEYS,
+    SILENCE_THRESHOLD_SEC, UTTERANCE_END_MS, public_ws_host
+)
+from agents import (
+    generate_agent_id, send_webhook, detect_intent, detect_confirmation_response,
+    parse_llm_response, execute_detected_tool, clean_markdown_for_tts,
+    handle_call_end
+)
+from call_handlers import (
+    manager, calculate_audio_energy, update_baseline, handle_interrupt,
+    stream_tts_worker, setup_streaming_stt, speak_text_streaming
+)
+
 # ----------------------------
-# Environment and configuration
-# ----------------------------
-TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
-TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
-TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
-PUBLIC_URL = os.getenv("PUBLIC_URL")
-DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
-DEEPGRAM_VOICE = os.getenv("DEEPGRAM_VOICE", "aura-2-thalia-en")
-DATA_FILE = os.getenv("DATA_FILE", "./data/data.json")
-CHROMA_PATH = os.getenv("CHROMA_PATH", "./chroma_db")
-EMBED_MODEL = os.getenv(
-    "EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "mixtral:8x7b")
-CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "384"))
-TOP_K = int(os.getenv("TOP_K", "3"))
-
-# 🎯 SMART INTERRUPT SETTINGS - ALL CONFIGURABLE
-INTERRUPT_ENABLED = os.getenv("INTERRUPT_ENABLED", "true").lower() == "true"
-INTERRUPT_MIN_ENERGY = int(os.getenv("INTERRUPT_MIN_ENERGY", "1000"))
-INTERRUPT_DEBOUNCE_MS = int(os.getenv("INTERRUPT_DEBOUNCE_MS", "1000"))
-INTERRUPT_BASELINE_FACTOR = float(
-    os.getenv("INTERRUPT_BASELINE_FACTOR", "3.5"))
-INTERRUPT_MIN_SPEECH_MS = int(os.getenv("INTERRUPT_MIN_SPEECH_MS", "300"))
-INTERRUPT_REQUIRE_TEXT = os.getenv(
-    "INTERRUPT_REQUIRE_TEXT", "false").lower() == "true"
-
-# âœ… SILENCE DETECTION (matches Deepgram utterance_end_ms)
-SILENCE_THRESHOLD_SEC = float(os.getenv("SILENCE_THRESHOLD_SEC", "0.8"))
-UTTERANCE_END_MS = int(SILENCE_THRESHOLD_SEC * 1000)
-
-REQUIRE_ENV = [TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN,
-               TWILIO_PHONE_NUMBER, PUBLIC_URL, DEEPGRAM_API_KEY]
-if not all(REQUIRE_ENV):
-    raise RuntimeError(
-        "Missing required env: TWILIO_*, PUBLIC_URL, DEEPGRAM_API_KEY")
-
-# JWT Secret for signed URLs
-JWT_SECRET = os.getenv("JWT_SECRET", "your-secret-key-change-in-production")
-
-# API Key Authentication
-API_KEY_HEADER = APIKeyHeader(name="xi-api-key", auto_error=False)
-API_KEYS = os.getenv("API_KEYS", "").split(",") if os.getenv("API_KEYS") else []
-
-# Webhook Events
-WEBHOOK_EVENTS = [
-    "call.initiated",
-    "call.started", 
-    "call.ended",
-    "call.failed",
-    "transcript.partial",
-    "transcript.final",
-    "agent.response",
-    "tool.called",
-    "user.interrupted"
-]
-
-
-LOG_LEVEL = os.getenv("LOG_LEVEL", "WARNING").upper()
-LOG_FILE = os.getenv("LOG_FILE", "server.log")
-
-_logger = logging.getLogger("new")
-_logger.setLevel(getattr(logging, LOG_LEVEL, logging.WARNING))
-
-_fmt = logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s")
-_ch = logging.StreamHandler()
-_ch.setFormatter(_fmt)
-_logger.addHandler(_ch)
-
-try:
-    _fh = RotatingFileHandler(LOG_FILE, maxBytes=5_000_000, backupCount=2)
-    _fh.setFormatter(_fmt)
-    _logger.addHandler(_fh)
-except Exception:
-    pass
-
-
-async def verify_api_key(api_key: str = Security(API_KEY_HEADER)):
-    """Verify API key - returns None if no API_KEYS configured (dev mode)"""
-    # If no API keys configured, allow all requests (dev mode)
-    if not API_KEYS or API_KEYS == ['']:
-        return None
-    
-    if not api_key or api_key not in API_KEYS:
-        raise HTTPException(status_code=401, detail="Invalid API key")
-    
-    return api_key
-
-DEVICE = detect_gpu()
-
-_logger.info("🚀 Config: PUBLIC_URL=%s DEVICE=%s", PUBLIC_URL, DEVICE)
-_logger.info("🎯 Interrupt: ENABLED=%s MIN_SPEECH=%dms MIN_ENERGY=%d BASELINE_FACTOR=%.1f",
-             INTERRUPT_ENABLED, INTERRUPT_MIN_SPEECH_MS, INTERRUPT_MIN_ENERGY, INTERRUPT_BASELINE_FACTOR)
-_logger.info("â±ï¸  Silence Threshold: %.1fs (utterance_end=%dms)",
-             SILENCE_THRESHOLD_SEC, UTTERANCE_END_MS)
-
-manager = ConnectionManager()
-# ----------------------------
-# âš¡ STREAMING TTS
-# ----------------------------
-async def stream_tts_worker(call_sid: str):
-    """âš¡ OPTIMIZED TTS - Fast first response + smooth playback + no clicks"""
-    conn = manager.get(call_sid)
-    if not conn:
-        return
-
-    # Single resampler for entire session (critical for smoothness)
-    # persistent_resampler_state = None
-
-    try:
-        while True:
-            # âœ… SINGLE SENTENCE: Process one sentence at a time
-            text = await conn.tts_queue.get()
-
-            if text is None:
-                conn.tts_queue.task_done()
-                break
-
-            conn.tts_queue.task_done()
-
-            if not text or not text.strip():
-                continue
-
-            if conn.interrupt_requested:
-                _logger.info("ðŸ›‘ Skipping batch due to interrupt")
-                while not conn.tts_queue.empty():
-                    try:
-                        conn.tts_queue.get_nowait()
-                        conn.tts_queue.task_done()
-                    except:
-                        break
-                conn.currently_speaking = False
-                conn.interrupt_requested = False
-                # persistent_resampler_state = None
-                break
-
-            _logger.info("ðŸŽ¤ TTS sentence (%d chars): '%s...'",
-                         len(text), text[:80])
-
-            t_start = time.time()
-            conn.currently_speaking = True
-            conn.speech_energy_buffer.clear()
-            conn.speech_start_time = None
-            is_first_chunk = True  # Track first chunk of sentence
-            audio_chunks_buffer = []  # Buffer to apply fade-out to last chunk
-
-            try:
-                url = "https://api.deepgram.com/v1/speak"
-                headers = {
-                    "Authorization": f"Token {DEEPGRAM_API_KEY}",
-                    "Content-Type": "application/json"
-                }
-                payload = {"text": text}
-                
-                # ✨ Use custom voice if provided, otherwise agent default, otherwise env default
-                voice_to_use = DEEPGRAM_VOICE  # Default from env
-                voice_source = "env_default"
-                
-                # 🔍 DEBUG: Log raw values for debugging
-                _logger.debug(f"🔍 TTS Voice Debug - conn.custom_voice_id: '{conn.custom_voice_id}'")
-                _logger.debug(f"🔍 TTS Voice Debug - conn.agent_config: {conn.agent_config}")
-                
-                if conn.custom_voice_id and str(conn.custom_voice_id).strip():
-                    voice_to_use = conn.custom_voice_id
-                    voice_source = "api_override"
-                elif conn.agent_config and conn.agent_config.get("voice_id"):
-                    voice_to_use = conn.agent_config["voice_id"]
-                    voice_source = "agent_config"
-                
-                # Log voice selection for EVERY sentence (to debug first message issue)
-                _logger.info(f"🎤 TTS Voice: {voice_to_use} (source: {voice_source}) for text: '{text[:50]}...'")
-                
-                params = {
-                    "model": voice_to_use,
-                    "encoding": "linear16",
-                    "sample_rate": "16000"
-                }
-
-                interrupted = False
-                chunk_count = 0
-
-                async with httpx.AsyncClient(timeout=30.0) as client:
-                    async with client.stream("POST", url, json=payload,
-                                             headers=headers, params=params) as response:
-                        response.raise_for_status()
-
-                        async for audio_chunk in response.aiter_bytes(chunk_size=3200):
-                            if conn.interrupt_requested:
-                                _logger.info(
-                                    "ðŸ›' TTS interrupted at chunk %d", chunk_count)
-                                interrupted = True
-                                break
-
-                            if len(audio_chunk) == 0:
-                                continue
-
-                            try:
-                                # ✅ CRITICAL: Ensure resampler is initialized before first chunk
-                                if conn.resampler_state is None:
-                                    # Initialize resampler with silence
-                                    _, conn.resampler_state = audioop.ratecv(
-                                        b'\x00' * 160, 2, 1, 16000, 8000, None
-                                    )
-
-                                # ✅ CRITICAL: Reuse same resampler state across all sentences
-                                pcm_8k, conn.resampler_state = audioop.ratecv(
-                                    audio_chunk, 2, 1, 16000, 8000,
-                                    conn.resampler_state
-                                )
-
-                                # ✅ FIX: Apply fade-in to first chunk to prevent clicks
-                                if is_first_chunk and len(pcm_8k) >= 320:
-                                    # Convert to list for manipulation
-                                    samples = list(struct.unpack(
-                                        f'<{len(pcm_8k)//2}h', pcm_8k))
-
-                                    # Apply fade-in to first 160 samples (20ms at 8kHz)
-                                    fade_samples = min(160, len(samples))
-                                    for i in range(fade_samples):
-                                        fade_factor = (i + 1) / fade_samples
-                                        samples[i] = int(
-                                            samples[i] * fade_factor)
-
-                                    # Repack
-                                    pcm_8k = struct.pack(
-                                        f'<{len(samples)}h', *samples)
-                                    is_first_chunk = False
-
-                                # Buffer the chunk for potential fade-out processing
-                                audio_chunks_buffer.append(pcm_8k)
-                                
-                                # Convert and send buffered chunks (keep last 2 for fade-out)
-                                while len(audio_chunks_buffer) > 2:
-                                    chunk_to_convert = audio_chunks_buffer.pop(0)
-                                    mulaw = audioop.lin2ulaw(chunk_to_convert, 2)
-
-                                    for i in range(0, len(mulaw), 160):
-                                        if conn.interrupt_requested:
-                                            interrupted = True
-                                            break
-
-                                        chunk_to_send = mulaw[i:i+160]
-                                        if len(chunk_to_send) < 160:
-                                            chunk_to_send += b'\xff' * \
-                                                (160 - len(chunk_to_send))
-
-                                        success = await manager.send_media_chunk(
-                                            call_sid, conn.stream_sid, chunk_to_send
-                                        )
-                                        if not success:
-                                            interrupted = True
-                                            break
-
-                                        conn.last_tts_send_time = time.time()
-                                        chunk_count += 1
-                                        await asyncio.sleep(0.018)
-
-                                    if interrupted:
-                                        break
-
-                            except Exception as e:
-                                continue
-                
-                # ✅ Process remaining buffered chunks with fade-out on the last one
-                if not interrupted and audio_chunks_buffer:
-                    for idx, chunk_to_convert in enumerate(audio_chunks_buffer):
-                        is_last_chunk = (idx == len(audio_chunks_buffer) - 1)
-                        
-                        # Apply fade-out to last chunk to prevent clicks between sentences
-                        if is_last_chunk and len(chunk_to_convert) >= 320:
-                            try:
-                                samples = list(struct.unpack(
-                                    f'<{len(chunk_to_convert)//2}h', chunk_to_convert))
-                                
-                                # Apply fade-out to last 160 samples (20ms at 8kHz)
-                                fade_samples = min(160, len(samples))
-                                start_idx = len(samples) - fade_samples
-                                for i in range(fade_samples):
-                                    fade_factor = 1.0 - ((i + 1) / fade_samples)
-                                    samples[start_idx + i] = int(
-                                        samples[start_idx + i] * fade_factor)
-                                
-                                chunk_to_convert = struct.pack(
-                                    f'<{len(samples)}h', *samples)
-                            except Exception as e:
-                                _logger.warning(f"⚠️ Fade-out failed: {e}")
-                        
-                        mulaw = audioop.lin2ulaw(chunk_to_convert, 2)
-                        
-                        for i in range(0, len(mulaw), 160):
-                            if conn.interrupt_requested:
-                                interrupted = True
-                                break
-
-                            chunk_to_send = mulaw[i:i+160]
-                            if len(chunk_to_send) < 160:
-                                chunk_to_send += b'\xff' * \
-                                    (160 - len(chunk_to_send))
-
-                            success = await manager.send_media_chunk(
-                                call_sid, conn.stream_sid, chunk_to_send
-                            )
-                            if not success:
-                                interrupted = True
-                                break
-
-                            conn.last_tts_send_time = time.time()
-                            chunk_count += 1
-                            await asyncio.sleep(0.018)
-
-                        if interrupted:
-                            break
-                    
-                    # Clear buffer after processing
-                    audio_chunks_buffer.clear()
-
-                t_end = time.time()
-
-                if interrupted:
-                    await handle_interrupt(call_sid)
-                    # Keep resampler state - don't reset on interrupt
-                    while not conn.tts_queue.empty():
-                        try:
-                            conn.tts_queue.get_nowait()
-                            conn.tts_queue.task_done()
-                        except:
-                            break
-                else:
-                    _logger.info("âœ… Sentence completed in %.0fms (%d chunks, %.1f chars/sec)",
-                                 (t_end - t_start)*1000, chunk_count,
-                                 len(text) / (t_end - t_start) if (t_end - t_start) > 0 else 0)
-
-            except Exception as e:
-                # ✅ Only reset resampler on serious conversion errors
-                if "resampler" in str(e).lower() or "audio" in str(e).lower():
-                    conn.resampler_state = None
-
-            # Only clear state when truly done
-            if conn.tts_queue.empty():
-                conn.currently_speaking = False
-                conn.interrupt_requested = False
-                conn.speech_energy_buffer.clear()
-                conn.speech_start_time = None
-                conn.user_speech_detected = False
-                # Keep resampler for next turn
-
-    except asyncio.CancelledError:
-        pass
-    except Exception as e:
-        pass
-    finally:
-        conn.currently_speaking = False
-        conn.interrupt_requested = False
-
-
-async def speak_text_streaming(call_sid: str, text: str):
-    """âš¡ Queue text with smart sentence splitting"""
-    conn = manager.get(call_sid)
-    if not conn or not conn.stream_sid:
-        return
-
-    try:
-        if conn.stream_sid:  # ✅ Validate stream_sid exists
-            await conn.ws.send_json({
-                "event": "clear",
-                "streamSid": conn.stream_sid
-            })
-    except:
-        pass
-
-    conn.currently_speaking = True
-    conn.interrupt_requested = False
-    conn.speech_energy_buffer.clear()
-    conn.user_speech_detected = False
-
-    # âœ… Split into sentences for queue
-    sentences = []
-    current = ""
-    for char in text:
-        current += char
-        if char in '.!?' and len(current.strip()) > 10:
-            sentences.append(current.strip())
-            current = ""
-    if current.strip():
-        sentences.append(current.strip())
-
-    # Queue all sentences (worker will batch them automatically)
-    for sentence in sentences:
-        if sentence:
-            try:
-                await asyncio.wait_for(conn.tts_queue.put(sentence), timeout=2.0)
-            except asyncio.TimeoutError:
-                break
-            except Exception as e:
-                break
-
-    await conn.tts_queue.join()
-    conn.currently_speaking = False
-
-# âš¡ STREAMING STT WITH IMPROVED VAD - Deepgram live + final-guard
-
-
-async def setup_streaming_stt(call_sid: str):
-    """âš¡ Setup Deepgram streaming STT with improved VAD"""
-    conn = manager.get(call_sid)
-    if not conn:
-        return
-
-    try:
-        dg_connection = deepgram.listen.live.v("1")
-
-        def on_message(self, result, **kwargs):
-            try:
-                if not result or not result.channel:
-                    return
-                alt = result.channel.alternatives[0]
-                transcript = alt.transcript
-                if not transcript:
-                    return
-
-                is_final = result.is_final
-                now = time.time()
-
-                _logger.info("ðŸŽ™ï¸ STT %s: '%s'",
-                             "FINAL" if is_final else "interim", transcript)
-
-                # âœ… Always update speech time when we receive text
-                conn.last_speech_time = now
-
-                if is_final:
-                    # ========================================
-                    # âœ… FINAL RESULT - ALWAYS ACCUMULATE
-                    # ========================================
-                    current_buffer = conn.stt_transcript_buffer.strip()
-
-                    if current_buffer:
-                        # Check if this continues the current thought
-                        if (not current_buffer.endswith((".", "!", "?")) and
-                                len(transcript) > 3):
-                            # Continue the sentence
-                            conn.stt_transcript_buffer += " " + transcript
-                            _logger.info(
-                                f"âž• Appending to sentence: '{transcript}'")
-                        else:
-                            # New thought or refinement
-                            conn.stt_transcript_buffer = transcript
-                            _logger.info(f"ðŸ”„ New sentence: '{transcript}'")
-                    else:
-                        # First content
-                        conn.stt_transcript_buffer = transcript
-
-                    # Mark that we have FINAL text
-                    conn.stt_is_final = True
-
-                    _logger.info(
-                        f"ðŸ“ Complete buffer: '{conn.stt_transcript_buffer.strip()}'")
-
-                else:
-                    # ========================================
-                    # âœ… INTERIM RESULT - TRACK BUT DON'T OVERWRITE
-                    # ========================================
-
-                    # Track interim time for activity detection
-                    conn.last_interim_time = now
-                    conn.last_interim_text = transcript
-
-                    # Only use interim if we have no FINAL content yet
-                    if not conn.stt_transcript_buffer or not conn.stt_is_final:
-                        conn.stt_transcript_buffer = transcript
-                        _logger.info(f"ðŸ“ Interim as buffer: '{transcript}'")
-
-            except Exception as e:
-                pass
-
-        def on_open(self, open, **kwargs):
-            pass
-
-        def on_error(self, error, **kwargs):
-            pass
-
-        def on_close(self, close_msg, **kwargs):
-            pass
-
-        def on_speech_started(self, speech_started, **kwargs):
-            """âœ… FIXED: Mark VAD trigger but require validation"""
-            conn.vad_triggered_time = time.time()
-            conn.user_speech_detected = True  # Tentatively set
-            conn.speech_start_time = time.time()
-            _logger.info("ðŸŽ¤ VAD: Speech trigger (needs validation)")
-
-        def on_utterance_end(self, utterance_end, **kwargs):
-            """âœ… FIXED: Clear VAD when Deepgram confirms utterance ended"""
-            now = time.time()
-
-            # Check if we got interim text very recently (within 200ms)
-            if conn.last_interim_time and (now - conn.last_interim_time) < 0.2:
-                _logger.info(
-                    "â­ï¸ UtteranceEnd ignored - recent interim detected")
-                return
-
-            # âœ… Clear VAD state when Deepgram confirms end
-            if conn.user_speech_detected:
-                _logger.info(
-                    "âœ… UtteranceEnd - clearing VAD (Deepgram confirmed)")
-                conn.user_speech_detected = False
-                conn.speech_start_time = None
-                conn.vad_triggered_time = None
-                conn.vad_validated = False
-                conn.energy_drop_time = None
-
-            conn.last_speech_time = now
-            _logger.info(f"ðŸ•’ UtteranceEnd - last_speech_time: {now}")
-
-        dg_connection.on(LiveTranscriptionEvents.Open, on_open)
-        dg_connection.on(LiveTranscriptionEvents.Transcript, on_message)
-        dg_connection.on(
-            LiveTranscriptionEvents.SpeechStarted, on_speech_started)
-        dg_connection.on(LiveTranscriptionEvents.UtteranceEnd,
-                         on_utterance_end)
-        dg_connection.on(LiveTranscriptionEvents.Error, on_error)
-        dg_connection.on(LiveTranscriptionEvents.Close, on_close)
-
-        # Minimal, safe options for Twilio mu-law 8k (works on deepgram-sdk 3.2)
-        options = LiveOptions(
-            model=os.getenv("DEEPGRAM_STT_MODEL", "nova-2"),
-            language="en-US",
-            smart_format=True,
-            interim_results=True,
-            vad_events=True,
-            encoding="mulaw",
-            sample_rate=8000,
-            channels=1,
-            # If you want Deepgram to emit UtteranceEnd reliably, try enabling endpointing:
-            # uncomment to try (if your project supports it)
-            endpointing=UTTERANCE_END_MS,
-        )
-
-        # start() is synchronous and returns bool in SDK 3.2
-        start_ok = False
-        try:
-            start_ok = dg_connection.start(options)
-        except Exception as e:
-            pass
-
-        if not start_ok:
-            fallback = LiveOptions(
-                model=os.getenv("DEEPGRAM_STT_FALLBACK_MODEL",
-                                "nova-2-general"),
-                encoding="mulaw",
-                sample_rate=8000,
-                interim_results=True,
-                # utterance_end_ms=UTTERANCE_END_MS,  # optional legacy param if endpointing not supported
-            )
-            try:
-                start_ok = dg_connection.start(fallback)
-            except Exception as e2:
-                return
-
-        if start_ok:
-            conn.deepgram_live = dg_connection
-            _logger.info("âœ… Streaming STT initialized")
-        else:
-            _logger.error(
-                "âŒ Deepgram start() returned False (model/options/API key)")
-
-    except Exception as e:
-        pass
-
-
-
-# FastAPI app
+# FastAPI App Setup
 # ----------------------------
 app = FastAPI(
     title="AI Voice Call System - ElevenLabs Compatible",
@@ -633,1213 +3261,649 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ----------------------------
+# Authentication
+# ----------------------------
+API_KEY_HEADER = APIKeyHeader(name=API_KEY_HEADER_NAME, auto_error=False)
 
-# ================================
-# HELPER FUNCTIONS
-# ================================
-
-def generate_agent_id() -> str:
-    """Generate unique agent ID"""
-    return f"agent_{uuid.uuid4().hex[:16]}"
-
-
-def generate_conversation_id() -> str:
-    """Generate unique conversation ID"""
-    return f"conv_{uuid.uuid4().hex[:16]}"
-
-
-async def send_webhook(webhook_url: str, event: str, data: Dict):
-    """Send webhook notification to registered webhook URLs (fire-and-forget)"""
-    try:
-        # Webhook URL must be absolute (http:// or https://)
-        if not webhook_url.startswith(("http://", "https://")):
-            _logger.error(f"❌ Invalid webhook URL: {webhook_url} - must start with http:// or https://")
-            return False
-        
-        async with httpx.AsyncClient() as client:
-            payload = {
-                "event": event,
-                "timestamp": dt.utcnow().isoformat(),
-                "data": data
-            }
-            response = await client.post(
-                webhook_url,
-                json=payload,
-                timeout=10
-            )
-            _logger.info(f"📤 Webhook sent: {event} to {webhook_url} (status: {response.status_code})")
-            return response.status_code == 200
-    except Exception as e:
-        _logger.error(f"❌ Webhook failed: {event} to {webhook_url} - {e}")
-        return False
-
-
-async def send_webhook_and_get_response(webhook_url: str, event: str, data: Dict) -> Optional[Dict]:
-    """Send webhook and wait for response data (for inbound call configuration)"""
-    try:
-        # Webhook URL must be absolute (http:// or https://)
-        if not webhook_url.startswith(("http://", "https://")):
-            _logger.error(f"❌ Invalid webhook URL: {webhook_url} - must start with http:// or https://")
-            return None
-        
-        async with httpx.AsyncClient() as client:
-            payload = {
-                "event": event,
-                "timestamp": dt.utcnow().isoformat(),
-                "data": data
-            }
-            response = await client.post(
-                webhook_url,
-                json=payload,
-                timeout=10
-            )
-            _logger.info(f"📤 Webhook sent: {event} to {webhook_url} (status: {response.status_code})")
-            
-            if response.status_code == 200:
-                response_data = response.json()
-                _logger.info(f"📥 Webhook response received: {list(response_data.keys())}")
-                return response_data
-            else:
-                _logger.warning(f"⚠️ Webhook returned non-200 status: {response.status_code}")
-                return None
-    except Exception as e:
-        _logger.error(f"❌ Webhook failed: {event} to {webhook_url} - {e}")
+async def verify_api_key(api_key: str = Security(API_KEY_HEADER)):
+    """Verify API key - returns None if no API_KEYS configured (dev mode)"""
+    if not API_KEYS or API_KEYS == ['']:
         return None
-
-
-# ================================
-# AGENT MANAGEMENT API
-# ================================
-
-@app.post("/v1/convai/agents", tags=["Agent Management"])
-async def create_agent(
-    agent: AgentCreate, 
-    db: Session = Depends(get_db),
-    api_key: str = Depends(verify_api_key)
-):
-    """
-    Create a new agent with custom configuration
     
-    Like ElevenLabs: Each agent has system prompt, voice, model settings
-    """
+    if not api_key or api_key not in API_KEYS:
+        raise HTTPException(status_code=401, detail="Invalid API key")
+    
+    return api_key
+
+# ----------------------------
+# GPU Detection & Optimization
+# ----------------------------
+def detect_gpu():
+    """Detect and configure GPU"""
+    if torch.cuda.is_available():
+        device = 'cuda'
+        gpu_count = torch.cuda.device_count()
+        gpu_name = torch.cuda.get_device_name(0)
+        gpu_memory = torch.cuda.get_device_properties(0).total_memory / 1024**3
+        cuda_version = torch.version.cuda
+
+        logger.info("=" * 60)
+        logger.info("🚀 GPU DETECTED!")
+        logger.info(f"   Device: {gpu_name}")
+        logger.info(f"   Count: {gpu_count}")
+        logger.info(f"   Memory: {gpu_memory:.2f} GB")
+        logger.info(f"   CUDA: {cuda_version}")
+        logger.info("=" * 60)
+
+        if torch.cuda.get_device_capability()[0] >= 8:
+            torch.backends.cuda.matmul.allow_tf32 = True
+            torch.backends.cudnn.allow_tf32 = True
+            logger.info("✅ TF32 enabled (Ampere+ GPU)")
+
+        torch.cuda.empty_cache()
+    elif torch.backends.mps.is_available():
+        device = 'mps'
+        logger.info("=" * 60)
+        logger.info("🚀 Apple Silicon GPU detected")
+        logger.info("=" * 60)
+    else:
+        device = 'cpu'
+        logger.warning("=" * 60)
+        logger.warning("⚠️  NO GPU DETECTED - Using CPU")
+        logger.warning("=" * 60)
+
+    return device
+
+DEVICE = detect_gpu()
+
+# ----------------------------
+# Clients and Models
+# ----------------------------
+twilio_client = TwilioClient(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+# Load embedding model
+logger.info(f"📦 Loading SentenceTransformer on {DEVICE}...")
+start_time = time.time()
+embedder = SentenceTransformer(EMBED_MODEL, device=DEVICE)
+embedder.eval()
+
+if DEVICE == 'cuda':
     try:
-        agent_id = generate_agent_id()
-        
-        db_agent = Agent(
-            agent_id=agent_id,
-            name=agent.name,
-            system_prompt=agent.system_prompt,
-            first_message=agent.first_message,
-            voice_provider=agent.voice_provider,
-            voice_id=agent.voice_id,
-            model_provider=agent.model_provider,
-            model_name=agent.model_name,
-            interrupt_enabled=agent.interrupt_enabled,
-            silence_threshold_sec=agent.silence_threshold_sec
-        )
-        
-        db.add(db_agent)
-        db.commit()
-        db.refresh(db_agent)
-        
-        _logger.info(f"✅ Created agent: {agent_id} - {agent.name}")
-        
-        return {
-            "success": True,
-            "agent_id": agent_id,
-            "name": agent.name,
-            "created_at": db_agent.created_at.isoformat()
-        }
+        embedder.half()
+        logger.info("✅ FP16 precision enabled")
     except Exception as e:
-        db.rollback()
-        _logger.error(f"❌ Failed to create agent: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.warning(f"⚠️ Could not enable FP16: {e}")
 
+load_time = time.time() - start_time
+logger.info(f"✅ Model loaded in {load_time:.2f}s")
 
-@app.get("/v1/convai/agents/{agent_id}", tags=["Agent Management"])
-async def get_agent(agent_id: str, db: Session = Depends(get_db)):
-    """Get agent configuration"""
-    agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
-    
-    if not agent:
-        raise HTTPException(status_code=404, detail="Agent not found")
-    
-    return {
-        "agent_id": agent.agent_id,
-        "name": agent.name,
-        "system_prompt": agent.system_prompt,
-        "first_message": agent.first_message,
-        "voice_provider": agent.voice_provider,
-        "voice_id": agent.voice_id,
-        "model_provider": agent.model_provider,
-        "model_name": agent.model_name,
-        "interrupt_enabled": agent.interrupt_enabled,
-        "silence_threshold_sec": agent.silence_threshold_sec,
-        "is_active": agent.is_active,
-        "created_at": agent.created_at.isoformat(),
-        "updated_at": agent.updated_at.isoformat()
-    }
+logger.info("🔥 Warming up GPU...")
+with torch.no_grad():
+    _ = embedder.encode(
+        ["warmup sentence for GPU initialization"],
+        device=DEVICE,
+        show_progress_bar=False,
+        convert_to_numpy=True,
+        batch_size=1
+    )
+logger.info("✅ GPU warmed up")
 
+# ChromaDB setup
+chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
+collection = chroma_client.get_or_create_collection("docs")
 
-@app.get("/v1/convai/agents", tags=["Agent Management"])
-async def list_agents(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db)
-):
-    """List all agents"""
-    agents = db.query(Agent).filter(Agent.is_active == True).offset(skip).limit(limit).all()
-    
-    return {
-        "agents": [
-            {
-                "agent_id": agent.agent_id,
-                "name": agent.name,
-                "voice_id": agent.voice_id,
-                "model_name": agent.model_name,
-                "created_at": agent.created_at.isoformat()
-            }
-            for agent in agents
-        ],
-        "total": len(agents)
-    }
+response_cache = {}
 
+# ----------------------------
+# RAG Query Function
+# ----------------------------
+async def query_rag_streaming(question: str, history, call_sid: Optional[str] = None):
+    """✨ ENHANCED: RAG with agent configuration and dynamic variables support"""
+    from datetime import datetime
+    
+    if history is None:
+        history = []
 
-@app.patch("/v1/convai/agents/{agent_id}", tags=["Agent Management"])
-async def update_agent(
-    agent_id: str,
-    updates: AgentUpdate,
-    db: Session = Depends(get_db),
-    api_key: str = Depends(verify_api_key)
-):
-    """Update agent configuration"""
-    agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
+    ny_tz = pytz.timezone('America/New_York')
+    current_date = datetime.now(ny_tz).strftime("%A, %B %d, %Y")
     
-    if not agent:
-        raise HTTPException(status_code=404, detail="Agent not found")
+    conn = manager.get(call_sid) if call_sid else None
+    agent_prompt = None
+    dynamic_vars = {}
+    model_to_use = OLLAMA_MODEL
+    model_source = "env_default"
     
-    # Update only provided fields
-    update_data = updates.dict(exclude_unset=True)
-    for key, value in update_data.items():
-        setattr(agent, key, value)
-    
-    agent.updated_at = dt.utcnow()
-    db.commit()
-    db.refresh(agent)
-    
-    _logger.info(f"✅ Updated agent: {agent_id}")
-    
-    return {
-        "success": True,
-        "agent_id": agent_id,
-        "updated_fields": list(update_data.keys())
-    }
-
-
-@app.delete("/v1/convai/agents/{agent_id}", tags=["Agent Management"])
-async def delete_agent(
-    agent_id: str, 
-    db: Session = Depends(get_db),
-    api_key: str = Depends(verify_api_key)
-):
-    """Delete (deactivate) agent"""
-    agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
-    
-    if not agent:
-        raise HTTPException(status_code=404, detail="Agent not found")
-    
-    agent.is_active = False
-    db.commit()
-    
-    _logger.info(f"✅ Deleted agent: {agent_id}")
-    
-    return {"success": True, "message": "Agent deleted"}
-
-
-# ================================
-# ELEVENLABS-COMPATIBLE CALL API
-# ================================
-
-@app.post("/v1/convai/twilio/outbound-call", tags=["Call Operations"])
-async def initiate_outbound_call(
-    request: OutboundCallRequest,
-    db: Session = Depends(get_db)
-):
-    """
-    ✨ ELEVENLABS-COMPATIBLE ENDPOINT
-    
-    Initiate outbound call with agent configuration and dynamic variables
-    
-    Request format (matches ElevenLabs):
-    {
-        "agent_id": "agent_xxx",
-        "to_number": "+1234567890",
-        "conversation_initiation_client_data": {
-            "dynamic_variables": {
-                "customer_name": "John",
-                "company": "Acme Corp",
-                ...
-            },
-            "conversation_config_override": {
-                "tts": {"voice_id": "custom_voice"},
-                "agent": {"prompt": {"llm": "custom_model"}}
-            }
-        }
-    }
-    """
-    try:
-        # Validate agent exists
-        agent = db.query(Agent).filter(
-            Agent.agent_id == request.agent_id,
-            Agent.is_active == True
-        ).first()
+    if conn and conn.agent_config:
+        agent_prompt = conn.agent_config.get("system_prompt")
+        dynamic_vars = conn.dynamic_variables or {}
+        logger.info(f"✅ Using agent prompt with {len(dynamic_vars)} dynamic variables")
         
-        if not agent:
-            raise HTTPException(status_code=404, detail=f"Agent not found: {request.agent_id}")
-        
-        # Extract dynamic variables and overrides
-        client_data = request.conversation_initiation_client_data or {}
-        dynamic_variables = client_data.get("dynamic_variables", {})
-        config_override = client_data.get("conversation_config_override", {})
-        
-        # 🔍 DEBUG: Log raw extraction
-        _logger.info(f"🔍 API Debug - client_data keys: {list(client_data.keys())}")
-        _logger.info(f"🔍 API Debug - config_override: {config_override}")
-        _logger.info(f"🔍 API Debug - tts section: {config_override.get('tts', {})}")
-        
-        # Extract voice and model overrides
-        custom_voice_id = config_override.get("tts", {}).get("voice_id")
-        custom_model = config_override.get("agent", {}).get("prompt", {}).get("llm")
-        custom_first_message = request.first_message or config_override.get("agent", {}).get("first_message")
+        if conn.custom_model and conn.custom_model.strip():
+            model_to_use = conn.custom_model
+            model_source = "api_override"
+        elif conn.agent_config.get("model_name"):
+            model_to_use = conn.agent_config["model_name"]
+            model_source = "agent_config"
+    
+    logger.info(f"🤖 Model: {model_to_use} (source: {model_source})")
 
-        _logger.info(f"📞 Initiating call to {request.to_number} with agent {request.agent_id}")
-        _logger.info(f"📊 Dynamic variables: {len(dynamic_variables)} fields")
-        
-        # 🔍 DEBUG: Log extracted values
-        _logger.info(f"🔍 API Extracted - custom_voice_id: '{custom_voice_id}'")
-        _logger.info(f"🔍 API Extracted - custom_model: '{custom_model}'")
-        _logger.info(f"🔍 API Extracted - custom_first_message: '{custom_first_message[:50] if custom_first_message else None}...'")
+    loop = asyncio.get_running_loop()
 
-        if custom_voice_id:
-            _logger.info(f"🎤 Voice override: {custom_voice_id}")
-        if custom_model:
-            _logger.info(f"🤖 Model override: {custom_model}")
-        
-        # ✨ Look up phone number from database (priority order)
-        phone_number_to_use = TWILIO_PHONE_NUMBER  # Default fallback from env
-        
-        # Priority 1: Use agent_phone_number_id from request (if provided)
-        if request.agent_phone_number_id:
-            phone_record = db.query(PhoneNumber).filter(
-                PhoneNumber.id == request.agent_phone_number_id,
-                PhoneNumber.is_active == True
-            ).first()
-            if phone_record:
-                phone_number_to_use = phone_record.phone_number
-                _logger.info(f"📞 Using phone number from database (ID: {request.agent_phone_number_id}): {phone_number_to_use}")
-            else:
-                _logger.warning(f"⚠️ Phone number ID '{request.agent_phone_number_id}' not found in database, using fallback")
-        
-        # Priority 2: Try to get phone number linked to agent
-        if phone_number_to_use == TWILIO_PHONE_NUMBER and agent.agent_id:
-            phone_record = db.query(PhoneNumber).filter(
-                PhoneNumber.agent_id == agent.agent_id,
-                PhoneNumber.is_active == True
-            ).first()
-            if phone_record:
-                phone_number_to_use = phone_record.phone_number
-                _logger.info(f"📞 Using agent's linked phone number: {phone_number_to_use}")
-        
-        # Priority 3: Use TWILIO_PHONE_NUMBER from env (already set as default)
-        if phone_number_to_use == TWILIO_PHONE_NUMBER:
-            _logger.info(f"📞 Using default phone number from env: {phone_number_to_use}")
-        
-        # Make Twilio call
-        _logger.info("api voice outbound api called")
-        webhook_url = f"{PUBLIC_URL.rstrip('/')}/voice/outbound"
+    def _embed_and_query():
+        with torch.no_grad():
+            query_embedding = embedder.encode(
+                [question],
+                device=DEVICE,
+                show_progress_bar=False,
+                convert_to_numpy=True,
+                normalize_embeddings=True,
+                batch_size=1
+            )[0].tolist()
 
-        status_callback_url = f"{PUBLIC_URL.rstrip('/')}/voice/status"
-        
-        call = twilio_client.calls.create(
-            to=request.to_number,
-            from_=phone_number_to_use,  # ✅ From database lookup or env fallback
-            url=webhook_url,
-            method="POST",
-            status_callback=status_callback_url,
-            status_callback_event=["initiated", "ringing", "answered", "completed"],
-            status_callback_method="POST"
-        )
-        
-        call_sid = call.sid
-        conversation_id = call_sid  # Use Twilio call_sid as conversation_id
-        
-        # Store call data for when WebSocket connects
-        pending_call_data[call_sid] = {
-            "agent_id": request.agent_id,
-            "dynamic_variables": dynamic_variables,
-            "custom_voice_id": custom_voice_id,
-            "custom_model": custom_model,
-            "custom_first_message": custom_first_message,
-            "to_number": request.to_number,
-            "enable_recording": request.enable_recording,
-            "direction": "outbound"
-        }
-        
-        _logger.info(f"💾 Stored call data for: {call_sid}")
-        _logger.info(f"💾 - Agent ID: {request.agent_id}")
-        _logger.info(f"💾 - Custom voice: {custom_voice_id}")
-        _logger.info(f"💾 - Custom model: {custom_model}")
-        _logger.info(f"💾 - Dynamic vars: {len(dynamic_variables)} fields")
-        
-        # Create conversation record in database
-        conversation = Conversation(
-            conversation_id=conversation_id,
-            agent_id=request.agent_id,
-            phone_number=request.to_number,
-            status="initiated",
-            dynamic_variables=dynamic_variables,
-            call_metadata={"overrides": config_override,
-            "custom_first_message": custom_first_message}
-        )
-        db.add(conversation)
-        db.commit()
-        
-        _logger.info(f"✅ Call initiated: {conversation_id}")
-        
-        # Send webhook notification (if configured)
-        webhooks = db.query(WebhookConfig).filter(
-            WebhookConfig.is_active == True
-        ).filter(
-            (WebhookConfig.agent_id == request.agent_id) | (WebhookConfig.agent_id == None)
-        ).all()
-        
-        for webhook in webhooks:
-            if "call.initiated" in webhook.events or not webhook.events:
-                await send_webhook(
-                    webhook.webhook_url,
-                    "call.initiated",
-                    {
-                        "conversation_id": conversation_id,
-                        "agent_id": request.agent_id,
-                        "to_number": request.to_number,
-                        "status": "initiated"
-                    }
-                )
-        
-        # Return ElevenLabs-compatible response
-        return {
-            "conversation_id": conversation_id,
-            "agent_id": request.agent_id,
-            "status": "initiated",
-            "phone_number": request.to_number,
-            "first_message": custom_first_message or agent.first_message  
-        }
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        _logger.error(f"❌ Call initiation failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-# ================================
-# CONVERSATION RETRIEVAL API
-# ================================
-
-@app.get("/v1/convai/conversations/{conversation_id}", tags=["Conversations"])
-async def get_conversation(conversation_id: str, db: Session = Depends(get_db)):
-    """
-    ✨ ELEVENLABS-COMPATIBLE ENDPOINT
-    
-    Get conversation details including transcript
-    """
-    conversation = db.query(Conversation).filter(
-        Conversation.conversation_id == conversation_id
-    ).first()
-    
-    if not conversation:
-        raise HTTPException(status_code=404, detail="Conversation not found")
-    
-    # Extract direction from call_metadata
-    call_direction = "outbound"
-    if conversation.call_metadata and isinstance(conversation.call_metadata, dict):
-        call_direction = conversation.call_metadata.get("direction", "outbound")
-    
-    # Get agent name if exists
-    agent_name = None
-    if conversation.agent_id:
-        agent = db.query(Agent).filter(Agent.agent_id == conversation.agent_id).first()
-        if agent:
-            agent_name = agent.name
-    
-    return {
-        "conversation_id": conversation.conversation_id,
-        "agent_id": conversation.agent_id,
-        "agent_name": agent_name,
-        "status": conversation.status,
-        "transcript": conversation.transcript,
-        "started_at": conversation.started_at.isoformat() if conversation.started_at else None,
-        "ended_at": conversation.ended_at.isoformat() if conversation.ended_at else None,
-        "created_at": conversation.created_at.isoformat() if conversation.created_at else None,
-        "metadata": {
-            "call_duration_secs": conversation.duration_secs,
-            "termination_reason": conversation.ended_reason,
-            "phone_number": conversation.phone_number,
-            "direction": call_direction,
-            "recording_url": conversation.recording_url
-        },
-        "analysis": {
-            "transcript_length": len(conversation.transcript) if conversation.transcript else 0,
-            "has_recording": bool(conversation.recording_url)
-        },
-        "dynamic_variables": conversation.dynamic_variables,
-        "call_metadata": conversation.call_metadata
-    }
-
-
-@app.get("/v1/convai/conversations", tags=["Conversations"])
-async def list_conversations(
-    agent_id: Optional[str] = None,
-    status: Optional[str] = None,
-    direction: Optional[str] = None,
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db)
-):
-    """
-    List conversations (optionally filtered by agent_id, status, direction)
-    
-    ✨ ELEVENLABS-COMPATIBLE: Supports filtering and pagination
-    """
-    query = db.query(Conversation)
-    
-    if agent_id:
-        query = query.filter(Conversation.agent_id == agent_id)
-    
-    if status:
-        query = query.filter(Conversation.status == status)
-    
-    conversations = query.order_by(Conversation.created_at.desc()).offset(skip).limit(limit).all()
-    
-    # Filter by direction if specified (direction is in call_metadata)
-    if direction:
-        conversations = [
-            conv for conv in conversations
-            if conv.call_metadata and isinstance(conv.call_metadata, dict) 
-            and conv.call_metadata.get("direction") == direction
-        ]
-    
-    # Get total count (without filters for pagination info)
-    total_query = db.query(Conversation)
-    if agent_id:
-        total_query = total_query.filter(Conversation.agent_id == agent_id)
-    if status:
-        total_query = total_query.filter(Conversation.status == status)
-    total_count = total_query.count()
-    
-    return {
-        "conversations": [
-            {
-                "conversation_id": conv.conversation_id,
-                "agent_id": conv.agent_id,
-                "status": conv.status,
-                "phone_number": conv.phone_number,
-                "duration_secs": conv.duration_secs,
-                "direction": conv.call_metadata.get("direction", "outbound") if conv.call_metadata and isinstance(conv.call_metadata, dict) else "outbound",
-                "ended_reason": conv.ended_reason,
-                "has_transcript": bool(conv.transcript),
-                "has_recording": bool(conv.recording_url),
-                "started_at": conv.started_at.isoformat() if conv.started_at else None,
-                "ended_at": conv.ended_at.isoformat() if conv.ended_at else None,
-                "created_at": conv.created_at.isoformat() if conv.created_at else None
-            }
-            for conv in conversations
-        ],
-        "total": total_count,
-        "page_size": limit,
-        "offset": skip
-    }
-
-
-# ================================
-# WEBHOOK MANAGEMENT API
-# ================================
-
-@app.post("/v1/convai/webhooks", tags=["Webhooks"], response_model=WebhookResponse)
-async def create_webhook(
-    request: WebhookCreate,
-    db: Session = Depends(get_db),
-    api_key: str = Depends(verify_api_key)
-):
-    """
-    Register webhook for call events
-    
-    **Available Events:**
-    - `call.initiated` - When a call is initiated
-    - `call.started` - When a call connects
-    - `call.ended` - When a call ends
-    - `call.failed` - When a call fails
-    - `transcript.partial` - Partial transcript updates
-    - `transcript.final` - Final transcript
-    - `agent.response` - Agent responds
-    - `tool.called` - When a tool is called
-    - `user.interrupted` - When user interrupts
-    
-    **Examples:**
-    ```json
-    {
-      "webhook_url": "https://your-app.com/webhook",
-      "events": ["call.started", "call.ended"],
-      "agent_id": "agent_123"
-    }
-    ```
-    
-    Set `agent_id` to `null` for global webhooks (all agents).
-    """
-    try:
-        # Validate webhook URL
-        if not request.webhook_url.startswith(("http://", "https://")):
-            raise HTTPException(
-                status_code=400, 
-                detail="Webhook URL must start with http:// or https://"
+            return collection.query(
+                query_embeddings=[query_embedding],
+                n_results=TOP_K * 2
             )
+
+    results = await loop.run_in_executor(None, _embed_and_query)
+    raw_docs = results.get("documents", [[]])[0] if results else []
+    distances = results.get("distances", [[]])[0] if results else []
+
+    relevant_chunks = []
+    for doc, dist in zip(raw_docs, distances):
+        if dist <= 1.3:
+            relevant_chunks.append(doc)
+
+    context_text = "\n".join(relevant_chunks[:3])
+
+    history_text = ""
+    if history and len(history) > 0:
+        recent_history = history[-6:]
+        history_lines = []
+        for h in recent_history:
+            history_lines.append(f"User: {h['user']}\nAssistant: {h['assistant']}")
+        history_text = "\n".join(history_lines)
+
+    if agent_prompt:
+        vars_section = ""
+        if dynamic_vars:
+            vars_lines = []
+            for key, value in dynamic_vars.items():
+                if value and str(value).strip():
+                    vars_lines.append(f"- **{key}**: {value}")
+            if vars_lines:
+                vars_section = "\n\n## Lead/Customer Information:\n" + "\n".join(vars_lines)
         
-        # Validate events
-        if request.events:
-            invalid_events = [e for e in request.events if e not in WEBHOOK_EVENTS]
-            if invalid_events:
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"Invalid events: {invalid_events}. Valid events: {WEBHOOK_EVENTS}"
-                )
-        
-        # If agent_id provided, verify agent exists
-        if request.agent_id:
-            agent = db.query(Agent).filter(Agent.agent_id == request.agent_id).first()
-            if not agent:
-                raise HTTPException(status_code=404, detail=f"Agent not found: {request.agent_id}")
-        
-        webhook = WebhookConfig(
-            agent_id=request.agent_id,
-            webhook_url=request.webhook_url,
-            events=request.events or WEBHOOK_EVENTS
-        )
-        
-        db.add(webhook)
-        db.commit()
-        db.refresh(webhook)
-        
-        _logger.info(
-            f"✅ Webhook registered: {request.webhook_url} "
-            f"for agent: {request.agent_id or 'GLOBAL'} "
-            f"with events: {request.events}"
-        )
-        
-        return WebhookResponse(
-            success=True,
-            webhook_id=webhook.id,
-            webhook_url=request.webhook_url,
-            events=webhook.events,
-            agent_id=request.agent_id
-        )
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        _logger.error(f"❌ Webhook creation failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        call_context = ""
+        if conn:
+            call_context = f"""
+        ## CALL CONTEXT (VERY IMPORTANT)
+        You are on a LIVE PHONE CALL with a real person.
+        - DO NOT include:
+            - stage directions (e.g. **pause**, **laughs**, **sighs**)
+            - do not use **bold** or _italics_, just respond in normal text and paragraphs
+            - emotional markers (e.g. [happy], [thinking])
+            - symbols like *, [], (), <> 
+            - DO NOT describe actions or emotions.
 
+        Current call phase: {conn.call_phase}
+        Detected user intent: {conn.last_intent}
 
-@app.get("/v1/convai/webhooks", tags=["Webhooks"])
-async def list_webhooks(
-    agent_id: Optional[str] = None,
-    db: Session = Depends(get_db)
-):
-    """
-    List all registered webhooks
-    
-    **Query Parameters:**
-    - `agent_id` (optional): Filter by agent ID. Omit to see all webhooks.
-    
-    **Returns:**
-    - List of webhooks with their configuration
-    - Includes global webhooks (agent_id = null)
-    """
-    query = db.query(WebhookConfig).filter(WebhookConfig.is_active == True)
-    
-    if agent_id:
-        query = query.filter(WebhookConfig.agent_id == agent_id)
-    
-    webhooks = query.all()
-    
-    return {
-        "webhooks": [
-            {
-                "id": w.id,
-                "agent_id": w.agent_id or "GLOBAL",
-                "webhook_url": w.webhook_url,
-                "events": w.events,
-                "created_at": w.created_at.isoformat() if w.created_at else None
-            }
-            for w in webhooks
-        ],
-        "total": len(webhooks)
-    }
+        Speech rules:
+        - Speak briefly and naturally, like a human on the phone
+        - Never explain in long paragraphs until asked
+        """
 
+        prompt = f"""{agent_prompt}
 
-@app.delete("/v1/convai/webhooks/{webhook_id}", tags=["Webhooks"])
-async def delete_webhook(
-    webhook_id: int,
-    db: Session = Depends(get_db),
-    api_key: str = Depends(verify_api_key)
-):
-    """
-    Delete a webhook by ID
+    {call_context}
     
-    **Path Parameters:**
-    - `webhook_id`: The numeric ID of the webhook to delete
-    
-    **Returns:**
-    - Success confirmation
-    """
-    webhook = db.query(WebhookConfig).filter(WebhookConfig.id == webhook_id).first()
-    
-    if not webhook:
-        raise HTTPException(status_code=404, detail="Webhook not found")
-    
-    webhook_url = webhook.webhook_url
-    agent_id = webhook.agent_id
-    
-    webhook.is_active = False
-    db.commit()
-    
-    _logger.info(f"✅ Webhook deleted: ID={webhook_id}, URL={webhook_url}, Agent={agent_id or 'GLOBAL'}")
-    
-    return {
-        "success": True,
-        "message": "Webhook deleted successfully",
-        "webhook_id": webhook_id
-    }
+## Current Date (America/New_York):
+Today is {current_date}.{vars_section}
 
+## Knowledge Base Context  (please make responses from only this company knowledge base):
+{context_text if context_text.strip() else "No specific context found for user's this current query."}
 
-# ================================
-# PHONE NUMBER MANAGEMENT API
-# ================================
+## current conversation history(if nothing is here, that means this is the start of the call):
+{history_text if history_text else ""}
 
-@app.post("/v1/convai/phone-numbers", tags=["Phone Numbers"])
-async def register_phone_number(
-    phone_number: str,
-    agent_id: Optional[str] = None,
-    label: Optional[str] = None,
-    db: Session = Depends(get_db),
-    api_key: str = Depends(verify_api_key)
-):
-    """Register a phone number and optionally link to agent"""
-    # Check if phone number already exists
-    existing = db.query(PhoneNumber).filter(
-        PhoneNumber.phone_number == phone_number
-    ).first()
-    
-    if existing:
-        raise HTTPException(status_code=400, detail="Phone number already registered")
-    
-    # Verify agent exists if provided
-    if agent_id:
-        agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
-        if not agent:
-            raise HTTPException(status_code=404, detail="Agent not found")
-    
-    phone = PhoneNumber(
-        id=f"pn_{uuid.uuid4().hex[:16]}",
-        phone_number=phone_number,
-        agent_id=agent_id,
-        label=label
-    )
-    db.add(phone)
-    db.commit()
-    db.refresh(phone)
-    
-    _logger.info(f"✅ Registered phone number: {phone_number} -> agent: {agent_id}")
-    
-    return {
-        "phone_number_id": phone.id,
-        "phone_number": phone_number,
-        "agent_id": agent_id,
-        "label": label
-    }
+## User's Current Question:
+{question}"""
+    else:
+        prompt = f"""You are MILA, a friendly voice assistant for Technology Mindz. Technology Mindz provides key services: Salesforce, AI, Managed IT, Cybersecurity, Microsoft Dynamics 365, Staff Augmentation, CRM Consulting, Web Development, Mobile App Development.
 
+## Current Date (America/New_York):
+Today is {current_date}.
 
-@app.get("/v1/convai/phone-numbers", tags=["Phone Numbers"])
-async def list_phone_numbers(db: Session = Depends(get_db)):
-    """List all registered phone numbers"""
-    phones = db.query(PhoneNumber).filter(PhoneNumber.is_active == True).all()
-    
-    return {
-        "phone_numbers": [
-            {
-                "id": p.id,
-                "phone_number": p.phone_number,
-                "agent_id": p.agent_id,
-                "label": p.label,
-                "provider": p.provider,
-                "created_at": p.created_at.isoformat()
-            }
-            for p in phones
-        ]
-    }
+## YOUR PHONE PERSONALITY:
+- You're on a LIVE phone call with a real person
+- Speak naturally like a human would on the phone
+- Keep responses BRIEF (1-2 sentences max)
+- Use natural filler words: "um", "you know", "well", "actually", "yeah"
+- Acknowledge what they say naturally: "Got it", "Makes sense", "Oh interesting", "I see", "Right"
+- Sound conversational, not scripted
+- Mirror their energy and pace
 
+## RESPONSE GUIDELINES:
+- For simple acknowledgments: Be brief and natural ("Yeah, got it" / "Makes sense" / "Okay, cool")
+- For questions: Answer concisely from the knowledge base
+- For confirmations: Respond naturally based on context (don't just say "okay got it" - be contextual)
+- For hesitation ("um", "uh"): Gently encourage them ("Take your time" / "What's on your mind?")
+- Never give long explanations - this is a phone call, not an essay
 
-@app.patch("/v1/convai/phone-numbers/{phone_id}", tags=["Phone Numbers"])
-async def update_phone_number(
-    phone_id: str,
-    agent_id: Optional[str] = None,
-    label: Optional[str] = None,
-    db: Session = Depends(get_db),
-    api_key: str = Depends(verify_api_key)
-):
-    """Update phone number configuration (link to different agent)"""
-    phone = db.query(PhoneNumber).filter(PhoneNumber.id == phone_id).first()
-    
-    if not phone:
-        raise HTTPException(status_code=404, detail="Phone number not found")
-    
-    if agent_id is not None:
-        if agent_id:  # Not empty string
-            agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
-            if not agent:
-                raise HTTPException(status_code=404, detail="Agent not found")
-        phone.agent_id = agent_id if agent_id else None
-    
-    if label is not None:
-        phone.label = label
-    
-    db.commit()
-    
-    return {"success": True, "phone_number_id": phone_id}
+## KNOWLEDGE BASE RULES:
+- Only use company knowledge base for factual answers
+- If something isn't in the knowledge base, say "I'm not sure about that, but let me connect you with someone who can help"
+- Never make up information
 
+## MEETING SCHEDULING:
+- When relevant, offer to schedule meetings
+- Ask for: date, time, timezone (only FUTURE dates)
+- After getting details: [TOOL:meeting_call:DATE:TIMEZONE:address]
+- If valid=true: confirm scheduled, else: apologize and reschedule
 
-@app.delete("/v1/convai/phone-numbers/{phone_id}", tags=["Phone Numbers"])
-async def delete_phone_number(
-    phone_id: str,
-    db: Session = Depends(get_db),
-    api_key: str = Depends(verify_api_key)
-):
-    """Delete a phone number"""
-    phone = db.query(PhoneNumber).filter(PhoneNumber.id == phone_id).first()
-    
-    if not phone:
-        raise HTTPException(status_code=404, detail="Phone number not found")
-    
-    phone.is_active = False
-    db.commit()
-    
-    return {"success": True, "message": "Phone number deleted"}
+## ENDING CALLS:
+- If they want to end ("bye", "that's all", "talk later"), output: [TOOL:end_call]
 
+## Previous Conversation:
+{history_text if history_text else "This is the start of the call."}
 
-# ================================
-# KNOWLEDGE BASE PER AGENT API
-# ================================
+## Knowledge Base:
+{context_text if context_text else "No specific context."}
 
-@app.post("/v1/convai/agents/{agent_id}/knowledge-base", tags=["Knowledge Base"])
-async def add_knowledge(
-    agent_id: str,
-    content: str,
-    metadata: Optional[Dict] = None,
-    db: Session = Depends(get_db),
-    api_key: str = Depends(verify_api_key)
-):
-    """Add knowledge to agent's knowledge base"""
-    # Verify agent exists
-    agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
-    if not agent:
-        raise HTTPException(status_code=404, detail="Agent not found")
-    
-    doc_id = f"doc_{uuid.uuid4().hex[:16]}"
-    
-    # Add to database
-    kb = KnowledgeBase(
-        agent_id=agent_id,
-        document_id=doc_id,
-        content=content,
-        kb_metadata=metadata
-    )
-    db.add(kb)
-    db.commit()
-    
-    # Add to ChromaDB with agent prefix
-    chunks = _chunk_text(content, CHUNK_SIZE, overlap=50)
-    
-    with torch.no_grad():
-        embeddings = embedder.encode(
-            chunks, 
-            device=DEVICE, 
-            convert_to_numpy=True,
-            normalize_embeddings=True
-        ).tolist()
-    
-    # Use agent-specific collection
-    agent_collection = chroma_client.get_or_create_collection(f"agent_{agent_id}")
-    
-    agent_collection.add(
-        documents=chunks,
-        embeddings=embeddings,
-        ids=[f"{doc_id}_{i}" for i in range(len(chunks))],
-        metadatas=[{"agent_id": agent_id, "doc_id": doc_id} for _ in chunks]
-    )
-    
-    _logger.info(f"✅ Added knowledge to agent {agent_id}: {len(chunks)} chunks")
-    
-    return {
-        "document_id": doc_id,
-        "agent_id": agent_id,
-        "chunks_created": len(chunks)
-    }
+## What they just said:
+{question}
 
+Respond naturally and briefly:"""
 
-@app.get("/v1/convai/agents/{agent_id}/knowledge-base", tags=["Knowledge Base"])
-async def list_agent_knowledge(
-    agent_id: str,
-    db: Session = Depends(get_db)
-):
-    """List knowledge base documents for an agent"""
-    # Verify agent exists
-    agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
-    if not agent:
-        raise HTTPException(status_code=404, detail="Agent not found")
-    
-    documents = db.query(KnowledgeBase).filter(
-        KnowledgeBase.agent_id == agent_id
-    ).all()
-    
-    return {
-        "agent_id": agent_id,
-        "documents": [
-            {
-                "document_id": doc.document_id,
-                "content_preview": doc.content[:200] + "..." if len(doc.content) > 200 else doc.content,
-                "metadata": doc.kb_metadata,
-                "created_at": doc.created_at.isoformat()
-            }
-            for doc in documents
-        ],
-        "total": len(documents)
-    }
+    queue: asyncio.Queue = asyncio.Queue(maxsize=500)
+    full_response = ""
 
+    def _safe_put(item):
+        try:
+            queue.put_nowait(item)
+        except asyncio.QueueFull:
+            if queue.qsize() > 400:
+                try:
+                    queue.get_nowait()
+                    queue.put_nowait(item)
+                except:
+                    pass
 
-@app.delete("/v1/convai/agents/{agent_id}/knowledge-base/{document_id}", tags=["Knowledge Base"])
-async def delete_agent_knowledge(
-    agent_id: str,
-    document_id: str,
-    db: Session = Depends(get_db),
-    api_key: str = Depends(verify_api_key)
-):
-    """Delete a knowledge base document"""
-    doc = db.query(KnowledgeBase).filter(
-        KnowledgeBase.agent_id == agent_id,
-        KnowledgeBase.document_id == document_id
-    ).first()
-    
-    if not doc:
-        raise HTTPException(status_code=404, detail="Document not found")
-    
-    # Remove from database
-    db.delete(doc)
-    db.commit()
-    
-    # Remove from ChromaDB
-    try:
-        agent_collection = chroma_client.get_or_create_collection(f"agent_{agent_id}")
-        # Get all IDs that start with this document_id
-        results = agent_collection.get(where={"doc_id": document_id})
-        if results and results.get("ids"):
-            agent_collection.delete(ids=results["ids"])
-    except Exception as e:
-        _logger.warning(f"⚠️ Could not delete from ChromaDB: {e}")
-    
-    return {"success": True, "message": "Document deleted"}
-
-
-# ================================
-# CUSTOM TOOLS PER AGENT API
-# ================================
-
-@app.post("/v1/convai/agents/{agent_id}/tools", tags=["Tools"])
-async def add_agent_tool(
-    agent_id: str,
-    tool_data: ToolCreate,
-    db: Session = Depends(get_db),
-    api_key: str = Depends(verify_api_key)
-):
-    """
-    Add custom tool to agent
-    
-    Example request body:
-    ```json
-    {
-        "tool_name": "weather",
-        "description": "Get weather information for a location",
-        "webhook_url": "https://your-api.com/weather",
-        "parameters": {
-            "location": {
-                "type": "string",
-                "required": true,
-                "description": "City name"
-            }
-        }
-    }
-    ```
-    """
-    # Verify agent exists
-    agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
-    if not agent:
-        raise HTTPException(status_code=404, detail="Agent not found")
-    
-    tool = AgentTool(
-        agent_id=agent_id,
-        tool_name=tool_data.tool_name,
-        description=tool_data.description,
-        webhook_url=tool_data.webhook_url,
-        parameters=tool_data.parameters or {}
-    )
-    db.add(tool)
-    db.commit()
-    db.refresh(tool)
-    
-    _logger.info(f"✅ Added tool '{tool_data.tool_name}' to agent {agent_id}")
-    
-    return {
-        "success": True,
-        "tool_id": tool.id,
-        "tool_name": tool_data.tool_name,
-        "agent_id": agent_id,
-        "webhook_url": tool_data.webhook_url
-    }
-
-
-@app.get("/v1/convai/agents/{agent_id}/tools", tags=["Tools"])
-async def list_agent_tools(
-    agent_id: str,
-    db: Session = Depends(get_db)
-):
-    """List custom tools for an agent"""
-    tools = db.query(AgentTool).filter(
-        AgentTool.agent_id == agent_id,
-        AgentTool.is_active == True
-    ).all()
-    
-    return {
-        "agent_id": agent_id,
-        "tools": [
-            {
-                "id": t.id,
-                "tool_name": t.tool_name,
-                "description": t.description,
-                "webhook_url": t.webhook_url,
-                "parameters": t.parameters,
-                "created_at": t.created_at.isoformat()
-            }
-            for t in tools
-        ]
-    }
-
-
-@app.delete("/v1/convai/agents/{agent_id}/tools/{tool_id}", tags=["Tools"])
-async def delete_agent_tool(
-    agent_id: str,
-    tool_id: int,
-    db: Session = Depends(get_db),
-    api_key: str = Depends(verify_api_key)
-):
-    """Delete a custom tool"""
-    tool = db.query(AgentTool).filter(
-        AgentTool.id == tool_id,
-        AgentTool.agent_id == agent_id
-    ).first()
-    
-    if not tool:
-        raise HTTPException(status_code=404, detail="Tool not found")
-    
-    tool.is_active = False
-    db.commit()
-    
-    return {"success": True, "message": "Tool deleted"}
-
-
-# ================================
-# CALL RECORDING API
-# ================================
-
-@app.post("/recording-callback", tags=["Recording"])
-async def recording_callback(request: Request):
-    """Handle recording completion from Twilio"""
-    form = await request.form()
-    call_sid = form.get("CallSid")
-    recording_url = form.get("RecordingUrl")
-    recording_sid = form.get("RecordingSid")
-    recording_duration = form.get("RecordingDuration")
-    
-    _logger.info(f"🎙️ Recording completed: {call_sid} - {recording_url}")
-    
-    db = SessionLocal()
-    try:
-        conversation = db.query(Conversation).filter(
-            Conversation.conversation_id == call_sid
-        ).first()
-        
-        if conversation:
-            conversation.recording_url = recording_url
-            # Store additional recording metadata
-            if conversation.call_metadata:
-                conversation.call_metadata["recording_sid"] = recording_sid
-                conversation.call_metadata["recording_duration"] = recording_duration
-            else:
-                conversation.call_metadata = {
-                    "recording_sid": recording_sid,
-                    "recording_duration": recording_duration
+    def _producer():
+        nonlocal full_response
+        try:
+            for chunk in ollama.generate(
+                model=model_to_use,
+                prompt=prompt,
+                stream=True,
+                options={
+                    "temperature": 0.2,
+                    "num_predict": 1200,
+                    "top_k": 40,
+                    "top_p": 0.9,
+                    "num_ctx": 1024,
+                    "num_thread": 8,
+                    "repeat_penalty": 1.2,
+                    "repeat_last_n": 128,
+                    "num_gpu": 99,
+                    "stop": ["\nUser:", "\nAssistant:", "User:"],
                 }
-            db.commit()
-            _logger.info(f"✅ Recording URL saved for {call_sid}")
+            ):
+                token = chunk.get("response")
+                if token:
+                    full_response += token
+                    loop.call_soon_threadsafe(_safe_put, token)
+            loop.call_soon_threadsafe(_safe_put, None)
+        except Exception as e:
+            loop.call_soon_threadsafe(_safe_put, {"__error__": str(e)})
+
+    loop.run_in_executor(None, _producer)
+
+    try:
+        while True:
+            item = await queue.get()
+            if item is None:
+                break
+            if isinstance(item, dict) and "__error__" in item:
+                yield "I'm having trouble responding right now. Could you repeat that?"
+                return
+            yield item
+
     except Exception as e:
-        _logger.error(f"❌ Failed to save recording URL: {e}")
+        yield "I'm having trouble answering right now. Could you repeat that?"
+
+
+# ----------------------------
+# Call Processing Pipeline
+# ----------------------------
+async def process_streaming_transcript(call_sid: str):
+    """✅ FIXED: Waits for COMPLETE final transcript + proper silence"""
+    from agents import parse_llm_response, execute_detected_tool
+    from call_handlers import manager
+    
+    conn = manager.get(call_sid)
+    if not conn or conn.is_responding:
+        return
+
+    if conn.interrupt_requested:
+        logger.debug("⏸️ Skipping - interrupt active")
+        return
+
+    now = time.time()
+
+    if conn.user_speech_detected and conn.vad_triggered_time:
+        vad_duration = now - conn.vad_triggered_time
+        if vad_duration > conn.vad_timeout:
+            logger.warning(f"⚠️ Clearing stuck VAD (duration: {vad_duration:.1f}s)")
+            conn.user_speech_detected = False
+            conn.speech_start_time = None
+            conn.vad_triggered_time = None
+            conn.vad_validated = False
+
+    if conn.last_interim_time and (now - conn.last_interim_time) < 0.5:
+        logger.debug("👂 User still adding to sentence (recent interim) - waiting...")
+        return
+
+    if conn.user_speech_detected:
+        logger.debug("👂 User still speaking (VAD active) - waiting...")
+        return
+
+    if not conn.stt_is_final:
+        logger.debug("⏳ Waiting for FINAL result...")
+        return
+
+    if not conn.stt_transcript_buffer or len(conn.stt_transcript_buffer.strip()) < 3:
+        logger.debug("⏳ Buffer empty or too short")
+        return
+
+    if not conn.last_speech_time:
+        logger.debug("⏳ No speech time recorded")
+        return
+
+    silence_elapsed = now - conn.last_speech_time
+    if silence_elapsed < SILENCE_THRESHOLD_SEC:
+        logger.debug(f"⏳ Waiting for silence: {silence_elapsed:.2f}s / {SILENCE_THRESHOLD_SEC:.1f}s")
+        return
+
+    conn.is_responding = True
+    await asyncio.sleep(0.05)
+
+    final_silence = time.time() - conn.last_speech_time
+    if final_silence < SILENCE_THRESHOLD_SEC:
+        logger.debug("⏳ New speech detected during threshold check - resetting")
+        return
+
+    if conn.last_interim_time and (time.time() - conn.last_interim_time) < 0.3:
+        logger.debug("⏳ New interim detected - waiting for completion")
+        return
+
+    logger.info(f"✅ {SILENCE_THRESHOLD_SEC:.1f}s silence threshold met ({final_silence:.2f}s)")
+
+    try:
+        text = conn.stt_transcript_buffer.strip()
+        intent = detect_intent(text)
+        conn.last_intent = intent
+        logger.info(f"🎯 Detected intent: {intent} | text='{text}'")
+
+        if intent == "CONFIRMATION":
+            conn.stt_transcript_buffer = ""
+            conn.stt_is_final = False
+            conn.last_interim_text = ""
+            conn.conversation_history.append({
+                "user": text,
+                "assistant": "Okay, got it.",
+                "timestamp": time.time()
+            })
+            await speak_text_streaming(call_sid, "Okay, got it.")
+            conn.is_responding = False
+            return
+
+        if intent == "HESITATION":
+            conn.stt_transcript_buffer = ""
+            conn.stt_is_final = False
+            conn.last_interim_text = ""
+            conn.conversation_history.append({
+                "user": text,
+                "assistant": "No worries, take your time.",
+                "timestamp": time.time()
+            })
+            await speak_text_streaming(call_sid, "No worries, take your time.")
+            conn.is_responding = False
+            return
+
+        if intent == "GOODBYE":
+            conn.stt_transcript_buffer = ""
+            conn.stt_is_final = False
+            conn.last_interim_text = ""
+            conn.conversation_history.append({
+                "user": text,
+                "assistant": "Thanks for your time. Have a great day.",
+                "timestamp": time.time()
+            })
+            await speak_text_streaming(call_sid, "Thanks for your time. Have a great day.")
+            from agents import end_call_tool
+            await end_call_tool(call_sid, "user_goodbye")
+            return
+
+        if conn.call_phase == "CALL_START":
+            conn.call_phase = "DISCOVERY"
+        elif conn.call_phase == "DISCOVERY":
+            if len(conn.conversation_history) >= 2:
+                conn.call_phase = "ACTIVE"
+        elif conn.call_phase == "ACTIVE":
+            if any(w in text.lower() for w in ["bye", "thank", "that's all", "no more"]):
+                conn.call_phase = "CLOSING"
+
+        if conn.interrupt_requested:
+            logger.debug("⏸️ Interrupt detected - aborting")
+            conn.stt_transcript_buffer = ""
+            conn.stt_is_final = False
+            conn.last_interim_text = ""
+            return
+
+        if conn.pending_action:
+            logger.info(f"Pending action detected. Checking user response: '{text}'")
+            confirmation = detect_confirmation_response(text)
+
+            if confirmation == "yes":
+                logger.info(f"User confirmed action: {conn.pending_action.get('tool')}")
+                result = await execute_detected_tool(call_sid, conn.pending_action)
+                logger.info(f"Confirmed tool execution result: {result}")
+                conn.pending_action = None
+                conn.stt_transcript_buffer = ""
+                conn.stt_is_final = False
+                conn.last_interim_text = ""
+                return
+            elif confirmation == "no":
+                await speak_text_streaming(call_sid, "Understood, I've cancelled that request. How else can I help you?")
+                conn.pending_action = None
+                conn.stt_transcript_buffer = ""
+                conn.stt_is_final = False
+                conn.last_interim_text = ""
+                return
+            else:
+                word_count = len(text.split())
+                if word_count > 5:
+                    logger.info(f"✅ User changed topic ({word_count} words) - clearing pending action")
+                    conn.pending_action = None
+                else:
+                    await speak_text_streaming(call_sid, "Could you please confirm yes or no?")
+                    conn.stt_transcript_buffer = ""
+                    conn.stt_is_final = False
+                    conn.last_interim_text = ""
+                    return
+
+        conn.stt_transcript_buffer = ""
+        conn.stt_is_final = False
+        conn.last_interim_text = ""
+
+        if not text or len(text) < 3:
+            logger.warning(f"⚠️ Text too short or empty: '{text}' - skipping")
+            conn.is_responding = False
+            return
+
+        logger.info(f"📝 USER INPUT: '{text}'")
+        print(f"INPUT: {text}")
+
+        t_start = time.time()
+        response_buffer = ""
+        sentence_buffer = ""
+        sentence_count = 0
+        MAX_SENTENCES = 10
+
+        async for token in query_rag_streaming(text, conn.conversation_history, call_sid=call_sid):
+            if conn.interrupt_requested:
+                logger.info("⏸️ Generation interrupted")
+                break
+
+            token = re.sub(r'\[(?:TOOL|CONFIRM_TOOL):[^\]]+\]', '', token)
+            response_buffer += token
+            sentence_buffer += token
+
+            if sentence_buffer.rstrip().endswith(('.', '?', '!')):
+                sentence = sentence_buffer.strip()
+                if sentence:
+                    clean_sentence = clean_markdown_for_tts(sentence)
+                    sentence_count += 1
+                    logger.info(f"🎯 Sentence {sentence_count}: '{clean_sentence}'")
+
+                    try:
+                        await asyncio.wait_for(conn.tts_queue.put(clean_sentence), timeout=2.0)
+                    except asyncio.TimeoutError:
+                        if conn.interrupt_requested:
+                            break
+                    except Exception as e:
+                        if conn.interrupt_requested:
+                            break
+
+                sentence_buffer = ""
+                if sentence_count >= MAX_SENTENCES:
+                    break
+
+        if not conn.interrupt_requested and sentence_buffer.strip():
+            final_sentence = sentence_buffer.strip()
+            if final_sentence and not re.match(r'^\s*\[\w+:[^\]]*\]\s*$', final_sentence):
+                clean_final = clean_markdown_for_tts(final_sentence)
+                logger.info(f"🎯 Final: '{clean_final}'")
+                try:
+                    await asyncio.wait_for(conn.tts_queue.put(clean_final), timeout=2.0)
+                except asyncio.TimeoutError:
+                    logger.warning("TTS queue full, dropping final sentence")
+                except Exception as e:
+                    logger.error(f"Error queuing final sentence: {e}")
+
+        cleaned_response, tool_data = parse_llm_response(response_buffer)
+        
+        if not conn.interrupt_requested and response_buffer.strip():
+            conn.conversation_history.append({
+                "user": text,
+                "assistant": cleaned_response,
+                "timestamp": time.time()
+            })
+            logger.info(f"✅ Added to conversation_history BEFORE TTS: user='{text[:50]}...', assistant='{cleaned_response[:50]}...'")
+            logger.info(f"   Total history entries: {len(conn.conversation_history)}")
+
+            if len(conn.conversation_history) > 10:
+                conn.conversation_history = conn.conversation_history[-10:]
+
+        if tool_data:
+            logger.info(f"🔧 Tool detected: {tool_data.get('tool')} - requires_confirmation: {tool_data.get('requires_confirmation')}")
+
+            if tool_data.get("requires_confirmation"):
+                conn.pending_action = tool_data
+                logger.info(f"⏳ Awaiting user confirmation for: {tool_data.get('tool')}")
+            else:
+                logger.info("⚡ Executing tool immediately...")
+                tool_result = await execute_detected_tool(call_sid, tool_data)
+                logger.info(f"🔧 Tool result: {tool_result}")
+                
+                tool_context = f"""You just executed the tool '{tool_data['tool']}' with result:
+
+Tool Result:
+{tool_result.get('response', tool_result.get('data', tool_result))}
+
+Generate a brief, natural response (1-2 sentences) to inform the user about this result. Be conversational."""
+                
+                logger.info("🤖 Asking AI to generate natural response from tool result...")
+                ai_tool_response = ""
+                tool_sentence_buffer = ""
+                tool_sentence_count = 0
+                
+                async for token in query_rag_streaming(tool_context, conn.conversation_history, call_sid=call_sid):
+                    if conn.interrupt_requested:
+                        break
+                    
+                    ai_tool_response += token
+                    tool_sentence_buffer += token
+                    
+                    if tool_sentence_buffer.rstrip().endswith(('.', '?', '!')):
+                        sentence = tool_sentence_buffer.strip()
+                        if sentence:
+                            clean_sentence = clean_markdown_for_tts(sentence)
+                            tool_sentence_count += 1
+                            logger.info(f"🎵 Tool response sentence {tool_sentence_count}: '{clean_sentence}'")
+                            
+                            try:
+                                await asyncio.wait_for(conn.tts_queue.put(clean_sentence), timeout=2.0)
+                            except asyncio.TimeoutError:
+                                if conn.interrupt_requested:
+                                    break
+                        
+                        tool_sentence_buffer = ""
+                        if tool_sentence_count >= 3:
+                            break
+                
+                if not conn.interrupt_requested and tool_sentence_buffer.strip():
+                    final_sentence = tool_sentence_buffer.strip()
+                    if final_sentence:
+                        clean_final = clean_markdown_for_tts(final_sentence)
+                        try:
+                            await asyncio.wait_for(conn.tts_queue.put(clean_final), timeout=2.0)
+                        except:
+                            pass
+                
+                if conn.conversation_history:
+                    conn.conversation_history[-1]["tool_executed"] = tool_data['tool']
+                    conn.conversation_history[-1]["tool_result"] = tool_result
+                    conn.conversation_history[-1]["ai_response"] = ai_tool_response
+                    logger.info(f"✅ Updated history with tool execution: {tool_data['tool']}")
+
+        logger.info("⏳ Waiting for TTS...")
+        max_wait = 30.0
+        wait_start = time.time()
+        while not conn.tts_queue.empty() and (time.time() - wait_start) < max_wait:
+            await asyncio.sleep(0.1)
+        logger.info("✅ TTS completed")
+
+        t_end = time.time()
+        logger.info(f"✅ TOTAL PROCESSING TIME: {(t_end - t_start) * 1000:.1f}ms")
+
+    except Exception as e:
+        logger.error(f"❌ ERROR in process_streaming_transcript: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        
+        if 'text' in locals() and 'response_buffer' in locals() and response_buffer:
+            try:
+                conn.conversation_history.append({
+                    "user": text,
+                    "assistant": f"[Error: {str(e)[:100]}] {response_buffer[:200]}",
+                    "timestamp": time.time()
+                })
+                logger.info(f"✅ Saved partial response to history despite error")
+            except:
+                pass
     finally:
-        db.close()
-    
-    return PlainTextResponse("OK")
+        conn.is_responding = False
+        if conn.interrupt_requested:
+            conn.interrupt_requested = False
 
 
-@app.get("/v1/convai/conversations/{conversation_id}/recording", tags=["Recording"])
-async def get_recording(
-    conversation_id: str,
-    db: Session = Depends(get_db)
-):
-    """Get recording URL for a conversation"""
-    conversation = db.query(Conversation).filter(
-        Conversation.conversation_id == conversation_id
-    ).first()
-    
-    if not conversation:
-        raise HTTPException(status_code=404, detail="Conversation not found")
-    
-    if not conversation.recording_url:
-        raise HTTPException(status_code=404, detail="No recording available")
-    
-    return {
-        "conversation_id": conversation_id,
-        "recording_url": conversation.recording_url,
-        "recording_metadata": conversation.call_metadata
-    }
-
-
-# ================================
-# SIGNED URL FOR WIDGETS (JWT)
-# ================================
-
-@app.get("/v1/convai/conversation/get-signed-url", tags=["Widgets"])
-async def get_signed_url(
-    agent_id: str,
-    db: Session = Depends(get_db)
-):
-    """Generate signed URL for embedding widget"""
-    import jwt
-    from datetime import timedelta
-    
-    # Verify agent exists
-    agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
-    if not agent:
-        raise HTTPException(status_code=404, detail="Agent not found")
-    
-    payload = {
-        "agent_id": agent_id,
-        "exp": dt.utcnow() + timedelta(hours=24),
-        "iat": dt.utcnow()
-    }
-    
-    token = jwt.encode(payload, JWT_SECRET, algorithm="HS256")
-    
-    return {
-        "signed_url": f"{PUBLIC_URL}/widget?token={token}",
-        "expires_in": 86400,  # 24 hours in seconds
-        "agent_id": agent_id
-    }
-
-
-@app.get("/widget", tags=["Widgets"])
-async def widget_page(
-    token: str,
-    db: Session = Depends(get_db)
-):
-    """Widget endpoint that validates JWT token"""
-    import jwt
-    
-    try:
-        payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-        agent_id = payload.get("agent_id")
-        
-        # Verify agent exists
-        agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
-        if not agent:
-            raise HTTPException(status_code=404, detail="Agent not found")
-        
-        return {
-            "valid": True,
-            "agent_id": agent_id,
-            "agent_name": agent.name,
-            "message": "Widget authentication successful"
-        }
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-
-@app.post("/test-end-call")
-async def test_end_call(request: Request):
-    """Test end call tool"""
-    try:
-        data = await request.json()
-        call_sid = data.get("call_sid", "test_call_123")
-        reason = data.get("reason", "test")
-
-        result = await end_call_tool(call_sid, reason)
-        return result
-    except Exception as e:
-        return {"success": False, "error": str(e)}
-
-
-@app.post("/test-transfer")
-async def test_transfer(request: Request):
-    """Test transfer tool"""
-    try:
-        data = await request.json()
-        call_sid = data.get("call_sid", "test_call_123")
-        department = data.get("department", "sales")
-
-        result = await transfer_call_tool(call_sid, department)
-        return result
-    except Exception as e:
-        return {"success": False, "error": str(e)}
-
-
-@app.get("/tools/status")
-async def tools_status():
-    """Check tool configuration"""
-    return {
-        "tools_available": ["end_call", "transfer_call"],
-        "departments": {
-            "sales": os.getenv("SALES_PHONE_NUMBER", "NOT_SET"),
-            "support": os.getenv("SUPPORT_PHONE_NUMBER", "NOT_SET"),
-            "technical": os.getenv("TECH_PHONE_NUMBER", "NOT_SET"),
-        },
-        "confirmation_system": "enabled",
-        "transfer_requires_confirmation": True,
-        "end_call_requires_confirmation": False,
-        "silence_threshold_sec": SILENCE_THRESHOLD_SEC,
-        "utterance_end_ms": UTTERANCE_END_MS
-
-
-    }
-
-
+# ----------------------------
+# WebSocket Endpoint
+# ----------------------------
 @app.websocket("/media-stream")
 async def media_ws(websocket: WebSocket):
     try:
@@ -1857,456 +3921,7 @@ async def media_ws(websocket: WebSocket):
                 break
 
     heartbeat_task = asyncio.create_task(send_heartbeat())
-
     current_call_sid: Optional[str] = None
-
-    processing_task: Optional[asyncio.Task] = None
-
-    
-    try:
-        while True:
-            try:
-                data = await websocket.receive_json()
-            except RuntimeError as e:
-                break
-            except Exception as e:
-                break
-
-            event = data.get("event")
-
-            if event == "start":
-                start_info = data.get("start", {})
-                current_call_sid = start_info.get("callSid")
-                stream_sid = start_info.get("streamSid")
-
-                if not current_call_sid:
-                    break
-
-                await manager.connect(current_call_sid, websocket)
-                conn = manager.get(current_call_sid)
-                if conn:
-                    conn.stream_sid = stream_sid
-                    conn.stream_ready = True
-                    conn.conversation_id = current_call_sid
-
-                    # ✨ Load agent configuration and call data
-                    call_data = pending_call_data.get(current_call_sid, {})
-                    agent_id = call_data.get("agent_id")
-                    call_direction = call_data.get("direction", "outbound")
-                    
-                    _logger.info(f"🔍 WebSocket Debug - call_sid: {current_call_sid}")
-                    _logger.info(f"🔍 Pending call data found: {bool(call_data)}")
-                    _logger.info(f"🔍 Agent ID: {agent_id}")
-                    _logger.info(f"🔍 Direction: {call_direction}")
-                    _logger.info(f"🔍 Custom voice_id: {call_data.get('custom_voice_id')}")
-                    _logger.info(f"🔍 Custom model: {call_data.get('custom_model')}")
-                    
-                    # ✨ ALWAYS load dynamic variables (like ElevenLabs)
-                    conn.dynamic_variables = call_data.get("dynamic_variables", {})
-                    conn.custom_voice_id = call_data.get("custom_voice_id")
-                    conn.custom_model = call_data.get("custom_model")
-                    conn.custom_first_message = call_data.get("custom_first_message")
-                    
-                    # ✨ Log all overrides for debugging
-                    _logger.info(f"🔧 Overrides loaded:")
-                    _logger.info(f"   - custom_voice_id: {conn.custom_voice_id or 'None (will use agent/default)'}")
-                    _logger.info(f"   - custom_model: {conn.custom_model or 'None (will use agent/default)'}")
-                    _logger.info(f"   - custom_first_message: {'Yes (' + conn.custom_first_message[:30] + '...)' if conn.custom_first_message else 'None (will use agent/default)'}")
-                    
-                    db = SessionLocal()
-                    try:
-                        # Load agent if specified
-                        if agent_id:
-                            agent = db.query(Agent).filter(
-                                Agent.agent_id == agent_id
-                            ).first()
-                            
-                            if agent:
-                                conn.agent_id = agent_id
-                                conn.agent_config = {
-                                    "system_prompt": agent.system_prompt,
-                                    "first_message": agent.first_message,
-                                    "voice_id": agent.voice_id,
-                                    "model_name": agent.model_name,
-                                    "silence_threshold_sec": agent.silence_threshold_sec
-                                }
-                                
-                                _logger.info(f"✅ Loaded agent: {agent_id} ({agent.name})")
-                                _logger.info(f"📊 Dynamic variables: {len(conn.dynamic_variables)} fields")
-
-                                if call_data.get("custom_first_message"):
-                                    conn.agent_config["first_message"] = call_data["custom_first_message"]
-                                    _logger.info(f"💬 Using custom first message: {call_data['custom_first_message'][:50]}...")
-                            else:
-                                _logger.warning(f"⚠️ Agent not found: {agent_id}")
-                        else:
-                            _logger.info("ℹ️ No agent specified, using default behavior")
-                        
-                        # ✨ ALWAYS update conversation status to "in-progress" (like ElevenLabs)
-                        conversation = db.query(Conversation).filter(
-                            Conversation.conversation_id == current_call_sid
-                        ).first()
-                        
-                        if conversation:
-                            conversation.status = "in-progress"
-                            conversation.started_at = dt.utcnow()
-                            db.commit()
-                            _logger.info(f"✅ Conversation status updated to 'in-progress': {current_call_sid}")
-                        else:
-                            # Create conversation record if it doesn't exist (fallback)
-                            _logger.warning(f"⚠️ Conversation not found, creating new record: {current_call_sid}")
-                            # ✅ For inbound: use from_number (caller), for outbound: use to_number (recipient)
-                            phone_for_record = call_data.get("from_number") if call_direction == "inbound" else call_data.get("to_number")
-                            new_conversation = Conversation(
-                                conversation_id=current_call_sid,
-                                agent_id=agent_id,
-                                phone_number=phone_for_record,
-                                status="in-progress",
-                                started_at=dt.utcnow(),
-                                dynamic_variables=conn.dynamic_variables,
-                                call_metadata={"direction": call_direction}
-                            )
-                            db.add(new_conversation)
-                            db.commit()
-                        
-                        # ✨ ALWAYS send "call.started" webhook (like ElevenLabs)
-                        webhooks = db.query(WebhookConfig).filter(
-                            WebhookConfig.is_active == True
-                        ).all()
-                        
-                        for webhook in webhooks:
-                            should_send = False
-                            if webhook.agent_id is None:
-                                should_send = True  # Global webhook
-                            elif agent_id and webhook.agent_id == agent_id:
-                                should_send = True  # Agent-specific webhook
-                            
-                            if should_send and ("call.started" in webhook.events or not webhook.events):
-                                # ✅ For inbound: send caller's number (from_number in call_data)
-                                # ✅ For outbound: send recipient's number (to_number in call_data)
-                                caller_phone = call_data.get("from_number") if call_direction == "inbound" else call_data.get("to_number")
-                                
-                                # ✅ For INBOUND calls: Wait for webhook response to get dynamic variables
-                                if call_direction == "inbound":
-                                    _logger.info(f"🔄 Sending call.started webhook to {webhook.webhook_url} and waiting for response...")
-                                    webhook_response = await send_webhook_and_get_response(
-                                        webhook.webhook_url,
-                                        "call.started",
-                                        {
-                                            "conversation_id": current_call_sid,
-                                            "agent_id": agent_id,
-                                            "direction": call_direction,
-                                            "status": "in-progress",
-                                            "phone_number": caller_phone
-                                        }
-                                    )
-                                    
-                                    _logger.info(f"📥 Webhook response received: {webhook_response is not None}, has dynamic_variables: {webhook_response and 'dynamic_variables' in webhook_response if webhook_response else False}")
-                                    
-                                    # Apply dynamic variables from webhook response
-                                    if webhook_response and "dynamic_variables" in webhook_response:
-                                        response_vars = webhook_response["dynamic_variables"]
-                                        _logger.info(f"📥 Applying {len(response_vars)} dynamic variables from webhook response")
-                                        
-                                        # Merge with existing dynamic variables
-                                        if conn.dynamic_variables:
-                                            conn.dynamic_variables.update(response_vars)
-                                        else:
-                                            conn.dynamic_variables = response_vars
-                                        
-                                        # Apply first_message if provided
-                                        if "first_message" in response_vars:
-                                            if conn.agent_config:
-                                                conn.agent_config["first_message"] = response_vars["first_message"]
-                                                _logger.info(f"✅ Applied first_message from webhook: '{response_vars['first_message'][:50]}...'")
-                                            else:
-                                                _logger.warning("⚠️ Cannot apply first_message - agent_config not loaded yet")
-                                else:
-                                    # For OUTBOUND calls: Fire-and-forget webhook
-                                    asyncio.create_task(send_webhook(
-                                        webhook.webhook_url,
-                                        "call.started",
-                                        {
-                                            "conversation_id": current_call_sid,
-                                            "agent_id": agent_id,
-                                            "direction": call_direction,
-                                            "status": "in-progress",
-                                            "phone_number": caller_phone
-                                        }
-                                    ))
-                    finally:
-                        db.close()
-
-                    # âœ… CRITICAL: Initialize resampler ONCE per connection
-                    dummy_state = None
-                    try:
-                        _, dummy_state = audioop.ratecv(
-                            b'\x00' * 3200, 2, 1, 16000, 8000, dummy_state
-                        )
-                        conn.resampler_state = dummy_state
-                        conn.resampler_initialized = True
-                        _logger.info("ðŸŽµ Resampler pre-initialized for this connection")
-                    except Exception as e:
-                        _logger.warning("Failed to pre-init resampler: %s", e)
-                    _logger.info("✅ Connection setup complete for call_sid: %s", current_call_sid)
-                    await setup_streaming_stt(current_call_sid)
-                    _logger.info("✅ Streaming STT setup complete for call_sid: %s", current_call_sid)
-                    conn.tts_task = asyncio.create_task(
-                        stream_tts_worker(current_call_sid))
-                _logger.info("✅ WebSocket connection started for call_sid: %s", current_call_sid)
-                await asyncio.sleep(0.1)
-                greeting = None
-
-                # ✨ Use agent's first_message or default greeting
-                if conn and conn.agent_config and conn.agent_config.get("first_message"):
-                    # Replace {{variable}} placeholders in first_message
-                    greeting = conn.agent_config["first_message"]
-                    if conn.dynamic_variables:
-                        for key, value in conn.dynamic_variables.items():
-                            greeting = greeting.replace(f"{{{{{key}}}}}", str(value))
-                else:
-                    greeting = "hello there! this is default greeting from AI assistant. How can I help you today?"
-                if conn and conn.dynamic_variables and greeting:
-                    for key, value in conn.dynamic_variables.items():
-                        greeting = greeting.replace(f"{{{{{key}}}}}", str(value))
-                
-                # 🔍 DEBUG: Verify overrides are still set before greeting
-                _logger.info(f"🎯 BEFORE GREETING - conn.custom_voice_id: '{conn.custom_voice_id}'")
-                _logger.info(f"🎯 BEFORE GREETING - conn.agent_config voice: '{conn.agent_config.get('voice_id') if conn.agent_config else None}'")
-                
-                await speak_text_streaming(current_call_sid, greeting)
-                
-                # ✨ CAPTURE GREETING IN TRANSCRIPT (like ElevenLabs)
-                # This ensures we have a transcript even if user hangs up immediately
-                if conn and greeting:
-                    conn.conversation_history.append({
-                        "user": "[Call Started]",
-                        "assistant": greeting,
-                        "timestamp": time.time()
-                    })
-                    _logger.info(f"✅ Greeting captured in conversation history")
-
-            elif event == "media":
-                if not current_call_sid:
-                    continue
-                _logger.debug(f"🎧 Media received for call_sid: {current_call_sid}")
-                media_data = data.get("media", {})
-                payload_b64 = media_data.get("payload")
-                _logger.debug(f"🔍 Payload size: {len(payload_b64) if payload_b64 else 0} bytes")
-                if payload_b64:
-                    try:
-                        chunk = base64.b64decode(payload_b64)
-                        conn = manager.get(current_call_sid)
-
-                        if not conn:
-                            _logger.warning("Connection not found for call_sid: %s", current_call_sid)
-                            continue
-
-                        # Send to Deepgram
-                        if conn.deepgram_live:
-                            _logger.debug("Sending audio chunk to Deepgram for call_sid: %s", current_call_sid)
-                            try:
-                                conn.deepgram_live.send(chunk)
-                                _logger.debug("Audio chunk sent to Deepgram for call_sid: %s", current_call_sid)
-                            except Exception as e:
-                                pass
-
-                        energy = calculate_audio_energy(chunk)
-                        _logger.debug("Calculated audio energy: %d for call_sid: %s", energy, current_call_sid)
-                        update_baseline(conn, energy)
-                        _logger.debug("Updated baseline energy: %d for call_sid: %s", conn.baseline_energy, current_call_sid)
-                        now = time.time()
-
-                        # Calculate energy threshold
-                        energy_threshold = max(
-                            conn.baseline_energy * INTERRUPT_BASELINE_FACTOR,
-                            INTERRUPT_MIN_ENERGY
-                        )
-                        _logger.debug("Energy threshold: %d for call_sid: %s", energy_threshold, current_call_sid)
-                        # ========================================
-                        # âœ… SMART VAD VALIDATION & TIMEOUT LOGIC
-                        # ========================================
-
-                        if conn.vad_triggered_time and conn.user_speech_detected:
-                            time_since_vad = now - conn.vad_triggered_time
-
-                            # Check if we're seeing actual speech energy
-                            if energy >= energy_threshold:
-                                # âœ… Real speech detected
-                                conn.last_valid_speech_energy = energy
-                                conn.energy_drop_time = None  # Reset drop timer
-
-                                # Validate VAD after short period
-                                if not conn.vad_validated and time_since_vad >= conn.vad_validation_threshold:
-                                    conn.vad_validated = True
-                                    _logger.info(
-                                        f"âœ… VAD validated after {time_since_vad*1000:.0f}ms (energy: {energy})")
-
-                                if not conn.speech_start_time:
-                                    conn.speech_start_time = now
-
-                            else:
-                                # Low energy - but is it silence or just a pause?
-
-                                if conn.vad_validated:
-                                    # âœ… VAD was real - this is just low energy during speech (normal)
-                                    # Track when energy dropped
-                                    if conn.energy_drop_time is None:
-                                        conn.energy_drop_time = now
-
-                                    # Only clear VAD if energy stays low for extended period
-                                    # AND we have FINAL or interim text (meaning Deepgram also thinks speech ended)
-                                    low_energy_duration = now - conn.energy_drop_time
-
-                                    if low_energy_duration >= 1.5:  # 1.5s of low energy
-                                        # Check if Deepgram also stopped detecting speech
-                                        time_since_last_text = now - conn.last_interim_time if conn.last_interim_time else 999
-
-                                        if time_since_last_text > 1.0:  # No text for 1s
-                                            _logger.info(
-                                                f"âœ… VAD cleared naturally (low energy: {low_energy_duration:.1f}s, no text: {time_since_last_text:.1f}s)")
-                                            conn.user_speech_detected = False
-                                            conn.speech_start_time = None
-                                            conn.vad_triggered_time = None
-                                            conn.vad_validated = False
-                                            conn.energy_drop_time = None
-                                else:
-                                    # âŒ VAD not validated yet - might be false positive
-                                    # Give it 1s to validate (reduced from 3s)
-                                    if time_since_vad >= 1.0:
-                                        _logger.warning(
-                                            f"âš ï¸ VAD timeout - false positive (duration: {time_since_vad:.1f}s)")
-                                        conn.user_speech_detected = False
-                                        conn.speech_start_time = None
-                                        conn.vad_triggered_time = None
-                                        conn.vad_validated = False
-                                        conn.energy_drop_time = None
-
-                        # ========================================
-                        # âœ… INTERRUPT DETECTION (unchanged logic)
-                        # ========================================
-
-                        if conn.currently_speaking and conn.user_speech_detected and not conn.interrupt_requested:
-                            # Only interrupt if VAD has been validated (real speech)
-                            if conn.vad_validated and conn.speech_start_time:
-                                user_speaking_duration = (
-                                    now - conn.speech_start_time) * 1000.0
-
-                                if user_speaking_duration < 500:
-                                    continue
-
-                                conn.speech_energy_buffer.append((now, energy))
-
-                                vad_dur_ms = (
-                                    now - conn.speech_start_time) * 1000.0
-                                buf = list(conn.speech_energy_buffer)
-
-                                window_ms = 300
-                                cutoff_time = now - (window_ms / 1000.0)
-                                recent_packets = [
-                                    (t, e) for t, e in buf if t >= cutoff_time]
-
-                                high_energy_count = sum(
-                                    1 for _, e in recent_packets if e >= energy_threshold)
-                                total_count = len(recent_packets)
-                                energy_percentage = (
-                                    high_energy_count / total_count * 100) if total_count > 0 else 0
-
-                                peak_energy = max(
-                                    (e for _, e in recent_packets), default=0)
-
-                                time_since_last_interrupt = now - conn.last_interrupt_time
-                                debounced = time_since_last_interrupt >= (
-                                    INTERRUPT_DEBOUNCE_MS / 1000.0)
-
-                                vad_ok = vad_dur_ms >= INTERRUPT_MIN_SPEECH_MS
-                                energy_ok = energy_percentage >= 60 or peak_energy >= (
-                                    conn.baseline_energy * INTERRUPT_BASELINE_FACTOR)
-                                current_energy_ok = energy >= (
-                                    energy_threshold * 0.8)
-
-                                all_checks_pass = vad_ok and energy_ok and current_energy_ok and debounced
-
-                                if all_checks_pass:
-                                    conn.interrupt_requested = True
-                                    conn.last_interrupt_time = now
-                                    _logger.info(
-                                        "ðŸ›‘ INTERRUPT! VAD: %.0fms | Energy: %.0f%% | Peak: %d | Threshold: %d",
-                                        vad_dur_ms, energy_percentage, peak_energy, energy_threshold
-                                    )
-
-                        # ========================================
-                        # âœ… PROCESS TRANSCRIPT
-                        # ========================================
-
-                        if not conn.currently_speaking and not conn.interrupt_requested:
-                            if processing_task is None or processing_task.done():
-                                processing_task = asyncio.create_task(
-                                    process_streaming_transcript(
-                                        current_call_sid)
-                                )
-
-                    except Exception as e:
-                        pass
-
-            elif event == "stop":
-                break
-
-    except WebSocketDisconnect:
-        _logger.info(f"📞 WebSocket disconnected for call: {current_call_sid}")
-    except Exception as e:
-        _logger.error(f"❌ WebSocket error: {e}")
-    finally:
-        try:
-            if processing_task and not processing_task.done():
-                processing_task.cancel()
-        except:
-            pass
-
-        try:
-            if heartbeat_task and not heartbeat_task.done():
-                heartbeat_task.cancel()
-        except:
-            pass
-
-        # ✅ CRITICAL: Save transcript BEFORE disconnecting (in case /voice/status comes later)
-        if current_call_sid:
-            conn = manager.get(current_call_sid)
-            if conn:
-                _logger.info(f"💾 Saving transcript on WebSocket disconnect for: {current_call_sid}")
-                _logger.info(f"   - conversation_history entries: {len(conn.conversation_history)}")
-                await save_conversation_transcript(current_call_sid, conn)
-            else:
-                _logger.warning(f"⚠️ No connection found on WebSocket disconnect for: {current_call_sid}")
-            
-            try:
-                await manager.disconnect(current_call_sid)
-            except:
-                pass
-
-        try:
-            await websocket.close()
-        except:
-            pass
-
-    try:
-        await websocket.accept()
-    except RuntimeError as e:
-        return
-
-    async def send_heartbeat():
-        while True:
-            try:
-                await asyncio.sleep(5)
-                if websocket.client_state.name == "CONNECTED":
-                    await websocket.send_json({"event": "heartbeat"})
-            except Exception as e:
-                break
-
-    heartbeat_task = asyncio.create_task(send_heartbeat())
-
-    current_call_sid: Optional[str] = None
-
     processing_task: Optional[asyncio.Task] = None
 
     try:
@@ -2335,37 +3950,28 @@ async def media_ws(websocket: WebSocket):
                     conn.stream_ready = True
                     conn.conversation_id = current_call_sid
 
-                    # ✨ Load agent configuration and call data
-                    call_data = pending_call_data.get(current_call_sid, {})
+                    call_data = manager.get_pending_call_data(current_call_sid) or {}
                     agent_id = call_data.get("agent_id")
                     call_direction = call_data.get("direction", "outbound")
                     
-                    _logger.info(f"🔍 WebSocket Debug - call_sid: {current_call_sid}")
-                    _logger.info(f"🔍 Pending call data found: {bool(call_data)}")
-                    _logger.info(f"🔍 Agent ID: {agent_id}")
-                    _logger.info(f"🔍 Direction: {call_direction}")
-                    _logger.info(f"🔍 Custom voice_id: {call_data.get('custom_voice_id')}")
-                    _logger.info(f"🔍 Custom model: {call_data.get('custom_model')}")
+                    logger.info(f"🔍 WebSocket Debug - call_sid: {current_call_sid}")
+                    logger.info(f"🔍 Agent ID: {agent_id}")
+                    logger.info(f"🔍 Direction: {call_direction}")
                     
-                    # ✨ ALWAYS load dynamic variables (like ElevenLabs)
                     conn.dynamic_variables = call_data.get("dynamic_variables", {})
                     conn.custom_voice_id = call_data.get("custom_voice_id")
                     conn.custom_model = call_data.get("custom_model")
                     conn.custom_first_message = call_data.get("custom_first_message")
                     
-                    # ✨ Log all overrides for debugging
-                    _logger.info(f"🔧 Overrides loaded:")
-                    _logger.info(f"   - custom_voice_id: {conn.custom_voice_id or 'None (will use agent/default)'}")
-                    _logger.info(f"   - custom_model: {conn.custom_model or 'None (will use agent/default)'}")
-                    _logger.info(f"   - custom_first_message: {'Yes (' + conn.custom_first_message[:30] + '...)' if conn.custom_first_message else 'None (will use agent/default)'}")
+                    logger.info(f"🔧 Overrides loaded:")
+                    logger.info(f"   - custom_voice_id: {conn.custom_voice_id or 'None (will use agent/default)'}")
+                    logger.info(f"   - custom_model: {conn.custom_model or 'None (will use agent/default)'}")
+                    logger.info(f"   - custom_first_message: {'Yes (' + conn.custom_first_message[:30] + '...)' if conn.custom_first_message else 'None (will use agent/default)'}")
                     
                     db = SessionLocal()
                     try:
-                        # Load agent if specified
                         if agent_id:
-                            agent = db.query(Agent).filter(
-                                Agent.agent_id == agent_id
-                            ).first()
+                            agent = db.query(Agent).filter(Agent.agent_id == agent_id).first()
                             
                             if agent:
                                 conn.agent_id = agent_id
@@ -2377,18 +3983,17 @@ async def media_ws(websocket: WebSocket):
                                     "silence_threshold_sec": agent.silence_threshold_sec
                                 }
                                 
-                                _logger.info(f"✅ Loaded agent: {agent_id} ({agent.name})")
-                                _logger.info(f"📊 Dynamic variables: {len(conn.dynamic_variables)} fields")
+                                logger.info(f"✅ Loaded agent: {agent_id} ({agent.name})")
+                                logger.info(f"📊 Dynamic variables: {len(conn.dynamic_variables)} fields")
 
                                 if call_data.get("custom_first_message"):
                                     conn.agent_config["first_message"] = call_data["custom_first_message"]
-                                    _logger.info(f"💬 Using custom first message: {call_data['custom_first_message'][:50]}...")
+                                    logger.info(f"💬 Using custom first message: {call_data['custom_first_message'][:50]}...")
                             else:
-                                _logger.warning(f"⚠️ Agent not found: {agent_id}")
+                                logger.warning(f"⚠️ Agent not found: {agent_id}")
                         else:
-                            _logger.info("ℹ️ No agent specified, using default behavior")
+                            logger.info("ℹ️ No agent specified, using default behavior")
                         
-                        # ✨ ALWAYS update conversation status to "in-progress" (like ElevenLabs)
                         conversation = db.query(Conversation).filter(
                             Conversation.conversation_id == current_call_sid
                         ).first()
@@ -2397,11 +4002,9 @@ async def media_ws(websocket: WebSocket):
                             conversation.status = "in-progress"
                             conversation.started_at = dt.utcnow()
                             db.commit()
-                            _logger.info(f"✅ Conversation status updated to 'in-progress': {current_call_sid}")
+                            logger.info(f"✅ Conversation status updated to 'in-progress': {current_call_sid}")
                         else:
-                            # Create conversation record if it doesn't exist (fallback)
-                            _logger.warning(f"⚠️ Conversation not found, creating new record: {current_call_sid}")
-                            # ✅ For inbound: use from_number (caller), for outbound: use to_number (recipient)
+                            logger.warning(f"⚠️ Conversation not found, creating new record: {current_call_sid}")
                             phone_for_record = call_data.get("from_number") if call_direction == "inbound" else call_data.get("to_number")
                             new_conversation = Conversation(
                                 conversation_id=current_call_sid,
@@ -2415,7 +4018,6 @@ async def media_ws(websocket: WebSocket):
                             db.add(new_conversation)
                             db.commit()
                         
-                        # ✨ ALWAYS send "call.started" webhook (like ElevenLabs)
                         webhooks = db.query(WebhookConfig).filter(
                             WebhookConfig.is_active == True
                         ).all()
@@ -2423,18 +4025,15 @@ async def media_ws(websocket: WebSocket):
                         for webhook in webhooks:
                             should_send = False
                             if webhook.agent_id is None:
-                                should_send = True  # Global webhook
+                                should_send = True
                             elif agent_id and webhook.agent_id == agent_id:
-                                should_send = True  # Agent-specific webhook
+                                should_send = True
                             
                             if should_send and ("call.started" in webhook.events or not webhook.events):
-                                # ✅ For inbound: send caller's number (from_number in call_data)
-                                # ✅ For outbound: send recipient's number (to_number in call_data)
                                 caller_phone = call_data.get("from_number") if call_direction == "inbound" else call_data.get("to_number")
                                 
-                                # ✅ For INBOUND calls: Wait for webhook response to get dynamic variables
                                 if call_direction == "inbound":
-                                    _logger.info(f"🔄 Sending call.started webhook to {webhook.webhook_url} and waiting for response...")
+                                    logger.info(f"🔄 Sending call.started webhook to {webhook.webhook_url} and waiting for response...")
                                     webhook_response = await send_webhook_and_get_response(
                                         webhook.webhook_url,
                                         "call.started",
@@ -2447,28 +4046,24 @@ async def media_ws(websocket: WebSocket):
                                         }
                                     )
                                     
-                                    _logger.info(f"📥 Webhook response received: {webhook_response is not None}, has dynamic_variables: {webhook_response and 'dynamic_variables' in webhook_response if webhook_response else False}")
+                                    logger.info(f"📥 Webhook response received: {webhook_response is not None}")
                                     
-                                    # Apply dynamic variables from webhook response
                                     if webhook_response and "dynamic_variables" in webhook_response:
                                         response_vars = webhook_response["dynamic_variables"]
-                                        _logger.info(f"📥 Applying {len(response_vars)} dynamic variables from webhook response")
+                                        logger.info(f"📥 Applying {len(response_vars)} dynamic variables from webhook response")
                                         
-                                        # Merge with existing dynamic variables
                                         if conn.dynamic_variables:
                                             conn.dynamic_variables.update(response_vars)
                                         else:
                                             conn.dynamic_variables = response_vars
                                         
-                                        # Apply first_message if provided
                                         if "first_message" in response_vars:
                                             if conn.agent_config:
                                                 conn.agent_config["first_message"] = response_vars["first_message"]
-                                                _logger.info(f"✅ Applied first_message from webhook: '{response_vars['first_message'][:50]}...'")
+                                                logger.info(f"✅ Applied first_message from webhook: '{response_vars['first_message'][:50]}...'")
                                             else:
-                                                _logger.warning("⚠️ Cannot apply first_message - agent_config not loaded yet")
+                                                logger.warning("⚠️ Cannot apply first_message - agent_config not loaded yet")
                                 else:
-                                    # For OUTBOUND calls: Fire-and-forget webhook
                                     asyncio.create_task(send_webhook(
                                         webhook.webhook_url,
                                         "call.started",
@@ -2483,7 +4078,6 @@ async def media_ws(websocket: WebSocket):
                     finally:
                         db.close()
 
-                    # âœ… CRITICAL: Initialize resampler ONCE per connection
                     dummy_state = None
                     try:
                         _, dummy_state = audioop.ratecv(
@@ -2491,45 +4085,40 @@ async def media_ws(websocket: WebSocket):
                         )
                         conn.resampler_state = dummy_state
                         conn.resampler_initialized = True
-                        _logger.info("ðŸŽµ Resampler pre-initialized for this connection")
+                        logger.info("🎵 Resampler pre-initialized for this connection")
                     except Exception as e:
-                        _logger.warning("Failed to pre-init resampler: %s", e)
+                        logger.warning(f"Failed to pre-init resampler: {e}")
 
                     await setup_streaming_stt(current_call_sid)
-                    conn.tts_task = asyncio.create_task(
-                        stream_tts_worker(current_call_sid))
+                    conn.tts_task = asyncio.create_task(stream_tts_worker(current_call_sid))
 
                 await asyncio.sleep(0.1)
                 greeting = None
 
-                # ✨ Use agent's first_message or default greeting
                 if conn and conn.agent_config and conn.agent_config.get("first_message"):
-                    # Replace {{variable}} placeholders in first_message
                     greeting = conn.agent_config["first_message"]
                     if conn.dynamic_variables:
                         for key, value in conn.dynamic_variables.items():
                             greeting = greeting.replace(f"{{{{{key}}}}}", str(value))
                 else:
                     greeting = "hello there! this is default greeting from AI assistant. How can I help you today?"
+                
                 if conn and conn.dynamic_variables and greeting:
                     for key, value in conn.dynamic_variables.items():
                         greeting = greeting.replace(f"{{{{{key}}}}}", str(value))
                 
-                # 🔍 DEBUG: Verify overrides are still set before greeting
-                _logger.info(f"🎯 BEFORE GREETING - conn.custom_voice_id: '{conn.custom_voice_id}'")
-                _logger.info(f"🎯 BEFORE GREETING - conn.agent_config voice: '{conn.agent_config.get('voice_id') if conn.agent_config else None}'")
+                logger.info(f"🎯 BEFORE GREETING - conn.custom_voice_id: '{conn.custom_voice_id}'")
+                logger.info(f"🎯 BEFORE GREETING - conn.agent_config voice: '{conn.agent_config.get('voice_id') if conn.agent_config else None}'")
                 
                 await speak_text_streaming(current_call_sid, greeting)
                 
-                # ✨ CAPTURE GREETING IN TRANSCRIPT (like ElevenLabs)
-                # This ensures we have a transcript even if user hangs up immediately
                 if conn and greeting:
                     conn.conversation_history.append({
                         "user": "[Call Started]",
                         "assistant": greeting,
                         "timestamp": time.time()
                     })
-                    _logger.info(f"✅ Greeting captured in conversation history")
+                    logger.info(f"✅ Greeting captured in conversation history")
 
             elif event == "media":
                 if not current_call_sid:
@@ -2546,7 +4135,6 @@ async def media_ws(websocket: WebSocket):
                         if not conn:
                             continue
 
-                        # Send to Deepgram
                         if conn.deepgram_live:
                             try:
                                 conn.deepgram_live.send(chunk)
@@ -2557,135 +4145,92 @@ async def media_ws(websocket: WebSocket):
                         update_baseline(conn, energy)
 
                         now = time.time()
-
-                        # Calculate energy threshold
                         energy_threshold = max(
                             conn.baseline_energy * INTERRUPT_BASELINE_FACTOR,
                             INTERRUPT_MIN_ENERGY
                         )
 
-                        # ========================================
-                        # âœ… SMART VAD VALIDATION & TIMEOUT LOGIC
-                        # ========================================
-
                         if conn.vad_triggered_time and conn.user_speech_detected:
                             time_since_vad = now - conn.vad_triggered_time
 
-                            # Check if we're seeing actual speech energy
                             if energy >= energy_threshold:
-                                # âœ… Real speech detected
                                 conn.last_valid_speech_energy = energy
-                                conn.energy_drop_time = None  # Reset drop timer
+                                conn.energy_drop_time = None
 
-                                # Validate VAD after short period
                                 if not conn.vad_validated and time_since_vad >= conn.vad_validation_threshold:
                                     conn.vad_validated = True
-                                    _logger.info(
-                                        f"âœ… VAD validated after {time_since_vad*1000:.0f}ms (energy: {energy})")
+                                    logger.info(f"✅ VAD validated after {time_since_vad*1000:.0f}ms (energy: {energy})")
 
                                 if not conn.speech_start_time:
                                     conn.speech_start_time = now
 
                             else:
-                                # Low energy - but is it silence or just a pause?
-
                                 if conn.vad_validated:
-                                    # âœ… VAD was real - this is just low energy during speech (normal)
-                                    # Track when energy dropped
                                     if conn.energy_drop_time is None:
                                         conn.energy_drop_time = now
 
-                                    # Only clear VAD if energy stays low for extended period
-                                    # AND we have FINAL or interim text (meaning Deepgram also thinks speech ended)
                                     low_energy_duration = now - conn.energy_drop_time
 
-                                    if low_energy_duration >= 1.5:  # 1.5s of low energy
-                                        # Check if Deepgram also stopped detecting speech
+                                    if low_energy_duration >= 1.5:
                                         time_since_last_text = now - conn.last_interim_time if conn.last_interim_time else 999
 
-                                        if time_since_last_text > 1.0:  # No text for 1s
-                                            _logger.info(
-                                                f"âœ… VAD cleared naturally (low energy: {low_energy_duration:.1f}s, no text: {time_since_last_text:.1f}s)")
+                                        if time_since_last_text > 1.0:
+                                            logger.info(f"✅ VAD cleared naturally (low energy: {low_energy_duration:.1f}s, no text: {time_since_last_text:.1f}s)")
                                             conn.user_speech_detected = False
                                             conn.speech_start_time = None
                                             conn.vad_triggered_time = None
                                             conn.vad_validated = False
                                             conn.energy_drop_time = None
                                 else:
-                                    # âŒ VAD not validated yet - might be false positive
-                                    # Give it 1s to validate (reduced from 3s)
                                     if time_since_vad >= 1.0:
-                                        _logger.warning(
-                                            f"âš ï¸ VAD timeout - false positive (duration: {time_since_vad:.1f}s)")
+                                        logger.warning(f"⚠️ VAD timeout - false positive (duration: {time_since_vad:.1f}s)")
                                         conn.user_speech_detected = False
                                         conn.speech_start_time = None
                                         conn.vad_triggered_time = None
                                         conn.vad_validated = False
                                         conn.energy_drop_time = None
 
-                        # ========================================
-                        # âœ… INTERRUPT DETECTION (unchanged logic)
-                        # ========================================
-
                         if conn.currently_speaking and conn.user_speech_detected and not conn.interrupt_requested:
-                            # Only interrupt if VAD has been validated (real speech)
                             if conn.vad_validated and conn.speech_start_time:
-                                user_speaking_duration = (
-                                    now - conn.speech_start_time) * 1000.0
+                                user_speaking_duration = (now - conn.speech_start_time) * 1000.0
 
                                 if user_speaking_duration < 500:
                                     continue
 
                                 conn.speech_energy_buffer.append((now, energy))
 
-                                vad_dur_ms = (
-                                    now - conn.speech_start_time) * 1000.0
+                                vad_dur_ms = (now - conn.speech_start_time) * 1000.0
                                 buf = list(conn.speech_energy_buffer)
 
                                 window_ms = 300
                                 cutoff_time = now - (window_ms / 1000.0)
-                                recent_packets = [
-                                    (t, e) for t, e in buf if t >= cutoff_time]
+                                recent_packets = [(t, e) for t, e in buf if t >= cutoff_time]
 
-                                high_energy_count = sum(
-                                    1 for _, e in recent_packets if e >= energy_threshold)
+                                high_energy_count = sum(1 for _, e in recent_packets if e >= energy_threshold)
                                 total_count = len(recent_packets)
-                                energy_percentage = (
-                                    high_energy_count / total_count * 100) if total_count > 0 else 0
+                                energy_percentage = (high_energy_count / total_count * 100) if total_count > 0 else 0
 
-                                peak_energy = max(
-                                    (e for _, e in recent_packets), default=0)
+                                peak_energy = max((e for _, e in recent_packets), default=0)
 
                                 time_since_last_interrupt = now - conn.last_interrupt_time
-                                debounced = time_since_last_interrupt >= (
-                                    INTERRUPT_DEBOUNCE_MS / 1000.0)
+                                debounced = time_since_last_interrupt >= (INTERRUPT_DEBOUNCE_MS / 1000.0)
 
                                 vad_ok = vad_dur_ms >= INTERRUPT_MIN_SPEECH_MS
-                                energy_ok = energy_percentage >= 60 or peak_energy >= (
-                                    conn.baseline_energy * INTERRUPT_BASELINE_FACTOR)
-                                current_energy_ok = energy >= (
-                                    energy_threshold * 0.8)
+                                energy_ok = energy_percentage >= 60 or peak_energy >= (conn.baseline_energy * INTERRUPT_BASELINE_FACTOR)
+                                current_energy_ok = energy >= (energy_threshold * 0.8)
 
                                 all_checks_pass = vad_ok and energy_ok and current_energy_ok and debounced
 
                                 if all_checks_pass:
                                     conn.interrupt_requested = True
                                     conn.last_interrupt_time = now
-                                    _logger.info(
-                                        "ðŸ›‘ INTERRUPT! VAD: %.0fms | Energy: %.0f%% | Peak: %d | Threshold: %d",
-                                        vad_dur_ms, energy_percentage, peak_energy, energy_threshold
+                                    logger.info(
+                                        f"🛑 INTERRUPT! VAD: {vad_dur_ms:.0f}ms | Energy: {energy_percentage:.0f}% | Peak: {peak_energy} | Threshold: {energy_threshold}"
                                     )
-
-                        # ========================================
-                        # âœ… PROCESS TRANSCRIPT
-                        # ========================================
 
                         if not conn.currently_speaking and not conn.interrupt_requested:
                             if processing_task is None or processing_task.done():
-                                processing_task = asyncio.create_task(
-                                    process_streaming_transcript(
-                                        current_call_sid)
-                                )
+                                processing_task = asyncio.create_task(process_streaming_transcript(current_call_sid))
 
                     except Exception as e:
                         pass
@@ -2694,9 +4239,9 @@ async def media_ws(websocket: WebSocket):
                 break
 
     except WebSocketDisconnect:
-        _logger.info(f"📞 WebSocket disconnected for call: {current_call_sid}")
+        logger.info(f"📞 WebSocket disconnected for call: {current_call_sid}")
     except Exception as e:
-        _logger.error(f"❌ WebSocket error: {e}")
+        logger.error(f"❌ WebSocket error: {e}")
     finally:
         try:
             if processing_task and not processing_task.done():
@@ -2710,15 +4255,15 @@ async def media_ws(websocket: WebSocket):
         except:
             pass
 
-        # ✅ CRITICAL: Save transcript BEFORE disconnecting (in case /voice/status comes later)
         if current_call_sid:
             conn = manager.get(current_call_sid)
             if conn:
-                _logger.info(f"💾 Saving transcript on WebSocket disconnect for: {current_call_sid}")
-                _logger.info(f"   - conversation_history entries: {len(conn.conversation_history)}")
+                logger.info(f"💾 Saving transcript on WebSocket disconnect for: {current_call_sid}")
+                logger.info(f"   - conversation_history entries: {len(conn.conversation_history)}")
+                from agents import save_conversation_transcript
                 await save_conversation_transcript(current_call_sid, conn)
             else:
-                _logger.warning(f"⚠️ No connection found on WebSocket disconnect for: {current_call_sid}")
+                logger.warning(f"⚠️ No connection found on WebSocket disconnect for: {current_call_sid}")
             
             try:
                 await manager.disconnect(current_call_sid)
@@ -2731,6 +4276,9 @@ async def media_ws(websocket: WebSocket):
             pass
 
 
+# ----------------------------
+# REST Endpoints
+# ----------------------------
 @app.api_route("/", methods=["GET", "POST"])
 async def index_page():
     return {
@@ -2738,13 +4286,13 @@ async def index_page():
         "message": "Twilio RAG Voice System - GPU + SMART VOICE INTERRUPTS + TRANSFER CONFIRMATION",
         "device": str(DEVICE),
         "features": [
-            "âœ… Transfer requires user confirmation",
-            "âœ… End call is immediate (no confirmation)",
-            "âœ… Interrupts on real voice (configurable)",
-            "âœ… GPU-accelerated RAG",
-            "âœ… Streaming STT/TTS pipeline",
-            "âœ… Smart conversation handling",
-            f"âœ… {SILENCE_THRESHOLD_SEC}s silence before processing"
+            "✅ Transfer requires user confirmation",
+            "✅ End call is immediate (no confirmation)",
+            "✅ Interrupts on real voice (configurable)",
+            "✅ GPU-accelerated RAG",
+            "✅ Streaming STT/TTS pipeline",
+            "✅ Smart conversation handling",
+            f"✅ {SILENCE_THRESHOLD_SEC}s silence before processing"
         ]
     }
 
@@ -2790,408 +4338,30 @@ async def gpu_status():
     return status
 
 
-@app.post("/voice/outbound")
-@app.get("/voice/outbound")
-async def voice_outbound(request: Request):
-    form = await request.form()
-    call_sid = form.get("CallSid", "")
+# @app.post("/voice/outbound")
+# @app.get("/voice/outbound")
+# async def voice_outbound(request: Request):
+#     form = await request.form()
+#     call_sid = form.get("CallSid", "")
     
-    # Check if recording is enabled for this call
-    call_data = pending_call_data.get(call_sid, {})
-    _logger.info("voice outbound call")
-    enable_recording = call_data.get("enable_recording", False)
+#     call_data = manager.get_pending_call_data(call_sid) or {}
+#     enable_recording = call_data.get("enable_recording", False)
     
-    response = VoiceResponse()
+#     response = VoiceResponse()
     
-    # Enable recording if requested
-    if enable_recording:
-        response.record(
-            recording_status_callback=f"{PUBLIC_URL}/recording-callback",
-            recording_status_callback_method="POST",
-            recording_status_callback_event="completed"
-        )
-        _logger.info(f"🎙️ Recording enabled for call: {call_sid}")
+#     if enable_recording:
+#         response.record(
+#             recording_status_callback=f"{PUBLIC_URL}/recording-callback",
+#             recording_status_callback_method="POST",
+#             recording_status_callback_event="completed"
+#         )
+#         logger.info(f"🎙️ Recording enabled for call: {call_sid}")
     
-    response.say(" ")
-    response.pause(length=0)
+#     response.say(" ")
+#     response.pause(length=0)
 
-    connect = Connect()
-    _logger.info("media_stream_websocket_called")
-    connect.stream(url=f"wss://{public_ws_host()}/media-stream")
-    response.append(connect)
-    _logger.info("response appended")
-    return Response(content=str(response), media_type="application/xml")
+#     connect = Connect()
+#     connect.stream(url=f"wss://{public_ws_host()}/media-stream")
+#     response.append(connect)
 
-
-@app.post("/voice/inbound")
-@app.get("/voice/inbound")
-async def voice_inbound(request: Request):
-    """
-    Handle incoming calls - route to appropriate agent
-    
-    ✨ ELEVENLABS-COMPATIBLE: Always creates conversation record and tracks status
-    """
-    form = await request.form()
-    from_number = form.get("From", "")
-    to_number = form.get("To", "")
-    call_sid = form.get("CallSid", "")
-    
-    _logger.info(f"📞 Inbound call: from={from_number}, to={to_number}, call_sid={call_sid}")
-    
-    db = SessionLocal()
-    try:
-        # Try to find agent linked to this phone number
-        phone_record = db.query(PhoneNumber).filter(
-            PhoneNumber.phone_number == to_number,
-            PhoneNumber.is_active == True
-        ).first()
-        
-        agent = None
-        if phone_record and phone_record.agent_id:
-            agent = db.query(Agent).filter(
-                Agent.agent_id == phone_record.agent_id,
-                Agent.is_active == True
-            ).first()
-        
-        # Fallback to first active agent if no phone number mapping
-        if not agent:
-            agent = db.query(Agent).filter(Agent.is_active == True).first()
-        
-        # ✨ ALWAYS store call data for WebSocket (like ElevenLabs)
-        pending_call_data[call_sid] = {
-            "agent_id": agent.agent_id if agent else None,
-            "dynamic_variables": {"caller_number": from_number},
-            "custom_voice_id": None,
-            "custom_model": None,
-            "custom_first_message": None,
-            "from_number": from_number,  # ✅ Caller's phone number
-            "to_number": to_number,      # Agent's phone number
-            "enable_recording": False,
-            "direction": "inbound"
-        }
-        
-        # ✨ ALWAYS create conversation record (like ElevenLabs)
-        conversation = Conversation(
-            conversation_id=call_sid,
-            agent_id=agent.agent_id if agent else None,
-            phone_number=from_number,
-            status="initiated",
-            dynamic_variables={"caller_number": from_number, "direction": "inbound"},
-            call_metadata={"direction": "inbound", "to_number": to_number}
-        )
-        db.add(conversation)
-        db.commit()
-        
-        if agent:
-            _logger.info(f"✅ Inbound call routed to agent: {agent.agent_id} ({agent.name})")
-        else:
-            _logger.warning("⚠️ No active agent found for inbound call - using default behavior")
-        
-        # ✨ ALWAYS send webhooks (like ElevenLabs)
-        webhooks = db.query(WebhookConfig).filter(
-            WebhookConfig.is_active == True
-        ).all()
-        
-        # Filter webhooks by agent_id or global (agent_id == None)
-        for webhook in webhooks:
-            should_send = False
-            if webhook.agent_id is None:
-                should_send = True  # Global webhook
-            elif agent and webhook.agent_id == agent.agent_id:
-                should_send = True  # Agent-specific webhook
-            
-            if should_send and ("call.initiated" in webhook.events or not webhook.events):
-                asyncio.create_task(send_webhook(
-                    webhook.webhook_url,
-                    "call.initiated",
-                    {
-                        "conversation_id": call_sid,
-                        "agent_id": agent.agent_id if agent else None,
-                        "from_number": from_number,
-                        "to_number": to_number,
-                        "direction": "inbound",
-                        "status": "initiated"
-                    }
-                ))
-    finally:
-        db.close()
-    
-    response = VoiceResponse()
-    response.say(" ")
-    response.pause(length=0)
-    
-    connect = Connect()
-    connect.stream(url=f"wss://{public_ws_host()}/media-stream")
-    response.append(connect)
-    
-    return Response(content=str(response), media_type="application/xml")
-
-
-@app.post("/make-call")
-async def make_call(request: CallRequest):
-    try:
-        to_number = request.to_number
-
-        _logger.info(f"📞 Starting outbound call: to={to_number}")  
-        webhook = f"{PUBLIC_URL.rstrip('/')}/voice/outbound"
-        status_callback_url = f"{PUBLIC_URL.rstrip('/')}/voice/status"
-
-        call_sid = twilio_client.calls.create(
-            to=to_number,
-            from_=+15108963495,  # your fixed Twilio number
-            url=webhook,
-            method="POST",
-            status_callback=status_callback_url,
-            status_callback_event=["initiated", "ringing", "answered", "completed"],
-            status_callback_method="POST"
-        )
-
-        return {
-            "success": True,
-            "message": "Call initiated successfully",
-            "call_sid": call_sid.sid,
-            "to": to_number
-        }
-
-    except Exception as e:
-        _logger.exception("âŒ Call initiation failed")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/voice/status")
-async def voice_status(request: Request):
-    """Enhanced voice status handler with transcript saving and webhooks"""
-    form = await request.form()
-    call_sid = form.get("CallSid")
-    call_status = form.get("CallStatus")
-    
-    _logger.info(f"📞 Call status update: {call_sid} -> {call_status}")
-    
-    if call_status in {"completed", "failed", "busy", "no-answer", "canceled"} and call_sid:
-        conn = manager.get(call_sid)
-        
-        # Save transcript before disconnecting
-        if conn:
-            await save_conversation_transcript(call_sid, conn)
-        
-        # Handle call end (update DB and send webhooks)
-        await handle_call_end(call_sid, call_status)
-        
-        # Disconnect
-        await manager.disconnect(call_sid)
-        
-        # Clean up pending call data
-        if call_sid in pending_call_data:
-            del pending_call_data[call_sid]
-
-    return PlainTextResponse("OK")
-
-
-@app.get("/health")
-async def health():
-    """Health check"""
-    health_data = {
-        "status": "ok",
-        "mode": "GPU + FIXED_INTERRUPTS + CONFIRMATION + 1s_SILENCE",
-        "device": str(DEVICE),
-        "docs_count": collection.count(),
-        "active_connections": len(manager._conns),
-        "confirmation_enabled": True,
-        "silence_threshold_sec": SILENCE_THRESHOLD_SEC,
-        "interrupt_settings": {
-            "enabled": INTERRUPT_ENABLED,
-            "min_energy": INTERRUPT_MIN_ENERGY,
-            "baseline_factor": INTERRUPT_BASELINE_FACTOR,
-            "min_speech_ms": INTERRUPT_MIN_SPEECH_MS,
-            "require_text": INTERRUPT_REQUIRE_TEXT
-        }
-    }
-
-    if torch.cuda.is_available():
-        health_data["gpu_memory_allocated_gb"] = f"{torch.cuda.memory_allocated(0) / 1024**3:.2f}"
-
-    return health_data
-
-
-def _chunk_text(text: str, size: int = CHUNK_SIZE, overlap: int = 50) -> List[str]:
-    """
-    Advanced semantic chunking with overlap for context preservation
-    """
-    # Clean text
-    text = re.sub(r'\s+', ' ', text.strip())
-
-    # Split into sentences
-    sentences = re.split(r'(?<=[.!?])\s+', text)
-    sentences = [s.strip() for s in sentences if s.strip()]
-
-    chunks = []
-    current_chunk = ""
-
-    for i, sentence in enumerate(sentences):
-        # If adding this sentence would exceed chunk size
-        if current_chunk and len(current_chunk) + len(sentence) + 1 > size:
-            chunks.append(current_chunk.strip())
-
-            # Start new chunk with overlap from previous chunk
-            if overlap > 0:
-                # Take last few sentences from current chunk for overlap
-                prev_sentences = current_chunk.split('. ')
-                overlap_sentences = prev_sentences[-2:] if len(
-                    prev_sentences) > 2 else prev_sentences[-1:]
-                current_chunk = '. '.join(overlap_sentences) + '. ' + sentence
-            else:
-                current_chunk = sentence
-        else:
-            # Add sentence to current chunk
-            if current_chunk:
-                current_chunk += " " + sentence
-            else:
-                current_chunk = sentence
-
-    # Add final chunk
-    if current_chunk.strip():
-        chunks.append(current_chunk.strip())
-
-    # Filter and deduplicate
-    final_chunks = []
-    seen = set()
-    for chunk in chunks:
-        if len(chunk) < 25:
-            continue
-        chunk_hash = hashlib.md5(chunk.encode()).hexdigest()[:12]
-        if chunk_hash not in seen:
-            seen.add(chunk_hash)
-            final_chunks.append(chunk)
-
-    _logger.info(
-        f"ðŸ“ Created {len(final_chunks)} overlapping chunks (size: {size}, overlap: {overlap})")
-    return final_chunks
-
-
-def build_index_from_file(path: str = DATA_FILE) -> Tuple[int, int]:
-    """Build ChromaDB index using contextual chunking"""
-
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"DATA_FILE not found: {path}")
-
-    _logger.info(f"ðŸ“– Reading data from: {path}")
-
-    with open(path, "r", encoding="utf-8") as f:
-        raw_text = f.read().strip()
-
-    if not raw_text:
-        _logger.warning("âš  DATA_FILE is empty.")
-        return (0, 0)
-
-    # Use the new chunking with overlap
-    # 50 character overlap
-    docs = _chunk_text(raw_text, CHUNK_SIZE, overlap=50)
-
-    # Clear existing collection
-    try:
-        chroma_client.delete_collection("docs")
-    except:
-        pass
-    collection = chroma_client.get_or_create_collection("docs")
-
-    metadatas = []
-    ids = []
-
-    for i, doc in enumerate(docs):
-        metadatas.append({
-            "chunk_id": i,
-            "length": len(doc),
-            "word_count": len(doc.split()),
-            "type": "contextual_chunk"
-        })
-        ids.append(f"ctx_{i}_{uuid.uuid4().hex[:8]}")
-
-    total = len(docs)
-    if total == 0:
-        _logger.warning("âš  No valid chunks found.")
-        return (0, 0)
-
-    _logger.info(f"ðŸ”„ Generating {total} embeddings...")
-
-    start = time.time()
-
-    with torch.no_grad():
-        embeddings = embedder.encode(
-            docs,
-            device=DEVICE,
-            batch_size=64 if DEVICE == "cuda" else 32,
-            convert_to_numpy=True,
-            show_progress_bar=True,
-            normalize_embeddings=True
-        ).tolist()
-
-    duration = time.time() - start
-    _logger.info(f"âœ… Embeddings done in {duration:.2f}s")
-
-    # Batch insertion
-    CHROMA_MAX_BATCH = 5000
-
-    for start_idx in range(0, total, CHROMA_MAX_BATCH):
-        end_idx = start_idx + CHROMA_MAX_BATCH
-        collection.add(
-            documents=docs[start_idx:end_idx],
-            embeddings=embeddings[start_idx:end_idx],
-            metadatas=metadatas[start_idx:end_idx],
-            ids=ids[start_idx:end_idx]
-        )
-
-    _logger.info(f"âœ… Contextual index built: {total} meaningful chunks")
-    return (total, total)
-
-if __name__ == "__main__":
-    import argparse
-    import uvicorn
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("mode", choices=["server", "build", "test"])
-    parser.add_argument("--host", default="0.0.0.0")
-    parser.add_argument("--port", default=9001, type=int)
-    args = parser.parse_args()
-
-    if args.mode == "build":
-        docs, chunks = build_index_from_file(DATA_FILE)
-        print(f"âœ… Built index: {docs} docs, {chunks} chunks")
-        print(f"🚀 Device used: {DEVICE}")
-    elif args.mode == "test":
-        print(f"Test mode (device: {DEVICE}):")
-
-        async def test_query():
-            while True:
-                q = input("> ").strip()
-                if q.lower() in {"exit", "quit"}:
-                    break
-                result = ""
-                print("Response: ", end="", flush=True)
-                async for token in query_rag_streaming(q):
-                    result += token
-                    print(token, end="", flush=True)
-                print("\n")
-
-        asyncio.run(test_query())
-    else:
-        _logger.info("🚀 Starting server on %s:%s", args.host, args.port)
-        _logger.info(f"🔥 GPU: {DEVICE}")
-        _logger.info("âœ… Transfer confirmation: ENABLED")
-        _logger.info(
-            f"â±ï¸  Silence threshold: {SILENCE_THRESHOLD_SEC}s (utterance_end={UTTERANCE_END_MS}ms)")
-        _logger.info(
-            f"🎯 Interrupt: enabled={INTERRUPT_ENABLED}, min_speech={INTERRUPT_MIN_SPEECH_MS}ms, "
-            f"min_energy={INTERRUPT_MIN_ENERGY}, baseline_factor={INTERRUPT_BASELINE_FACTOR}, "
-            f"require_text={INTERRUPT_REQUIRE_TEXT}"
-        )
-        uvicorn.run("new:app",
-                    host=args.host,
-                    port=args.port,
-                    reload=False,
-                    timeout_keep_alive=60,
-                    timeout_graceful_shutdown=30,
-                    ws_ping_interval=10.0,    # Add WebSocket ping
-                    ws_ping_timeout=10.0
-                    )
-
-
+#     return Response(content=str(response), media_type="application/xml")

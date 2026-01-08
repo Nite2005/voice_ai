@@ -11084,3 +11084,2014 @@
 2026-01-08 12:10:46,938 INFO new 📞 Call status update: CAa952e865442e4c9c8a03ca67a4cafca8 -> completed
 2026-01-08 12:10:46,938 INFO new 📞 Call status update: CAa952e865442e4c9c8a03ca67a4cafca8 -> completed
 2026-01-08 12:10:46,938 INFO new 📞 Call status update: CAa952e865442e4c9c8a03ca67a4cafca8 -> completed
+2026-01-08 12:16:14,500 INFO new ============================================================
+2026-01-08 12:16:14,500 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:16:14,500 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:16:14,501 INFO new    Count: 1
+2026-01-08 12:16:14,501 INFO new    Memory: 23.52 GB
+2026-01-08 12:16:14,501 INFO new    CUDA: 12.8
+2026-01-08 12:16:14,501 INFO new ============================================================
+2026-01-08 12:16:14,501 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:16:14,501 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:16:14,501 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:16:14,501 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:16:14,502 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:16:15,440 INFO new âœ… FP16 precision enabled
+2026-01-08 12:16:15,440 INFO new âœ… Model loaded in 0.94s
+2026-01-08 12:16:15,440 INFO new 🔥 Warming up GPU...
+2026-01-08 12:16:15,820 INFO new âœ… GPU warmed up
+2026-01-08 12:16:16,006 INFO new ============================================================
+2026-01-08 12:16:16,006 INFO new ============================================================
+2026-01-08 12:16:16,006 INFO new ============================================================
+2026-01-08 12:16:16,007 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:16:16,007 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:16:16,007 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:16:16,007 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:16:16,007 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:16:16,007 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:16:16,008 INFO new    Count: 1
+2026-01-08 12:16:16,008 INFO new    Count: 1
+2026-01-08 12:16:16,008 INFO new    Count: 1
+2026-01-08 12:16:16,008 INFO new    Memory: 23.52 GB
+2026-01-08 12:16:16,008 INFO new    Memory: 23.52 GB
+2026-01-08 12:16:16,008 INFO new    Memory: 23.52 GB
+2026-01-08 12:16:16,008 INFO new    CUDA: 12.8
+2026-01-08 12:16:16,008 INFO new    CUDA: 12.8
+2026-01-08 12:16:16,008 INFO new    CUDA: 12.8
+2026-01-08 12:16:16,009 INFO new ============================================================
+2026-01-08 12:16:16,009 INFO new ============================================================
+2026-01-08 12:16:16,009 INFO new ============================================================
+2026-01-08 12:16:16,009 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:16:16,009 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:16:16,009 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:16:16,010 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:16:16,010 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:16:16,010 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:16:16,010 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:16:16,010 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:16:16,010 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:16:16,011 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:16:16,011 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:16:16,011 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:16:23,909 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:16:23,909 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:16:23,909 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:16:23,910 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:16:23,910 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:16:23,910 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:16:23,910 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:16:23,910 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:16:23,910 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:16:23,911 INFO new 📞 Initiating call to +917061474588 with agent agent_580542b4db734644
+2026-01-08 12:16:23,911 INFO new 📞 Initiating call to +917061474588 with agent agent_580542b4db734644
+2026-01-08 12:16:23,911 INFO new 📞 Initiating call to +917061474588 with agent agent_580542b4db734644
+2026-01-08 12:16:23,911 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:16:23,911 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:16:23,911 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:16:23,911 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:16:23,911 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:16:23,911 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:16:23,912 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:16:23,912 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:16:23,912 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:16:23,912 INFO new 🔍 API Extracted - custom_first_message: 'hi how are you nitesh ...'
+2026-01-08 12:16:23,912 INFO new 🔍 API Extracted - custom_first_message: 'hi how are you nitesh ...'
+2026-01-08 12:16:23,912 INFO new 🔍 API Extracted - custom_first_message: 'hi how are you nitesh ...'
+2026-01-08 12:16:23,915 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:16:23,915 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:16:23,915 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:16:23,916 INFO new api voice outbound api called
+2026-01-08 12:16:23,916 INFO new api voice outbound api called
+2026-01-08 12:16:23,916 INFO new api voice outbound api called
+2026-01-08 12:16:24,118 ERROR new ❌ Call initiation failed: 
+[31m[49mHTTP Error[0m [37m[49mYour request was:[0m
+
+[36m[49mPOST /Accounts/AC259a9235c503f06ba4d16e3814f86f5a/Calls.json[0m
+
+[37m[49mTwilio returned the following information:[0m
+
+[34m[49mUnable to create record: Authenticate[0m
+
+[37m[49mMore information may be available here:[0m
+
+[34m[49mhttps://www.twilio.com/docs/errors/20003[0m
+
+
+2026-01-08 12:16:24,118 ERROR new ❌ Call initiation failed: 
+[31m[49mHTTP Error[0m [37m[49mYour request was:[0m
+
+[36m[49mPOST /Accounts/AC259a9235c503f06ba4d16e3814f86f5a/Calls.json[0m
+
+[37m[49mTwilio returned the following information:[0m
+
+[34m[49mUnable to create record: Authenticate[0m
+
+[37m[49mMore information may be available here:[0m
+
+[34m[49mhttps://www.twilio.com/docs/errors/20003[0m
+
+
+2026-01-08 12:16:24,118 ERROR new ❌ Call initiation failed: 
+[31m[49mHTTP Error[0m [37m[49mYour request was:[0m
+
+[36m[49mPOST /Accounts/AC259a9235c503f06ba4d16e3814f86f5a/Calls.json[0m
+
+[37m[49mTwilio returned the following information:[0m
+
+[34m[49mUnable to create record: Authenticate[0m
+
+[37m[49mMore information may be available here:[0m
+
+[34m[49mhttps://www.twilio.com/docs/errors/20003[0m
+
+
+2026-01-08 12:19:06,901 INFO new ============================================================
+2026-01-08 12:19:06,901 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:19:06,901 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:19:06,901 INFO new    Count: 1
+2026-01-08 12:19:06,901 INFO new    Memory: 23.52 GB
+2026-01-08 12:19:06,901 INFO new    CUDA: 12.8
+2026-01-08 12:19:06,901 INFO new ============================================================
+2026-01-08 12:19:06,901 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:19:06,902 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:19:06,902 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:19:06,902 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:19:06,902 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:19:08,007 INFO new âœ… FP16 precision enabled
+2026-01-08 12:19:08,007 INFO new âœ… Model loaded in 1.11s
+2026-01-08 12:19:08,007 INFO new 🔥 Warming up GPU...
+2026-01-08 12:19:08,387 INFO new âœ… GPU warmed up
+2026-01-08 12:19:08,566 INFO new ============================================================
+2026-01-08 12:19:08,566 INFO new ============================================================
+2026-01-08 12:19:08,566 INFO new ============================================================
+2026-01-08 12:19:08,567 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:19:08,567 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:19:08,567 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:19:08,567 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:19:08,567 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:19:08,567 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:19:08,567 INFO new    Count: 1
+2026-01-08 12:19:08,567 INFO new    Count: 1
+2026-01-08 12:19:08,567 INFO new    Count: 1
+2026-01-08 12:19:08,568 INFO new    Memory: 23.52 GB
+2026-01-08 12:19:08,568 INFO new    Memory: 23.52 GB
+2026-01-08 12:19:08,568 INFO new    Memory: 23.52 GB
+2026-01-08 12:19:08,568 INFO new    CUDA: 12.8
+2026-01-08 12:19:08,568 INFO new    CUDA: 12.8
+2026-01-08 12:19:08,568 INFO new    CUDA: 12.8
+2026-01-08 12:19:08,568 INFO new ============================================================
+2026-01-08 12:19:08,568 INFO new ============================================================
+2026-01-08 12:19:08,568 INFO new ============================================================
+2026-01-08 12:19:08,569 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:19:08,569 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:19:08,569 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:19:08,570 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:19:08,570 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:19:08,570 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:19:08,570 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:19:08,570 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:19:08,570 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:19:08,571 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:19:08,571 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:19:08,571 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:19:33,570 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:19:33,570 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:19:33,570 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:19:33,571 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:19:33,571 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:19:33,571 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:19:33,571 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:19:33,571 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:19:33,571 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:19:33,572 INFO new 📞 Initiating call to +917061474588 with agent agent_580542b4db734644
+2026-01-08 12:19:33,572 INFO new 📞 Initiating call to +917061474588 with agent agent_580542b4db734644
+2026-01-08 12:19:33,572 INFO new 📞 Initiating call to +917061474588 with agent agent_580542b4db734644
+2026-01-08 12:19:33,572 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:19:33,572 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:19:33,572 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:19:33,572 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:19:33,572 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:19:33,572 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:19:33,573 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:19:33,573 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:19:33,573 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:19:33,573 INFO new 🔍 API Extracted - custom_first_message: 'hi how are you nitesh ...'
+2026-01-08 12:19:33,573 INFO new 🔍 API Extracted - custom_first_message: 'hi how are you nitesh ...'
+2026-01-08 12:19:33,573 INFO new 🔍 API Extracted - custom_first_message: 'hi how are you nitesh ...'
+2026-01-08 12:19:33,576 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:19:33,576 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:19:33,576 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:19:33,577 INFO new api voice outbound api called
+2026-01-08 12:19:33,577 INFO new api voice outbound api called
+2026-01-08 12:19:33,577 INFO new api voice outbound api called
+2026-01-08 12:19:33,848 INFO new 💾 Stored call data for: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:33,848 INFO new 💾 Stored call data for: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:33,848 INFO new 💾 Stored call data for: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:33,849 INFO new 💾 - Agent ID: agent_580542b4db734644
+2026-01-08 12:19:33,849 INFO new 💾 - Agent ID: agent_580542b4db734644
+2026-01-08 12:19:33,849 INFO new 💾 - Agent ID: agent_580542b4db734644
+2026-01-08 12:19:33,849 INFO new 💾 - Custom voice: None
+2026-01-08 12:19:33,849 INFO new 💾 - Custom voice: None
+2026-01-08 12:19:33,849 INFO new 💾 - Custom voice: None
+2026-01-08 12:19:33,850 INFO new 💾 - Custom model: None
+2026-01-08 12:19:33,850 INFO new 💾 - Custom model: None
+2026-01-08 12:19:33,850 INFO new 💾 - Custom model: None
+2026-01-08 12:19:33,850 INFO new 💾 - Dynamic vars: 0 fields
+2026-01-08 12:19:33,850 INFO new 💾 - Dynamic vars: 0 fields
+2026-01-08 12:19:33,850 INFO new 💾 - Dynamic vars: 0 fields
+2026-01-08 12:19:33,860 INFO new ✅ Call initiated: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:33,860 INFO new ✅ Call initiated: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:33,860 INFO new ✅ Call initiated: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:33,918 INFO new 📞 Call status update: CA082e2fb0531d41f096107c8ac3507dd5 -> initiated
+2026-01-08 12:19:33,918 INFO new 📞 Call status update: CA082e2fb0531d41f096107c8ac3507dd5 -> initiated
+2026-01-08 12:19:33,918 INFO new 📞 Call status update: CA082e2fb0531d41f096107c8ac3507dd5 -> initiated
+2026-01-08 12:19:35,060 INFO new 📞 Call status update: CA082e2fb0531d41f096107c8ac3507dd5 -> ringing
+2026-01-08 12:19:35,060 INFO new 📞 Call status update: CA082e2fb0531d41f096107c8ac3507dd5 -> ringing
+2026-01-08 12:19:35,060 INFO new 📞 Call status update: CA082e2fb0531d41f096107c8ac3507dd5 -> ringing
+2026-01-08 12:19:39,633 INFO new 📞 Call status update: CA082e2fb0531d41f096107c8ac3507dd5 -> in-progress
+2026-01-08 12:19:39,633 INFO new 📞 Call status update: CA082e2fb0531d41f096107c8ac3507dd5 -> in-progress
+2026-01-08 12:19:39,633 INFO new 📞 Call status update: CA082e2fb0531d41f096107c8ac3507dd5 -> in-progress
+2026-01-08 12:19:39,718 INFO new voice outbound call
+2026-01-08 12:19:39,718 INFO new voice outbound call
+2026-01-08 12:19:39,718 INFO new voice outbound call
+2026-01-08 12:19:39,719 INFO new media_stream_websocket_called
+2026-01-08 12:19:39,719 INFO new media_stream_websocket_called
+2026-01-08 12:19:39,719 INFO new media_stream_websocket_called
+2026-01-08 12:19:39,719 INFO new response appended
+2026-01-08 12:19:39,719 INFO new response appended
+2026-01-08 12:19:39,719 INFO new response appended
+2026-01-08 12:19:39,904 INFO new 🔍 WebSocket Debug - call_sid: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,904 INFO new 🔍 WebSocket Debug - call_sid: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,904 INFO new 🔍 WebSocket Debug - call_sid: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,905 INFO new 🔍 Pending call data found: True
+2026-01-08 12:19:39,905 INFO new 🔍 Pending call data found: True
+2026-01-08 12:19:39,905 INFO new 🔍 Pending call data found: True
+2026-01-08 12:19:39,905 INFO new 🔍 Agent ID: agent_580542b4db734644
+2026-01-08 12:19:39,905 INFO new 🔍 Agent ID: agent_580542b4db734644
+2026-01-08 12:19:39,905 INFO new 🔍 Agent ID: agent_580542b4db734644
+2026-01-08 12:19:39,906 INFO new 🔍 Direction: outbound
+2026-01-08 12:19:39,906 INFO new 🔍 Direction: outbound
+2026-01-08 12:19:39,906 INFO new 🔍 Direction: outbound
+2026-01-08 12:19:39,906 INFO new 🔍 Custom voice_id: None
+2026-01-08 12:19:39,906 INFO new 🔍 Custom voice_id: None
+2026-01-08 12:19:39,906 INFO new 🔍 Custom voice_id: None
+2026-01-08 12:19:39,906 INFO new 🔍 Custom model: None
+2026-01-08 12:19:39,906 INFO new 🔍 Custom model: None
+2026-01-08 12:19:39,906 INFO new 🔍 Custom model: None
+2026-01-08 12:19:39,907 INFO new 🔧 Overrides loaded:
+2026-01-08 12:19:39,907 INFO new 🔧 Overrides loaded:
+2026-01-08 12:19:39,907 INFO new 🔧 Overrides loaded:
+2026-01-08 12:19:39,907 INFO new    - custom_voice_id: None (will use agent/default)
+2026-01-08 12:19:39,907 INFO new    - custom_voice_id: None (will use agent/default)
+2026-01-08 12:19:39,907 INFO new    - custom_voice_id: None (will use agent/default)
+2026-01-08 12:19:39,908 INFO new    - custom_model: None (will use agent/default)
+2026-01-08 12:19:39,908 INFO new    - custom_model: None (will use agent/default)
+2026-01-08 12:19:39,908 INFO new    - custom_model: None (will use agent/default)
+2026-01-08 12:19:39,908 INFO new    - custom_first_message: Yes (hi how are you nitesh ...)
+2026-01-08 12:19:39,908 INFO new    - custom_first_message: Yes (hi how are you nitesh ...)
+2026-01-08 12:19:39,908 INFO new    - custom_first_message: Yes (hi how are you nitesh ...)
+2026-01-08 12:19:39,911 INFO new ✅ Loaded agent: agent_580542b4db734644 (strifghng)
+2026-01-08 12:19:39,911 INFO new ✅ Loaded agent: agent_580542b4db734644 (strifghng)
+2026-01-08 12:19:39,911 INFO new ✅ Loaded agent: agent_580542b4db734644 (strifghng)
+2026-01-08 12:19:39,912 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:19:39,912 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:19:39,912 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:19:39,912 INFO new 💬 Using custom first message: hi how are you nitesh ...
+2026-01-08 12:19:39,912 INFO new 💬 Using custom first message: hi how are you nitesh ...
+2026-01-08 12:19:39,912 INFO new 💬 Using custom first message: hi how are you nitesh ...
+2026-01-08 12:19:39,923 INFO new ✅ Conversation status updated to 'in-progress': CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,923 INFO new ✅ Conversation status updated to 'in-progress': CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,923 INFO new ✅ Conversation status updated to 'in-progress': CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,925 INFO new ðŸŽµ Resampler pre-initialized for this connection
+2026-01-08 12:19:39,925 INFO new ðŸŽµ Resampler pre-initialized for this connection
+2026-01-08 12:19:39,925 INFO new ðŸŽµ Resampler pre-initialized for this connection
+2026-01-08 12:19:39,926 INFO new ✅ Connection setup complete for call_sid: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,926 INFO new ✅ Connection setup complete for call_sid: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,926 INFO new ✅ Connection setup complete for call_sid: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,926 INFO new ✅ Streaming STT setup complete for call_sid: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,926 INFO new ✅ Streaming STT setup complete for call_sid: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,926 INFO new ✅ Streaming STT setup complete for call_sid: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,927 INFO new ✅ WebSocket connection started for call_sid: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,927 INFO new ✅ WebSocket connection started for call_sid: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:39,927 INFO new ✅ WebSocket connection started for call_sid: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:19:40,026 INFO new 🎯 BEFORE GREETING - conn.custom_voice_id: 'None'
+2026-01-08 12:19:40,026 INFO new 🎯 BEFORE GREETING - conn.custom_voice_id: 'None'
+2026-01-08 12:19:40,026 INFO new 🎯 BEFORE GREETING - conn.custom_voice_id: 'None'
+2026-01-08 12:19:40,027 INFO new 🎯 BEFORE GREETING - conn.agent_config voice: 'aura-2-thalia-en'
+2026-01-08 12:19:40,027 INFO new 🎯 BEFORE GREETING - conn.agent_config voice: 'aura-2-thalia-en'
+2026-01-08 12:19:40,027 INFO new 🎯 BEFORE GREETING - conn.agent_config voice: 'aura-2-thalia-en'
+2026-01-08 12:19:40,028 INFO new ðŸŽ¤ TTS sentence (21 chars): 'hi how are you nitesh...'
+2026-01-08 12:19:40,028 INFO new ðŸŽ¤ TTS sentence (21 chars): 'hi how are you nitesh...'
+2026-01-08 12:19:40,028 INFO new ðŸŽ¤ TTS sentence (21 chars): 'hi how are you nitesh...'
+2026-01-08 12:19:40,028 INFO new 🎤 TTS Voice: aura-2-thalia-en (source: agent_config) for text: 'hi how are you nitesh...'
+2026-01-08 12:19:40,028 INFO new 🎤 TTS Voice: aura-2-thalia-en (source: agent_config) for text: 'hi how are you nitesh...'
+2026-01-08 12:19:40,028 INFO new 🎤 TTS Voice: aura-2-thalia-en (source: agent_config) for text: 'hi how are you nitesh...'
+2026-01-08 12:19:40,091 INFO new ✅ Greeting captured in conversation history
+2026-01-08 12:19:40,091 INFO new ✅ Greeting captured in conversation history
+2026-01-08 12:19:40,091 INFO new ✅ Greeting captured in conversation history
+2026-01-08 12:19:42,508 INFO new âœ… Sentence completed in 2480ms (97 chunks, 8.5 chars/sec)
+2026-01-08 12:19:42,508 INFO new âœ… Sentence completed in 2480ms (97 chunks, 8.5 chars/sec)
+2026-01-08 12:19:42,508 INFO new âœ… Sentence completed in 2480ms (97 chunks, 8.5 chars/sec)
+2026-01-08 12:20:06,562 INFO new 💾 Saving transcript on WebSocket disconnect for: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:20:06,562 INFO new 💾 Saving transcript on WebSocket disconnect for: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:20:06,562 INFO new 💾 Saving transcript on WebSocket disconnect for: CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:20:06,563 INFO new    - conversation_history entries: 1
+2026-01-08 12:20:06,563 INFO new    - conversation_history entries: 1
+2026-01-08 12:20:06,563 INFO new    - conversation_history entries: 1
+2026-01-08 12:20:06,563 INFO new 💾 save_conversation_transcript called for CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:20:06,563 INFO new 💾 save_conversation_transcript called for CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:20:06,563 INFO new 💾 save_conversation_transcript called for CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:20:06,563 INFO new    - conn exists: True
+2026-01-08 12:20:06,563 INFO new    - conn exists: True
+2026-01-08 12:20:06,563 INFO new    - conn exists: True
+2026-01-08 12:20:06,564 INFO new    - conversation_history length: 1
+2026-01-08 12:20:06,564 INFO new    - conversation_history length: 1
+2026-01-08 12:20:06,564 INFO new    - conversation_history length: 1
+2026-01-08 12:20:06,572 INFO new ✅ Saved transcript for CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:20:06,572 INFO new ✅ Saved transcript for CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:20:06,572 INFO new ✅ Saved transcript for CA082e2fb0531d41f096107c8ac3507dd5
+2026-01-08 12:20:06,573 INFO new    - Exchanges: 1
+2026-01-08 12:20:06,573 INFO new    - Exchanges: 1
+2026-01-08 12:20:06,573 INFO new    - Exchanges: 1
+2026-01-08 12:20:06,577 INFO new    - Duration: 26s
+2026-01-08 12:20:06,577 INFO new    - Duration: 26s
+2026-01-08 12:20:06,577 INFO new    - Duration: 26s
+2026-01-08 12:20:06,577 INFO new    - Transcript length: 54 chars
+2026-01-08 12:20:06,577 INFO new    - Transcript length: 54 chars
+2026-01-08 12:20:06,577 INFO new    - Transcript length: 54 chars
+2026-01-08 12:20:06,612 INFO new 📞 Call status update: CA082e2fb0531d41f096107c8ac3507dd5 -> completed
+2026-01-08 12:20:06,612 INFO new 📞 Call status update: CA082e2fb0531d41f096107c8ac3507dd5 -> completed
+2026-01-08 12:20:06,612 INFO new 📞 Call status update: CA082e2fb0531d41f096107c8ac3507dd5 -> completed
+2026-01-08 12:20:06,620 INFO new ✅ Call ended: CA082e2fb0531d41f096107c8ac3507dd5 - reason: completed - duration: 26s
+2026-01-08 12:20:06,620 INFO new ✅ Call ended: CA082e2fb0531d41f096107c8ac3507dd5 - reason: completed - duration: 26s
+2026-01-08 12:20:06,620 INFO new ✅ Call ended: CA082e2fb0531d41f096107c8ac3507dd5 - reason: completed - duration: 26s
+2026-01-08 12:20:30,771 INFO new ============================================================
+2026-01-08 12:20:30,771 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:30,771 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:30,771 INFO new    Count: 1
+2026-01-08 12:20:30,771 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:30,771 INFO new    CUDA: 12.8
+2026-01-08 12:20:30,771 INFO new ============================================================
+2026-01-08 12:20:30,772 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:30,772 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:30,772 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:30,772 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:30,772 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:20:31,876 INFO new âœ… FP16 precision enabled
+2026-01-08 12:20:31,876 INFO new âœ… Model loaded in 1.10s
+2026-01-08 12:20:31,876 INFO new 🔥 Warming up GPU...
+2026-01-08 12:20:32,255 INFO new âœ… GPU warmed up
+2026-01-08 12:20:32,433 INFO new ============================================================
+2026-01-08 12:20:32,433 INFO new ============================================================
+2026-01-08 12:20:32,433 INFO new ============================================================
+2026-01-08 12:20:32,434 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:32,434 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:32,434 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:32,434 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:32,434 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:32,434 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:32,435 INFO new    Count: 1
+2026-01-08 12:20:32,435 INFO new    Count: 1
+2026-01-08 12:20:32,435 INFO new    Count: 1
+2026-01-08 12:20:32,435 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:32,435 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:32,435 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:32,435 INFO new    CUDA: 12.8
+2026-01-08 12:20:32,435 INFO new    CUDA: 12.8
+2026-01-08 12:20:32,435 INFO new    CUDA: 12.8
+2026-01-08 12:20:32,436 INFO new ============================================================
+2026-01-08 12:20:32,436 INFO new ============================================================
+2026-01-08 12:20:32,436 INFO new ============================================================
+2026-01-08 12:20:32,436 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:32,436 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:32,436 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:32,437 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:32,437 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:32,437 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:32,438 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:32,438 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:32,438 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:32,438 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:32,438 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:32,438 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:37,870 INFO new ============================================================
+2026-01-08 12:20:37,870 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:37,870 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:37,870 INFO new    Count: 1
+2026-01-08 12:20:37,870 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:37,870 INFO new    CUDA: 12.8
+2026-01-08 12:20:37,871 INFO new ============================================================
+2026-01-08 12:20:37,871 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:37,871 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:37,871 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:37,871 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:37,871 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:20:38,774 INFO new âœ… FP16 precision enabled
+2026-01-08 12:20:38,774 INFO new âœ… Model loaded in 0.90s
+2026-01-08 12:20:38,774 INFO new 🔥 Warming up GPU...
+2026-01-08 12:20:39,157 INFO new âœ… GPU warmed up
+2026-01-08 12:20:39,310 INFO new ============================================================
+2026-01-08 12:20:39,310 INFO new ============================================================
+2026-01-08 12:20:39,310 INFO new ============================================================
+2026-01-08 12:20:39,310 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:39,310 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:39,310 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:39,310 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:39,310 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:39,310 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:39,311 INFO new    Count: 1
+2026-01-08 12:20:39,311 INFO new    Count: 1
+2026-01-08 12:20:39,311 INFO new    Count: 1
+2026-01-08 12:20:39,311 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:39,311 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:39,311 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:39,311 INFO new    CUDA: 12.8
+2026-01-08 12:20:39,311 INFO new    CUDA: 12.8
+2026-01-08 12:20:39,311 INFO new    CUDA: 12.8
+2026-01-08 12:20:39,311 INFO new ============================================================
+2026-01-08 12:20:39,311 INFO new ============================================================
+2026-01-08 12:20:39,311 INFO new ============================================================
+2026-01-08 12:20:39,311 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:39,311 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:39,311 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:39,312 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:39,312 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:39,312 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:39,312 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:39,312 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:39,312 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:39,312 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:39,312 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:39,312 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:44,529 INFO new ============================================================
+2026-01-08 12:20:44,529 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:44,529 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:44,529 INFO new    Count: 1
+2026-01-08 12:20:44,529 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:44,529 INFO new    CUDA: 12.8
+2026-01-08 12:20:44,529 INFO new ============================================================
+2026-01-08 12:20:44,529 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:44,529 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:44,530 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:44,530 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:44,530 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:20:45,424 INFO new âœ… FP16 precision enabled
+2026-01-08 12:20:45,424 INFO new âœ… Model loaded in 0.89s
+2026-01-08 12:20:45,424 INFO new 🔥 Warming up GPU...
+2026-01-08 12:20:45,806 INFO new âœ… GPU warmed up
+2026-01-08 12:20:45,935 INFO new ============================================================
+2026-01-08 12:20:45,935 INFO new ============================================================
+2026-01-08 12:20:45,935 INFO new ============================================================
+2026-01-08 12:20:45,935 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:45,935 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:45,935 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:45,936 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:45,936 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:45,936 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:45,936 INFO new    Count: 1
+2026-01-08 12:20:45,936 INFO new    Count: 1
+2026-01-08 12:20:45,936 INFO new    Count: 1
+2026-01-08 12:20:45,936 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:45,936 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:45,936 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:45,936 INFO new    CUDA: 12.8
+2026-01-08 12:20:45,936 INFO new    CUDA: 12.8
+2026-01-08 12:20:45,936 INFO new    CUDA: 12.8
+2026-01-08 12:20:45,937 INFO new ============================================================
+2026-01-08 12:20:45,937 INFO new ============================================================
+2026-01-08 12:20:45,937 INFO new ============================================================
+2026-01-08 12:20:45,937 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:45,937 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:45,937 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:45,938 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:45,938 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:45,938 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:45,938 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:45,938 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:45,938 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:45,938 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:45,938 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:45,938 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:51,020 INFO new ============================================================
+2026-01-08 12:20:51,020 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:51,020 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:51,020 INFO new    Count: 1
+2026-01-08 12:20:51,020 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:51,020 INFO new    CUDA: 12.8
+2026-01-08 12:20:51,020 INFO new ============================================================
+2026-01-08 12:20:51,021 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:51,021 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:51,021 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:51,021 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:51,021 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:20:51,912 INFO new âœ… FP16 precision enabled
+2026-01-08 12:20:51,912 INFO new âœ… Model loaded in 0.89s
+2026-01-08 12:20:51,912 INFO new 🔥 Warming up GPU...
+2026-01-08 12:20:52,291 INFO new âœ… GPU warmed up
+2026-01-08 12:20:52,473 INFO new ============================================================
+2026-01-08 12:20:52,473 INFO new ============================================================
+2026-01-08 12:20:52,473 INFO new ============================================================
+2026-01-08 12:20:52,474 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:52,474 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:52,474 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:52,475 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:52,475 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:52,475 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:52,475 INFO new    Count: 1
+2026-01-08 12:20:52,475 INFO new    Count: 1
+2026-01-08 12:20:52,475 INFO new    Count: 1
+2026-01-08 12:20:52,475 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:52,475 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:52,475 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:52,476 INFO new    CUDA: 12.8
+2026-01-08 12:20:52,476 INFO new    CUDA: 12.8
+2026-01-08 12:20:52,476 INFO new    CUDA: 12.8
+2026-01-08 12:20:52,476 INFO new ============================================================
+2026-01-08 12:20:52,476 INFO new ============================================================
+2026-01-08 12:20:52,476 INFO new ============================================================
+2026-01-08 12:20:52,477 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:52,477 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:52,477 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:52,478 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:52,478 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:52,478 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:52,478 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:52,478 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:52,478 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:52,479 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:52,479 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:52,479 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:57,694 INFO new ============================================================
+2026-01-08 12:20:57,694 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:57,694 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:57,695 INFO new    Count: 1
+2026-01-08 12:20:57,695 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:57,695 INFO new    CUDA: 12.8
+2026-01-08 12:20:57,695 INFO new ============================================================
+2026-01-08 12:20:57,695 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:57,695 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:57,695 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:57,695 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:57,696 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:20:58,611 INFO new âœ… FP16 precision enabled
+2026-01-08 12:20:58,611 INFO new âœ… Model loaded in 0.91s
+2026-01-08 12:20:58,611 INFO new 🔥 Warming up GPU...
+2026-01-08 12:20:58,990 INFO new âœ… GPU warmed up
+2026-01-08 12:20:59,173 INFO new ============================================================
+2026-01-08 12:20:59,173 INFO new ============================================================
+2026-01-08 12:20:59,173 INFO new ============================================================
+2026-01-08 12:20:59,173 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:59,173 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:59,173 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:20:59,174 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:59,174 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:59,174 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:20:59,174 INFO new    Count: 1
+2026-01-08 12:20:59,174 INFO new    Count: 1
+2026-01-08 12:20:59,174 INFO new    Count: 1
+2026-01-08 12:20:59,175 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:59,175 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:59,175 INFO new    Memory: 23.52 GB
+2026-01-08 12:20:59,175 INFO new    CUDA: 12.8
+2026-01-08 12:20:59,175 INFO new    CUDA: 12.8
+2026-01-08 12:20:59,175 INFO new    CUDA: 12.8
+2026-01-08 12:20:59,176 INFO new ============================================================
+2026-01-08 12:20:59,176 INFO new ============================================================
+2026-01-08 12:20:59,176 INFO new ============================================================
+2026-01-08 12:20:59,176 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:59,176 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:59,176 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:20:59,177 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:59,177 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:59,177 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:20:59,178 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:59,178 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:59,178 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:20:59,178 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:59,178 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:20:59,178 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:04,435 INFO new ============================================================
+2026-01-08 12:21:04,435 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:04,435 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:04,435 INFO new    Count: 1
+2026-01-08 12:21:04,435 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:04,435 INFO new    CUDA: 12.8
+2026-01-08 12:21:04,435 INFO new ============================================================
+2026-01-08 12:21:04,435 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:04,436 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:04,436 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:04,436 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:04,436 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:21:05,348 INFO new âœ… FP16 precision enabled
+2026-01-08 12:21:05,348 INFO new âœ… Model loaded in 0.91s
+2026-01-08 12:21:05,348 INFO new 🔥 Warming up GPU...
+2026-01-08 12:21:05,728 INFO new âœ… GPU warmed up
+2026-01-08 12:21:05,884 INFO new ============================================================
+2026-01-08 12:21:05,884 INFO new ============================================================
+2026-01-08 12:21:05,884 INFO new ============================================================
+2026-01-08 12:21:05,885 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:05,885 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:05,885 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:05,886 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:05,886 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:05,886 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:05,886 INFO new    Count: 1
+2026-01-08 12:21:05,886 INFO new    Count: 1
+2026-01-08 12:21:05,886 INFO new    Count: 1
+2026-01-08 12:21:05,886 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:05,886 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:05,886 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:05,887 INFO new    CUDA: 12.8
+2026-01-08 12:21:05,887 INFO new    CUDA: 12.8
+2026-01-08 12:21:05,887 INFO new    CUDA: 12.8
+2026-01-08 12:21:05,887 INFO new ============================================================
+2026-01-08 12:21:05,887 INFO new ============================================================
+2026-01-08 12:21:05,887 INFO new ============================================================
+2026-01-08 12:21:05,888 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:05,888 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:05,888 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:05,889 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:05,889 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:05,889 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:05,889 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:05,889 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:05,889 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:05,890 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:05,890 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:05,890 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:11,002 INFO new ============================================================
+2026-01-08 12:21:11,002 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:11,002 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:11,002 INFO new    Count: 1
+2026-01-08 12:21:11,002 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:11,002 INFO new    CUDA: 12.8
+2026-01-08 12:21:11,003 INFO new ============================================================
+2026-01-08 12:21:11,003 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:11,003 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:11,003 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:11,003 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:11,003 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:21:11,877 INFO new âœ… FP16 precision enabled
+2026-01-08 12:21:11,901 INFO new âœ… Model loaded in 0.90s
+2026-01-08 12:21:11,901 INFO new 🔥 Warming up GPU...
+2026-01-08 12:21:12,280 INFO new âœ… GPU warmed up
+2026-01-08 12:21:12,451 INFO new ============================================================
+2026-01-08 12:21:12,451 INFO new ============================================================
+2026-01-08 12:21:12,451 INFO new ============================================================
+2026-01-08 12:21:12,451 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:12,451 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:12,451 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:12,452 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:12,452 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:12,452 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:12,452 INFO new    Count: 1
+2026-01-08 12:21:12,452 INFO new    Count: 1
+2026-01-08 12:21:12,452 INFO new    Count: 1
+2026-01-08 12:21:12,453 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:12,453 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:12,453 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:12,453 INFO new    CUDA: 12.8
+2026-01-08 12:21:12,453 INFO new    CUDA: 12.8
+2026-01-08 12:21:12,453 INFO new    CUDA: 12.8
+2026-01-08 12:21:12,454 INFO new ============================================================
+2026-01-08 12:21:12,454 INFO new ============================================================
+2026-01-08 12:21:12,454 INFO new ============================================================
+2026-01-08 12:21:12,454 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:12,454 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:12,454 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:12,455 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:12,455 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:12,455 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:12,456 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:12,456 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:12,456 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:12,456 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:12,456 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:12,456 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:17,651 INFO new ============================================================
+2026-01-08 12:21:17,651 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:17,651 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:17,651 INFO new    Count: 1
+2026-01-08 12:21:17,651 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:17,651 INFO new    CUDA: 12.8
+2026-01-08 12:21:17,651 INFO new ============================================================
+2026-01-08 12:21:17,651 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:17,652 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:17,652 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:17,652 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:17,652 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:21:18,543 INFO new âœ… FP16 precision enabled
+2026-01-08 12:21:18,543 INFO new âœ… Model loaded in 0.89s
+2026-01-08 12:21:18,543 INFO new 🔥 Warming up GPU...
+2026-01-08 12:21:18,920 INFO new âœ… GPU warmed up
+2026-01-08 12:21:19,109 INFO new ============================================================
+2026-01-08 12:21:19,109 INFO new ============================================================
+2026-01-08 12:21:19,109 INFO new ============================================================
+2026-01-08 12:21:19,109 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:19,109 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:19,109 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:19,110 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:19,110 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:19,110 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:19,110 INFO new    Count: 1
+2026-01-08 12:21:19,110 INFO new    Count: 1
+2026-01-08 12:21:19,110 INFO new    Count: 1
+2026-01-08 12:21:19,111 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:19,111 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:19,111 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:19,111 INFO new    CUDA: 12.8
+2026-01-08 12:21:19,111 INFO new    CUDA: 12.8
+2026-01-08 12:21:19,111 INFO new    CUDA: 12.8
+2026-01-08 12:21:19,112 INFO new ============================================================
+2026-01-08 12:21:19,112 INFO new ============================================================
+2026-01-08 12:21:19,112 INFO new ============================================================
+2026-01-08 12:21:19,112 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:19,112 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:19,112 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:19,113 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:19,113 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:19,113 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:19,114 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:19,114 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:19,114 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:19,114 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:19,114 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:19,114 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:24,186 INFO new ============================================================
+2026-01-08 12:21:24,186 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:24,186 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:24,186 INFO new    Count: 1
+2026-01-08 12:21:24,186 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:24,186 INFO new    CUDA: 12.8
+2026-01-08 12:21:24,187 INFO new ============================================================
+2026-01-08 12:21:24,187 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:24,187 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:24,187 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:24,187 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:24,188 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:21:25,059 INFO new âœ… FP16 precision enabled
+2026-01-08 12:21:25,059 INFO new âœ… Model loaded in 0.87s
+2026-01-08 12:21:25,059 INFO new 🔥 Warming up GPU...
+2026-01-08 12:21:25,435 INFO new âœ… GPU warmed up
+2026-01-08 12:21:25,597 INFO new ============================================================
+2026-01-08 12:21:25,597 INFO new ============================================================
+2026-01-08 12:21:25,597 INFO new ============================================================
+2026-01-08 12:21:25,597 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:25,597 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:25,597 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:25,598 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:25,598 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:25,598 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:25,598 INFO new    Count: 1
+2026-01-08 12:21:25,598 INFO new    Count: 1
+2026-01-08 12:21:25,598 INFO new    Count: 1
+2026-01-08 12:21:25,599 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:25,599 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:25,599 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:25,599 INFO new    CUDA: 12.8
+2026-01-08 12:21:25,599 INFO new    CUDA: 12.8
+2026-01-08 12:21:25,599 INFO new    CUDA: 12.8
+2026-01-08 12:21:25,600 INFO new ============================================================
+2026-01-08 12:21:25,600 INFO new ============================================================
+2026-01-08 12:21:25,600 INFO new ============================================================
+2026-01-08 12:21:25,600 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:25,600 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:25,600 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:25,601 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:25,601 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:25,601 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:25,602 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:25,602 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:25,602 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:25,602 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:25,602 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:25,602 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:33,830 INFO new ============================================================
+2026-01-08 12:21:33,830 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:33,830 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:33,830 INFO new    Count: 1
+2026-01-08 12:21:33,830 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:33,830 INFO new    CUDA: 12.8
+2026-01-08 12:21:33,830 INFO new ============================================================
+2026-01-08 12:21:33,830 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:33,830 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:33,831 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:33,831 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:33,831 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:21:34,822 INFO new âœ… FP16 precision enabled
+2026-01-08 12:21:34,822 INFO new âœ… Model loaded in 0.99s
+2026-01-08 12:21:34,822 INFO new 🔥 Warming up GPU...
+2026-01-08 12:21:35,201 INFO new âœ… GPU warmed up
+2026-01-08 12:21:35,386 INFO new ============================================================
+2026-01-08 12:21:35,386 INFO new ============================================================
+2026-01-08 12:21:35,386 INFO new ============================================================
+2026-01-08 12:21:35,387 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:35,387 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:35,387 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:35,388 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:35,388 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:35,388 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:35,388 INFO new    Count: 1
+2026-01-08 12:21:35,388 INFO new    Count: 1
+2026-01-08 12:21:35,388 INFO new    Count: 1
+2026-01-08 12:21:35,388 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:35,388 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:35,388 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:35,389 INFO new    CUDA: 12.8
+2026-01-08 12:21:35,389 INFO new    CUDA: 12.8
+2026-01-08 12:21:35,389 INFO new    CUDA: 12.8
+2026-01-08 12:21:35,389 INFO new ============================================================
+2026-01-08 12:21:35,389 INFO new ============================================================
+2026-01-08 12:21:35,389 INFO new ============================================================
+2026-01-08 12:21:35,390 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:35,390 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:35,390 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:35,390 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:35,390 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:35,390 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:35,391 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:35,391 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:35,391 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:35,391 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:35,391 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:35,391 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:40,541 INFO new ============================================================
+2026-01-08 12:21:40,541 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:40,541 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:40,542 INFO new    Count: 1
+2026-01-08 12:21:40,542 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:40,542 INFO new    CUDA: 12.8
+2026-01-08 12:21:40,542 INFO new ============================================================
+2026-01-08 12:21:40,542 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:40,542 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:40,542 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:40,542 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:40,543 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:21:41,445 INFO new âœ… FP16 precision enabled
+2026-01-08 12:21:41,446 INFO new âœ… Model loaded in 0.90s
+2026-01-08 12:21:41,446 INFO new 🔥 Warming up GPU...
+2026-01-08 12:21:41,845 INFO new âœ… GPU warmed up
+2026-01-08 12:21:42,058 INFO new ============================================================
+2026-01-08 12:21:42,058 INFO new ============================================================
+2026-01-08 12:21:42,058 INFO new ============================================================
+2026-01-08 12:21:42,058 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:42,058 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:42,058 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:42,059 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:42,059 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:42,059 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:42,059 INFO new    Count: 1
+2026-01-08 12:21:42,059 INFO new    Count: 1
+2026-01-08 12:21:42,059 INFO new    Count: 1
+2026-01-08 12:21:42,059 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:42,059 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:42,059 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:42,060 INFO new    CUDA: 12.8
+2026-01-08 12:21:42,060 INFO new    CUDA: 12.8
+2026-01-08 12:21:42,060 INFO new    CUDA: 12.8
+2026-01-08 12:21:42,060 INFO new ============================================================
+2026-01-08 12:21:42,060 INFO new ============================================================
+2026-01-08 12:21:42,060 INFO new ============================================================
+2026-01-08 12:21:42,061 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:42,061 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:42,061 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:42,061 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:42,061 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:42,061 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:42,062 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:42,062 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:42,062 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:42,062 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:42,062 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:42,062 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:47,157 INFO new ============================================================
+2026-01-08 12:21:47,157 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:47,157 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:47,157 INFO new    Count: 1
+2026-01-08 12:21:47,157 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:47,157 INFO new    CUDA: 12.8
+2026-01-08 12:21:47,157 INFO new ============================================================
+2026-01-08 12:21:47,157 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:47,158 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:47,158 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:47,158 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:47,158 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:21:48,134 INFO new âœ… FP16 precision enabled
+2026-01-08 12:21:48,135 INFO new âœ… Model loaded in 0.98s
+2026-01-08 12:21:48,135 INFO new 🔥 Warming up GPU...
+2026-01-08 12:21:48,516 INFO new âœ… GPU warmed up
+2026-01-08 12:21:48,676 INFO new ============================================================
+2026-01-08 12:21:48,676 INFO new ============================================================
+2026-01-08 12:21:48,676 INFO new ============================================================
+2026-01-08 12:21:48,676 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:48,676 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:48,676 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:48,677 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:48,677 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:48,677 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:48,677 INFO new    Count: 1
+2026-01-08 12:21:48,677 INFO new    Count: 1
+2026-01-08 12:21:48,677 INFO new    Count: 1
+2026-01-08 12:21:48,678 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:48,678 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:48,678 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:48,678 INFO new    CUDA: 12.8
+2026-01-08 12:21:48,678 INFO new    CUDA: 12.8
+2026-01-08 12:21:48,678 INFO new    CUDA: 12.8
+2026-01-08 12:21:48,678 INFO new ============================================================
+2026-01-08 12:21:48,678 INFO new ============================================================
+2026-01-08 12:21:48,678 INFO new ============================================================
+2026-01-08 12:21:48,679 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:48,679 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:48,679 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:48,679 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:48,679 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:48,679 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:48,680 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:48,680 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:48,680 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:48,680 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:48,680 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:48,680 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:53,889 INFO new ============================================================
+2026-01-08 12:21:53,890 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:53,890 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:53,890 INFO new    Count: 1
+2026-01-08 12:21:53,890 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:53,890 INFO new    CUDA: 12.8
+2026-01-08 12:21:53,890 INFO new ============================================================
+2026-01-08 12:21:53,890 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:53,890 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:53,890 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:53,891 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:53,891 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:21:54,782 INFO new âœ… FP16 precision enabled
+2026-01-08 12:21:54,783 INFO new âœ… Model loaded in 0.89s
+2026-01-08 12:21:54,783 INFO new 🔥 Warming up GPU...
+2026-01-08 12:21:55,160 INFO new âœ… GPU warmed up
+2026-01-08 12:21:55,329 INFO new ============================================================
+2026-01-08 12:21:55,329 INFO new ============================================================
+2026-01-08 12:21:55,329 INFO new ============================================================
+2026-01-08 12:21:55,329 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:55,329 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:55,329 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:21:55,330 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:55,330 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:55,330 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:21:55,330 INFO new    Count: 1
+2026-01-08 12:21:55,330 INFO new    Count: 1
+2026-01-08 12:21:55,330 INFO new    Count: 1
+2026-01-08 12:21:55,331 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:55,331 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:55,331 INFO new    Memory: 23.52 GB
+2026-01-08 12:21:55,331 INFO new    CUDA: 12.8
+2026-01-08 12:21:55,331 INFO new    CUDA: 12.8
+2026-01-08 12:21:55,331 INFO new    CUDA: 12.8
+2026-01-08 12:21:55,331 INFO new ============================================================
+2026-01-08 12:21:55,331 INFO new ============================================================
+2026-01-08 12:21:55,331 INFO new ============================================================
+2026-01-08 12:21:55,332 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:55,332 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:55,332 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:21:55,333 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:55,333 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:55,333 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:21:55,333 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:55,333 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:55,333 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:21:55,334 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:55,334 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:21:55,334 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:00,455 INFO new ============================================================
+2026-01-08 12:22:00,455 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:00,456 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:00,456 INFO new    Count: 1
+2026-01-08 12:22:00,456 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:00,456 INFO new    CUDA: 12.8
+2026-01-08 12:22:00,456 INFO new ============================================================
+2026-01-08 12:22:00,456 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:00,456 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:00,456 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:00,456 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:00,457 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:22:01,329 INFO new âœ… FP16 precision enabled
+2026-01-08 12:22:01,329 INFO new âœ… Model loaded in 0.87s
+2026-01-08 12:22:01,329 INFO new 🔥 Warming up GPU...
+2026-01-08 12:22:01,709 INFO new âœ… GPU warmed up
+2026-01-08 12:22:01,881 INFO new ============================================================
+2026-01-08 12:22:01,881 INFO new ============================================================
+2026-01-08 12:22:01,881 INFO new ============================================================
+2026-01-08 12:22:01,882 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:01,882 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:01,882 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:01,882 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:01,882 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:01,882 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:01,883 INFO new    Count: 1
+2026-01-08 12:22:01,883 INFO new    Count: 1
+2026-01-08 12:22:01,883 INFO new    Count: 1
+2026-01-08 12:22:01,883 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:01,883 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:01,883 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:01,883 INFO new    CUDA: 12.8
+2026-01-08 12:22:01,883 INFO new    CUDA: 12.8
+2026-01-08 12:22:01,883 INFO new    CUDA: 12.8
+2026-01-08 12:22:01,884 INFO new ============================================================
+2026-01-08 12:22:01,884 INFO new ============================================================
+2026-01-08 12:22:01,884 INFO new ============================================================
+2026-01-08 12:22:01,884 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:01,884 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:01,884 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:01,885 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:01,885 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:01,885 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:01,885 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:01,885 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:01,885 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:01,886 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:01,886 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:01,886 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:07,092 INFO new ============================================================
+2026-01-08 12:22:07,092 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:07,092 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:07,093 INFO new    Count: 1
+2026-01-08 12:22:07,093 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:07,093 INFO new    CUDA: 12.8
+2026-01-08 12:22:07,093 INFO new ============================================================
+2026-01-08 12:22:07,093 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:07,093 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:07,093 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:07,093 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:07,094 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:22:08,026 INFO new âœ… FP16 precision enabled
+2026-01-08 12:22:08,026 INFO new âœ… Model loaded in 0.93s
+2026-01-08 12:22:08,026 INFO new 🔥 Warming up GPU...
+2026-01-08 12:22:08,404 INFO new âœ… GPU warmed up
+2026-01-08 12:22:08,584 INFO new ============================================================
+2026-01-08 12:22:08,584 INFO new ============================================================
+2026-01-08 12:22:08,584 INFO new ============================================================
+2026-01-08 12:22:08,585 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:08,585 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:08,585 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:08,586 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:08,586 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:08,586 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:08,587 INFO new    Count: 1
+2026-01-08 12:22:08,587 INFO new    Count: 1
+2026-01-08 12:22:08,587 INFO new    Count: 1
+2026-01-08 12:22:08,587 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:08,587 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:08,587 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:08,588 INFO new    CUDA: 12.8
+2026-01-08 12:22:08,588 INFO new    CUDA: 12.8
+2026-01-08 12:22:08,588 INFO new    CUDA: 12.8
+2026-01-08 12:22:08,589 INFO new ============================================================
+2026-01-08 12:22:08,589 INFO new ============================================================
+2026-01-08 12:22:08,589 INFO new ============================================================
+2026-01-08 12:22:08,589 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:08,589 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:08,589 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:08,590 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:08,590 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:08,590 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:08,591 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:08,591 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:08,591 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:08,591 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:08,591 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:08,591 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:13,659 INFO new ============================================================
+2026-01-08 12:22:13,660 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:13,660 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:13,660 INFO new    Count: 1
+2026-01-08 12:22:13,660 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:13,660 INFO new    CUDA: 12.8
+2026-01-08 12:22:13,660 INFO new ============================================================
+2026-01-08 12:22:13,660 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:13,660 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:13,660 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:13,661 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:13,661 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:22:14,565 INFO new âœ… FP16 precision enabled
+2026-01-08 12:22:14,566 INFO new âœ… Model loaded in 0.90s
+2026-01-08 12:22:14,566 INFO new 🔥 Warming up GPU...
+2026-01-08 12:22:14,944 INFO new âœ… GPU warmed up
+2026-01-08 12:22:15,126 INFO new ============================================================
+2026-01-08 12:22:15,126 INFO new ============================================================
+2026-01-08 12:22:15,126 INFO new ============================================================
+2026-01-08 12:22:15,127 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:15,127 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:15,127 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:15,127 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:15,127 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:15,127 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:15,128 INFO new    Count: 1
+2026-01-08 12:22:15,128 INFO new    Count: 1
+2026-01-08 12:22:15,128 INFO new    Count: 1
+2026-01-08 12:22:15,128 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:15,128 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:15,128 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:15,129 INFO new    CUDA: 12.8
+2026-01-08 12:22:15,129 INFO new    CUDA: 12.8
+2026-01-08 12:22:15,129 INFO new    CUDA: 12.8
+2026-01-08 12:22:15,129 INFO new ============================================================
+2026-01-08 12:22:15,129 INFO new ============================================================
+2026-01-08 12:22:15,129 INFO new ============================================================
+2026-01-08 12:22:15,130 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:15,130 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:15,130 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:15,131 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:15,131 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:15,131 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:15,131 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:15,131 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:15,131 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:15,131 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:15,131 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:15,131 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:20,300 INFO new ============================================================
+2026-01-08 12:22:20,301 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:20,301 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:20,301 INFO new    Count: 1
+2026-01-08 12:22:20,301 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:20,301 INFO new    CUDA: 12.8
+2026-01-08 12:22:20,301 INFO new ============================================================
+2026-01-08 12:22:20,301 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:20,301 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:20,301 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:20,301 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:20,302 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:22:21,204 INFO new âœ… FP16 precision enabled
+2026-01-08 12:22:21,204 INFO new âœ… Model loaded in 0.90s
+2026-01-08 12:22:21,204 INFO new 🔥 Warming up GPU...
+2026-01-08 12:22:21,571 INFO new âœ… GPU warmed up
+2026-01-08 12:22:21,730 INFO new ============================================================
+2026-01-08 12:22:21,730 INFO new ============================================================
+2026-01-08 12:22:21,730 INFO new ============================================================
+2026-01-08 12:22:21,731 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:21,731 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:21,731 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:21,731 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:21,731 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:21,731 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:21,732 INFO new    Count: 1
+2026-01-08 12:22:21,732 INFO new    Count: 1
+2026-01-08 12:22:21,732 INFO new    Count: 1
+2026-01-08 12:22:21,732 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:21,732 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:21,732 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:21,732 INFO new    CUDA: 12.8
+2026-01-08 12:22:21,732 INFO new    CUDA: 12.8
+2026-01-08 12:22:21,732 INFO new    CUDA: 12.8
+2026-01-08 12:22:21,733 INFO new ============================================================
+2026-01-08 12:22:21,733 INFO new ============================================================
+2026-01-08 12:22:21,733 INFO new ============================================================
+2026-01-08 12:22:21,733 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:21,733 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:21,733 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:21,734 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:21,734 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:21,734 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:21,734 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:21,734 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:21,734 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:21,735 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:21,735 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:21,735 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:26,949 INFO new ============================================================
+2026-01-08 12:22:26,949 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:26,949 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:26,949 INFO new    Count: 1
+2026-01-08 12:22:26,949 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:26,949 INFO new    CUDA: 12.8
+2026-01-08 12:22:26,950 INFO new ============================================================
+2026-01-08 12:22:26,950 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:26,950 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:26,950 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:26,950 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:26,951 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:22:27,921 INFO new âœ… FP16 precision enabled
+2026-01-08 12:22:27,921 INFO new âœ… Model loaded in 0.97s
+2026-01-08 12:22:27,921 INFO new 🔥 Warming up GPU...
+2026-01-08 12:22:28,305 INFO new âœ… GPU warmed up
+2026-01-08 12:22:28,489 INFO new ============================================================
+2026-01-08 12:22:28,489 INFO new ============================================================
+2026-01-08 12:22:28,489 INFO new ============================================================
+2026-01-08 12:22:28,490 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:28,490 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:28,490 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:28,490 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:28,490 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:28,490 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:28,491 INFO new    Count: 1
+2026-01-08 12:22:28,491 INFO new    Count: 1
+2026-01-08 12:22:28,491 INFO new    Count: 1
+2026-01-08 12:22:28,491 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:28,491 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:28,491 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:28,492 INFO new    CUDA: 12.8
+2026-01-08 12:22:28,492 INFO new    CUDA: 12.8
+2026-01-08 12:22:28,492 INFO new    CUDA: 12.8
+2026-01-08 12:22:28,492 INFO new ============================================================
+2026-01-08 12:22:28,492 INFO new ============================================================
+2026-01-08 12:22:28,492 INFO new ============================================================
+2026-01-08 12:22:28,493 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:28,493 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:28,493 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:28,494 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:28,494 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:28,494 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:28,494 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:28,494 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:28,494 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:28,495 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:28,495 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:28,495 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:33,745 INFO new ============================================================
+2026-01-08 12:22:33,745 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:33,745 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:33,745 INFO new    Count: 1
+2026-01-08 12:22:33,745 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:33,745 INFO new    CUDA: 12.8
+2026-01-08 12:22:33,745 INFO new ============================================================
+2026-01-08 12:22:33,745 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:33,745 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:33,746 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:33,746 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:33,746 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:22:34,661 INFO new âœ… FP16 precision enabled
+2026-01-08 12:22:34,661 INFO new âœ… Model loaded in 0.91s
+2026-01-08 12:22:34,661 INFO new 🔥 Warming up GPU...
+2026-01-08 12:22:35,041 INFO new âœ… GPU warmed up
+2026-01-08 12:22:35,226 INFO new ============================================================
+2026-01-08 12:22:35,226 INFO new ============================================================
+2026-01-08 12:22:35,226 INFO new ============================================================
+2026-01-08 12:22:35,226 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:35,226 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:35,226 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:35,227 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:35,227 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:35,227 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:35,227 INFO new    Count: 1
+2026-01-08 12:22:35,227 INFO new    Count: 1
+2026-01-08 12:22:35,227 INFO new    Count: 1
+2026-01-08 12:22:35,228 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:35,228 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:35,228 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:35,228 INFO new    CUDA: 12.8
+2026-01-08 12:22:35,228 INFO new    CUDA: 12.8
+2026-01-08 12:22:35,228 INFO new    CUDA: 12.8
+2026-01-08 12:22:35,229 INFO new ============================================================
+2026-01-08 12:22:35,229 INFO new ============================================================
+2026-01-08 12:22:35,229 INFO new ============================================================
+2026-01-08 12:22:35,229 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:35,229 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:35,229 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:35,230 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:35,230 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:35,230 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:35,231 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:35,231 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:35,231 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:35,231 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:35,231 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:35,231 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:40,458 INFO new ============================================================
+2026-01-08 12:22:40,458 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:40,458 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:40,459 INFO new    Count: 1
+2026-01-08 12:22:40,459 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:40,459 INFO new    CUDA: 12.8
+2026-01-08 12:22:40,459 INFO new ============================================================
+2026-01-08 12:22:40,459 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:40,459 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:40,459 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:40,459 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:40,460 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:22:41,522 INFO new âœ… FP16 precision enabled
+2026-01-08 12:22:41,523 INFO new âœ… Model loaded in 1.06s
+2026-01-08 12:22:41,523 INFO new 🔥 Warming up GPU...
+2026-01-08 12:22:41,900 INFO new âœ… GPU warmed up
+2026-01-08 12:22:42,081 INFO new ============================================================
+2026-01-08 12:22:42,081 INFO new ============================================================
+2026-01-08 12:22:42,081 INFO new ============================================================
+2026-01-08 12:22:42,082 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:42,082 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:42,082 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:42,082 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:42,082 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:42,082 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:42,083 INFO new    Count: 1
+2026-01-08 12:22:42,083 INFO new    Count: 1
+2026-01-08 12:22:42,083 INFO new    Count: 1
+2026-01-08 12:22:42,083 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:42,083 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:42,083 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:42,084 INFO new    CUDA: 12.8
+2026-01-08 12:22:42,084 INFO new    CUDA: 12.8
+2026-01-08 12:22:42,084 INFO new    CUDA: 12.8
+2026-01-08 12:22:42,084 INFO new ============================================================
+2026-01-08 12:22:42,084 INFO new ============================================================
+2026-01-08 12:22:42,084 INFO new ============================================================
+2026-01-08 12:22:42,085 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:42,085 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:42,085 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:42,085 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:42,085 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:42,085 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:42,086 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:42,086 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:42,086 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:42,086 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:42,086 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:42,086 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:47,188 INFO new ============================================================
+2026-01-08 12:22:47,188 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:47,188 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:47,188 INFO new    Count: 1
+2026-01-08 12:22:47,189 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:47,189 INFO new    CUDA: 12.8
+2026-01-08 12:22:47,189 INFO new ============================================================
+2026-01-08 12:22:47,189 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:47,189 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:47,189 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:47,189 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:47,190 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:22:48,098 INFO new âœ… FP16 precision enabled
+2026-01-08 12:22:48,099 INFO new âœ… Model loaded in 0.91s
+2026-01-08 12:22:48,099 INFO new 🔥 Warming up GPU...
+2026-01-08 12:22:48,478 INFO new âœ… GPU warmed up
+2026-01-08 12:22:48,633 INFO new ============================================================
+2026-01-08 12:22:48,633 INFO new ============================================================
+2026-01-08 12:22:48,633 INFO new ============================================================
+2026-01-08 12:22:48,633 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:48,633 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:48,633 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:48,634 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:48,634 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:48,634 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:48,634 INFO new    Count: 1
+2026-01-08 12:22:48,634 INFO new    Count: 1
+2026-01-08 12:22:48,634 INFO new    Count: 1
+2026-01-08 12:22:48,635 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:48,635 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:48,635 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:48,635 INFO new    CUDA: 12.8
+2026-01-08 12:22:48,635 INFO new    CUDA: 12.8
+2026-01-08 12:22:48,635 INFO new    CUDA: 12.8
+2026-01-08 12:22:48,635 INFO new ============================================================
+2026-01-08 12:22:48,635 INFO new ============================================================
+2026-01-08 12:22:48,635 INFO new ============================================================
+2026-01-08 12:22:48,636 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:48,636 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:48,636 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:48,637 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:48,637 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:48,637 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:48,638 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:48,638 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:48,638 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:48,638 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:48,638 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:48,638 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:53,806 INFO new ============================================================
+2026-01-08 12:22:53,806 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:53,806 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:53,806 INFO new    Count: 1
+2026-01-08 12:22:53,806 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:53,806 INFO new    CUDA: 12.8
+2026-01-08 12:22:53,806 INFO new ============================================================
+2026-01-08 12:22:53,806 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:53,807 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:53,807 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:53,807 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:53,807 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:22:54,713 INFO new âœ… FP16 precision enabled
+2026-01-08 12:22:54,713 INFO new âœ… Model loaded in 0.91s
+2026-01-08 12:22:54,713 INFO new 🔥 Warming up GPU...
+2026-01-08 12:22:55,093 INFO new âœ… GPU warmed up
+2026-01-08 12:22:55,256 INFO new ============================================================
+2026-01-08 12:22:55,256 INFO new ============================================================
+2026-01-08 12:22:55,256 INFO new ============================================================
+2026-01-08 12:22:55,257 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:55,257 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:55,257 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:22:55,258 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:55,258 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:55,258 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:22:55,258 INFO new    Count: 1
+2026-01-08 12:22:55,258 INFO new    Count: 1
+2026-01-08 12:22:55,258 INFO new    Count: 1
+2026-01-08 12:22:55,259 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:55,259 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:55,259 INFO new    Memory: 23.52 GB
+2026-01-08 12:22:55,259 INFO new    CUDA: 12.8
+2026-01-08 12:22:55,259 INFO new    CUDA: 12.8
+2026-01-08 12:22:55,259 INFO new    CUDA: 12.8
+2026-01-08 12:22:55,259 INFO new ============================================================
+2026-01-08 12:22:55,259 INFO new ============================================================
+2026-01-08 12:22:55,259 INFO new ============================================================
+2026-01-08 12:22:55,260 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:55,260 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:55,260 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:22:55,261 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:55,261 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:55,261 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:22:55,261 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:55,261 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:55,261 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:22:55,262 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:55,262 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:22:55,262 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:23:15,182 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:23:15,182 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:23:15,182 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:23:15,183 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:23:15,183 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:23:15,183 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:23:15,183 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:23:15,183 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:23:15,183 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:23:15,184 INFO new 📞 Initiating call to +917061474588 with agent agent_580542b4db734644
+2026-01-08 12:23:15,184 INFO new 📞 Initiating call to +917061474588 with agent agent_580542b4db734644
+2026-01-08 12:23:15,184 INFO new 📞 Initiating call to +917061474588 with agent agent_580542b4db734644
+2026-01-08 12:23:15,184 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:23:15,184 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:23:15,184 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:23:15,184 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:23:15,184 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:23:15,184 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:23:15,185 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:23:15,185 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:23:15,185 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:23:15,185 INFO new 🔍 API Extracted - custom_first_message: 'hi how are you nitesh ...'
+2026-01-08 12:23:15,185 INFO new 🔍 API Extracted - custom_first_message: 'hi how are you nitesh ...'
+2026-01-08 12:23:15,185 INFO new 🔍 API Extracted - custom_first_message: 'hi how are you nitesh ...'
+2026-01-08 12:23:15,188 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:23:15,188 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:23:15,188 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:23:15,189 INFO new api voice outbound api called
+2026-01-08 12:23:15,189 INFO new api voice outbound api called
+2026-01-08 12:23:15,189 INFO new api voice outbound api called
+2026-01-08 12:23:15,476 INFO new 💾 Stored call data for: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:15,476 INFO new 💾 Stored call data for: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:15,476 INFO new 💾 Stored call data for: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:15,477 INFO new 💾 - Agent ID: agent_580542b4db734644
+2026-01-08 12:23:15,477 INFO new 💾 - Agent ID: agent_580542b4db734644
+2026-01-08 12:23:15,477 INFO new 💾 - Agent ID: agent_580542b4db734644
+2026-01-08 12:23:15,477 INFO new 💾 - Custom voice: None
+2026-01-08 12:23:15,477 INFO new 💾 - Custom voice: None
+2026-01-08 12:23:15,477 INFO new 💾 - Custom voice: None
+2026-01-08 12:23:15,478 INFO new 💾 - Custom model: None
+2026-01-08 12:23:15,478 INFO new 💾 - Custom model: None
+2026-01-08 12:23:15,478 INFO new 💾 - Custom model: None
+2026-01-08 12:23:15,478 INFO new 💾 - Dynamic vars: 0 fields
+2026-01-08 12:23:15,478 INFO new 💾 - Dynamic vars: 0 fields
+2026-01-08 12:23:15,478 INFO new 💾 - Dynamic vars: 0 fields
+2026-01-08 12:23:15,488 INFO new ✅ Call initiated: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:15,488 INFO new ✅ Call initiated: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:15,488 INFO new ✅ Call initiated: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:15,548 INFO new 📞 Call status update: CA1e048bd03d6b914cb83e6a7f620967e0 -> initiated
+2026-01-08 12:23:15,548 INFO new 📞 Call status update: CA1e048bd03d6b914cb83e6a7f620967e0 -> initiated
+2026-01-08 12:23:15,548 INFO new 📞 Call status update: CA1e048bd03d6b914cb83e6a7f620967e0 -> initiated
+2026-01-08 12:23:16,694 INFO new 📞 Call status update: CA1e048bd03d6b914cb83e6a7f620967e0 -> ringing
+2026-01-08 12:23:16,694 INFO new 📞 Call status update: CA1e048bd03d6b914cb83e6a7f620967e0 -> ringing
+2026-01-08 12:23:16,694 INFO new 📞 Call status update: CA1e048bd03d6b914cb83e6a7f620967e0 -> ringing
+2026-01-08 12:23:19,452 INFO new 📞 Call status update: CA1e048bd03d6b914cb83e6a7f620967e0 -> in-progress
+2026-01-08 12:23:19,452 INFO new 📞 Call status update: CA1e048bd03d6b914cb83e6a7f620967e0 -> in-progress
+2026-01-08 12:23:19,452 INFO new 📞 Call status update: CA1e048bd03d6b914cb83e6a7f620967e0 -> in-progress
+2026-01-08 12:23:19,535 INFO new voice outbound call
+2026-01-08 12:23:19,535 INFO new voice outbound call
+2026-01-08 12:23:19,535 INFO new voice outbound call
+2026-01-08 12:23:19,535 INFO new media_stream_websocket_called
+2026-01-08 12:23:19,535 INFO new media_stream_websocket_called
+2026-01-08 12:23:19,535 INFO new media_stream_websocket_called
+2026-01-08 12:23:19,536 INFO new response appended
+2026-01-08 12:23:19,536 INFO new response appended
+2026-01-08 12:23:19,536 INFO new response appended
+2026-01-08 12:23:19,728 INFO new 🔍 WebSocket Debug - call_sid: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,728 INFO new 🔍 WebSocket Debug - call_sid: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,728 INFO new 🔍 WebSocket Debug - call_sid: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,728 INFO new 🔍 Pending call data found: True
+2026-01-08 12:23:19,728 INFO new 🔍 Pending call data found: True
+2026-01-08 12:23:19,728 INFO new 🔍 Pending call data found: True
+2026-01-08 12:23:19,729 INFO new 🔍 Agent ID: agent_580542b4db734644
+2026-01-08 12:23:19,729 INFO new 🔍 Agent ID: agent_580542b4db734644
+2026-01-08 12:23:19,729 INFO new 🔍 Agent ID: agent_580542b4db734644
+2026-01-08 12:23:19,729 INFO new 🔍 Direction: outbound
+2026-01-08 12:23:19,729 INFO new 🔍 Direction: outbound
+2026-01-08 12:23:19,729 INFO new 🔍 Direction: outbound
+2026-01-08 12:23:19,730 INFO new 🔍 Custom voice_id: None
+2026-01-08 12:23:19,730 INFO new 🔍 Custom voice_id: None
+2026-01-08 12:23:19,730 INFO new 🔍 Custom voice_id: None
+2026-01-08 12:23:19,730 INFO new 🔍 Custom model: None
+2026-01-08 12:23:19,730 INFO new 🔍 Custom model: None
+2026-01-08 12:23:19,730 INFO new 🔍 Custom model: None
+2026-01-08 12:23:19,730 INFO new 🔧 Overrides loaded:
+2026-01-08 12:23:19,730 INFO new 🔧 Overrides loaded:
+2026-01-08 12:23:19,730 INFO new 🔧 Overrides loaded:
+2026-01-08 12:23:19,731 INFO new    - custom_voice_id: None (will use agent/default)
+2026-01-08 12:23:19,731 INFO new    - custom_voice_id: None (will use agent/default)
+2026-01-08 12:23:19,731 INFO new    - custom_voice_id: None (will use agent/default)
+2026-01-08 12:23:19,731 INFO new    - custom_model: None (will use agent/default)
+2026-01-08 12:23:19,731 INFO new    - custom_model: None (will use agent/default)
+2026-01-08 12:23:19,731 INFO new    - custom_model: None (will use agent/default)
+2026-01-08 12:23:19,731 INFO new    - custom_first_message: Yes (hi how are you nitesh ...)
+2026-01-08 12:23:19,731 INFO new    - custom_first_message: Yes (hi how are you nitesh ...)
+2026-01-08 12:23:19,731 INFO new    - custom_first_message: Yes (hi how are you nitesh ...)
+2026-01-08 12:23:19,735 INFO new ✅ Loaded agent: agent_580542b4db734644 (strifghng)
+2026-01-08 12:23:19,735 INFO new ✅ Loaded agent: agent_580542b4db734644 (strifghng)
+2026-01-08 12:23:19,735 INFO new ✅ Loaded agent: agent_580542b4db734644 (strifghng)
+2026-01-08 12:23:19,735 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:23:19,735 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:23:19,735 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:23:19,736 INFO new 💬 Using custom first message: hi how are you nitesh ...
+2026-01-08 12:23:19,736 INFO new 💬 Using custom first message: hi how are you nitesh ...
+2026-01-08 12:23:19,736 INFO new 💬 Using custom first message: hi how are you nitesh ...
+2026-01-08 12:23:19,746 INFO new ✅ Conversation status updated to 'in-progress': CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,746 INFO new ✅ Conversation status updated to 'in-progress': CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,746 INFO new ✅ Conversation status updated to 'in-progress': CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,749 INFO new ðŸŽµ Resampler pre-initialized for this connection
+2026-01-08 12:23:19,749 INFO new ðŸŽµ Resampler pre-initialized for this connection
+2026-01-08 12:23:19,749 INFO new ðŸŽµ Resampler pre-initialized for this connection
+2026-01-08 12:23:19,749 INFO new ✅ Connection setup complete for call_sid: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,749 INFO new ✅ Connection setup complete for call_sid: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,749 INFO new ✅ Connection setup complete for call_sid: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,750 INFO new ✅ Streaming STT setup complete for call_sid: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,750 INFO new ✅ Streaming STT setup complete for call_sid: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,750 INFO new ✅ Streaming STT setup complete for call_sid: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,750 INFO new ✅ WebSocket connection started for call_sid: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,750 INFO new ✅ WebSocket connection started for call_sid: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,750 INFO new ✅ WebSocket connection started for call_sid: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:23:19,750 INFO new ðŸ’» TTS Worker waiting for text...
+2026-01-08 12:23:19,750 INFO new ðŸ’» TTS Worker waiting for text...
+2026-01-08 12:23:19,750 INFO new ðŸ’» TTS Worker waiting for text...
+2026-01-08 12:23:19,850 INFO new 🎯 BEFORE GREETING - conn.custom_voice_id: 'None'
+2026-01-08 12:23:19,850 INFO new 🎯 BEFORE GREETING - conn.custom_voice_id: 'None'
+2026-01-08 12:23:19,850 INFO new 🎯 BEFORE GREETING - conn.custom_voice_id: 'None'
+2026-01-08 12:23:19,850 INFO new 🎯 BEFORE GREETING - conn.agent_config voice: 'aura-2-thalia-en'
+2026-01-08 12:23:19,850 INFO new 🎯 BEFORE GREETING - conn.agent_config voice: 'aura-2-thalia-en'
+2026-01-08 12:23:19,850 INFO new 🎯 BEFORE GREETING - conn.agent_config voice: 'aura-2-thalia-en'
+2026-01-08 12:23:19,851 INFO new ðŸ’» TTS Worker got text (21 chars)
+2026-01-08 12:23:19,851 INFO new ðŸ’» TTS Worker got text (21 chars)
+2026-01-08 12:23:19,851 INFO new ðŸ’» TTS Worker got text (21 chars)
+2026-01-08 12:23:19,852 INFO new ðŸ’» TTS Worker processing text: 'hi how are you nitesh...'
+2026-01-08 12:23:19,852 INFO new ðŸ’» TTS Worker processing text: 'hi how are you nitesh...'
+2026-01-08 12:23:19,852 INFO new ðŸ’» TTS Worker processing text: 'hi how are you nitesh...'
+2026-01-08 12:23:19,852 INFO new ðŸ’» TTS Worker started processing
+2026-01-08 12:23:19,852 INFO new ðŸ’» TTS Worker started processing
+2026-01-08 12:23:19,852 INFO new ðŸ’» TTS Worker started processing
+2026-01-08 12:23:19,852 INFO new ðŸ’» TTS Worker processing valid text
+2026-01-08 12:23:19,852 INFO new ðŸ’» TTS Worker processing valid text
+2026-01-08 12:23:19,852 INFO new ðŸ’» TTS Worker processing valid text
+2026-01-08 12:23:19,853 INFO new ðŸŽ¤ TTS sentence (21 chars): 'hi how are you nitesh...'
+2026-01-08 12:23:19,853 INFO new ðŸŽ¤ TTS sentence (21 chars): 'hi how are you nitesh...'
+2026-01-08 12:23:19,853 INFO new ðŸŽ¤ TTS sentence (21 chars): 'hi how are you nitesh...'
+2026-01-08 12:23:19,853 INFO new ðŸ’» TTS Worker starting stream...
+2026-01-08 12:23:19,853 INFO new ðŸ’» TTS Worker starting stream...
+2026-01-08 12:23:19,853 INFO new ðŸ’» TTS Worker starting stream...
+2026-01-08 12:23:19,853 INFO new ðŸ’» TTS Worker set currently_speaking=True
+2026-01-08 12:23:19,853 INFO new ðŸ’» TTS Worker set currently_speaking=True
+2026-01-08 12:23:19,853 INFO new ðŸ’» TTS Worker set currently_speaking=True
+2026-01-08 12:23:19,854 INFO new ðŸ’» TTS Worker initialized variables
+2026-01-08 12:23:19,854 INFO new ðŸ’» TTS Worker initialized variables
+2026-01-08 12:23:19,854 INFO new ðŸ’» TTS Worker initialized variables
+2026-01-08 12:23:19,854 INFO new ðŸ’» TTS Worker prepared request payload
+2026-01-08 12:23:19,854 INFO new ðŸ’» TTS Worker prepared request payload
+2026-01-08 12:23:19,854 INFO new ðŸ’» TTS Worker prepared request payload
+2026-01-08 12:23:19,854 INFO new ðŸ’» TTS Worker determining voice to use
+2026-01-08 12:23:19,854 INFO new ðŸ’» TTS Worker determining voice to use
+2026-01-08 12:23:19,854 INFO new ðŸ’» TTS Worker determining voice to use
+2026-01-08 12:23:19,855 INFO new ðŸ’» TTS Worker default voice: aura-2-thalia-en
+2026-01-08 12:23:19,855 INFO new ðŸ’» TTS Worker default voice: aura-2-thalia-en
+2026-01-08 12:23:19,855 INFO new ðŸ’» TTS Worker default voice: aura-2-thalia-en
+2026-01-08 12:23:19,855 INFO new 🎤 TTS Voice: aura-2-thalia-en (source: agent_config) for text: 'hi how are you nitesh...'
+2026-01-08 12:23:19,855 INFO new 🎤 TTS Voice: aura-2-thalia-en (source: agent_config) for text: 'hi how are you nitesh...'
+2026-01-08 12:23:19,855 INFO new 🎤 TTS Voice: aura-2-thalia-en (source: agent_config) for text: 'hi how are you nitesh...'
+2026-01-08 12:23:19,917 INFO new ✅ Greeting captured in conversation history
+2026-01-08 12:23:19,917 INFO new ✅ Greeting captured in conversation history
+2026-01-08 12:23:19,917 INFO new ✅ Greeting captured in conversation history
+2026-01-08 12:23:21,810 INFO new âœ… Sentence completed in 1957ms (69 chunks, 10.7 chars/sec)
+2026-01-08 12:23:21,810 INFO new âœ… Sentence completed in 1957ms (69 chunks, 10.7 chars/sec)
+2026-01-08 12:23:21,810 INFO new âœ… Sentence completed in 1957ms (69 chunks, 10.7 chars/sec)
+2026-01-08 12:23:21,810 INFO new ðŸ’» TTS Worker waiting for text...
+2026-01-08 12:23:21,810 INFO new ðŸ’» TTS Worker waiting for text...
+2026-01-08 12:23:21,810 INFO new ðŸ’» TTS Worker waiting for text...
+2026-01-08 12:24:05,830 INFO new 💾 Saving transcript on WebSocket disconnect for: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:24:05,830 INFO new 💾 Saving transcript on WebSocket disconnect for: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:24:05,830 INFO new 💾 Saving transcript on WebSocket disconnect for: CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:24:05,830 INFO new    - conversation_history entries: 1
+2026-01-08 12:24:05,830 INFO new    - conversation_history entries: 1
+2026-01-08 12:24:05,830 INFO new    - conversation_history entries: 1
+2026-01-08 12:24:05,831 INFO new 💾 save_conversation_transcript called for CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:24:05,831 INFO new 💾 save_conversation_transcript called for CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:24:05,831 INFO new 💾 save_conversation_transcript called for CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:24:05,831 INFO new    - conn exists: True
+2026-01-08 12:24:05,831 INFO new    - conn exists: True
+2026-01-08 12:24:05,831 INFO new    - conn exists: True
+2026-01-08 12:24:05,831 INFO new    - conversation_history length: 1
+2026-01-08 12:24:05,831 INFO new    - conversation_history length: 1
+2026-01-08 12:24:05,831 INFO new    - conversation_history length: 1
+2026-01-08 12:24:05,839 INFO new ✅ Saved transcript for CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:24:05,839 INFO new ✅ Saved transcript for CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:24:05,839 INFO new ✅ Saved transcript for CA1e048bd03d6b914cb83e6a7f620967e0
+2026-01-08 12:24:05,840 INFO new    - Exchanges: 1
+2026-01-08 12:24:05,840 INFO new    - Exchanges: 1
+2026-01-08 12:24:05,840 INFO new    - Exchanges: 1
+2026-01-08 12:24:05,843 INFO new    - Duration: 46s
+2026-01-08 12:24:05,843 INFO new    - Duration: 46s
+2026-01-08 12:24:05,843 INFO new    - Duration: 46s
+2026-01-08 12:24:05,843 INFO new    - Transcript length: 54 chars
+2026-01-08 12:24:05,843 INFO new    - Transcript length: 54 chars
+2026-01-08 12:24:05,843 INFO new    - Transcript length: 54 chars
+2026-01-08 12:24:05,875 INFO new 📞 Call status update: CA1e048bd03d6b914cb83e6a7f620967e0 -> completed
+2026-01-08 12:24:05,875 INFO new 📞 Call status update: CA1e048bd03d6b914cb83e6a7f620967e0 -> completed
+2026-01-08 12:24:05,875 INFO new 📞 Call status update: CA1e048bd03d6b914cb83e6a7f620967e0 -> completed
+2026-01-08 12:24:05,883 INFO new ✅ Call ended: CA1e048bd03d6b914cb83e6a7f620967e0 - reason: completed - duration: 46s
+2026-01-08 12:24:05,883 INFO new ✅ Call ended: CA1e048bd03d6b914cb83e6a7f620967e0 - reason: completed - duration: 46s
+2026-01-08 12:24:05,883 INFO new ✅ Call ended: CA1e048bd03d6b914cb83e6a7f620967e0 - reason: completed - duration: 46s
+2026-01-08 12:36:01,687 INFO new ============================================================
+2026-01-08 12:36:01,687 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:36:01,687 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:36:01,687 INFO new    Count: 1
+2026-01-08 12:36:01,687 INFO new    Memory: 23.52 GB
+2026-01-08 12:36:01,687 INFO new    CUDA: 12.8
+2026-01-08 12:36:01,687 INFO new ============================================================
+2026-01-08 12:36:01,687 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:36:01,688 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:36:01,688 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:36:01,688 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:36:01,688 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:36:02,787 INFO new âœ… FP16 precision enabled
+2026-01-08 12:36:02,788 INFO new âœ… Model loaded in 1.10s
+2026-01-08 12:36:02,788 INFO new 🔥 Warming up GPU...
+2026-01-08 12:36:03,168 INFO new âœ… GPU warmed up
+2026-01-08 12:36:08,603 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:36:08,604 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:36:08,604 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:36:08,604 INFO new 📞 Initiating call to +917061474588 with agent agent_240935f0c0754685
+2026-01-08 12:36:08,605 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:36:08,605 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:36:08,605 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:36:08,606 INFO new 🔍 API Extracted - custom_first_message: 'HOW ARE YOU...'
+2026-01-08 12:36:08,610 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:36:08,898 INFO new 💾 Stored call data for: CAd4e9adce7bd1c344e708161ac19e2bb1
+2026-01-08 12:36:08,898 INFO new 💾 - Agent ID: agent_240935f0c0754685
+2026-01-08 12:36:08,899 INFO new 💾 - Custom voice: None
+2026-01-08 12:36:08,899 INFO new 💾 - Custom model: None
+2026-01-08 12:36:08,899 INFO new 💾 - Dynamic vars: 0 fields
+2026-01-08 12:36:08,909 INFO new ✅ Call initiated: CAd4e9adce7bd1c344e708161ac19e2bb1
+2026-01-08 12:36:14,678 ERROR new ❌ WebSocket error: name 'logger' is not defined
+2026-01-08 12:36:14,678 WARNING new ⚠️ No connection found on WebSocket disconnect for: CAd4e9adce7bd1c344e708161ac19e2bb1
+2026-01-08 12:36:58,964 INFO new ============================================================
+2026-01-08 12:36:58,964 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:36:58,964 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:36:58,964 INFO new    Count: 1
+2026-01-08 12:36:58,964 INFO new    Memory: 23.52 GB
+2026-01-08 12:36:58,964 INFO new    CUDA: 12.8
+2026-01-08 12:36:58,965 INFO new ============================================================
+2026-01-08 12:36:58,965 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:36:58,965 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:36:58,965 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:36:58,965 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:36:58,966 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:36:59,839 INFO new âœ… FP16 precision enabled
+2026-01-08 12:36:59,839 INFO new âœ… Model loaded in 0.87s
+2026-01-08 12:36:59,840 INFO new 🔥 Warming up GPU...
+2026-01-08 12:37:00,220 INFO new âœ… GPU warmed up
+2026-01-08 12:37:05,619 INFO new ============================================================
+2026-01-08 12:37:05,619 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:37:05,619 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:37:05,619 INFO new    Count: 1
+2026-01-08 12:37:05,619 INFO new    Memory: 23.52 GB
+2026-01-08 12:37:05,620 INFO new    CUDA: 12.8
+2026-01-08 12:37:05,620 INFO new ============================================================
+2026-01-08 12:37:05,620 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:37:05,620 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:37:05,620 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:37:05,620 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:37:05,621 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:37:06,598 INFO new âœ… FP16 precision enabled
+2026-01-08 12:37:06,598 INFO new âœ… Model loaded in 0.98s
+2026-01-08 12:37:06,598 INFO new 🔥 Warming up GPU...
+2026-01-08 12:37:06,977 INFO new âœ… GPU warmed up
+2026-01-08 12:37:12,322 INFO new ============================================================
+2026-01-08 12:37:12,322 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:37:12,323 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:37:12,323 INFO new    Count: 1
+2026-01-08 12:37:12,323 INFO new    Memory: 23.52 GB
+2026-01-08 12:37:12,323 INFO new    CUDA: 12.8
+2026-01-08 12:37:12,323 INFO new ============================================================
+2026-01-08 12:37:12,323 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:37:12,323 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:37:12,323 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:37:12,323 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:37:12,324 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:37:13,207 INFO new âœ… FP16 precision enabled
+2026-01-08 12:37:13,207 INFO new âœ… Model loaded in 0.88s
+2026-01-08 12:37:13,208 INFO new 🔥 Warming up GPU...
+2026-01-08 12:37:13,588 INFO new âœ… GPU warmed up
+2026-01-08 12:37:18,566 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:37:18,566 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:37:18,566 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:37:18,567 INFO new 📞 Initiating call to +917061474588 with agent agent_240935f0c0754685
+2026-01-08 12:37:18,567 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:37:18,567 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:37:18,568 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:37:18,568 INFO new 🔍 API Extracted - custom_first_message: 'HOW ARE YOU...'
+2026-01-08 12:37:18,571 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:37:19,029 INFO new 💾 Stored call data for: CAede537834cdd69ad638cde3d47e06950
+2026-01-08 12:37:19,030 INFO new 💾 - Agent ID: agent_240935f0c0754685
+2026-01-08 12:37:19,030 INFO new 💾 - Custom voice: None
+2026-01-08 12:37:19,030 INFO new 💾 - Custom model: None
+2026-01-08 12:37:19,030 INFO new 💾 - Dynamic vars: 0 fields
+2026-01-08 12:37:19,040 INFO new ✅ Call initiated: CAede537834cdd69ad638cde3d47e06950
+2026-01-08 12:37:23,190 ERROR new ❌ WebSocket error: name 'logger' is not defined
+2026-01-08 12:37:23,191 WARNING new ⚠️ No connection found on WebSocket disconnect for: CAede537834cdd69ad638cde3d47e06950
+2026-01-08 12:38:16,665 INFO new ============================================================
+2026-01-08 12:38:16,666 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:38:16,666 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:38:16,666 INFO new    Count: 1
+2026-01-08 12:38:16,666 INFO new    Memory: 23.52 GB
+2026-01-08 12:38:16,666 INFO new    CUDA: 12.8
+2026-01-08 12:38:16,666 INFO new ============================================================
+2026-01-08 12:38:16,666 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:38:16,666 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:38:16,666 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:38:16,667 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:38:16,667 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:38:17,702 INFO new âœ… FP16 precision enabled
+2026-01-08 12:38:17,702 INFO new âœ… Model loaded in 1.03s
+2026-01-08 12:38:17,702 INFO new 🔥 Warming up GPU...
+2026-01-08 12:38:18,083 INFO new âœ… GPU warmed up
+2026-01-08 12:38:21,176 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:38:21,176 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:38:21,176 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:38:21,177 INFO new 📞 Initiating call to +917061474588 with agent agent_240935f0c0754685
+2026-01-08 12:38:21,177 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:38:21,177 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:38:21,177 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:38:21,177 INFO new 🔍 API Extracted - custom_first_message: 'HOW ARE YOU...'
+2026-01-08 12:38:21,180 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:38:21,629 INFO new 💾 Stored call data for: CAe79ea867e692f9ceda64eeeed37742ce
+2026-01-08 12:38:21,630 INFO new 💾 - Agent ID: agent_240935f0c0754685
+2026-01-08 12:38:21,630 INFO new 💾 - Custom voice: None
+2026-01-08 12:38:21,630 INFO new 💾 - Custom model: None
+2026-01-08 12:38:21,630 INFO new 💾 - Dynamic vars: 0 fields
+2026-01-08 12:38:21,640 INFO new ✅ Call initiated: CAe79ea867e692f9ceda64eeeed37742ce
+2026-01-08 12:38:25,217 ERROR new ❌ WebSocket error: name 'logger' is not defined
+2026-01-08 12:38:25,218 WARNING new ⚠️ No connection found on WebSocket disconnect for: CAe79ea867e692f9ceda64eeeed37742ce
+2026-01-08 12:38:49,179 INFO new ============================================================
+2026-01-08 12:38:49,179 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:38:49,179 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:38:49,179 INFO new    Count: 1
+2026-01-08 12:38:49,179 INFO new    Memory: 23.52 GB
+2026-01-08 12:38:49,179 INFO new    CUDA: 12.8
+2026-01-08 12:38:49,179 INFO new ============================================================
+2026-01-08 12:38:49,179 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:38:49,180 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:38:49,180 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:38:49,180 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:38:49,180 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:38:50,074 INFO new âœ… FP16 precision enabled
+2026-01-08 12:38:50,074 INFO new âœ… Model loaded in 0.89s
+2026-01-08 12:38:50,074 INFO new 🔥 Warming up GPU...
+2026-01-08 12:38:50,455 INFO new âœ… GPU warmed up
+2026-01-08 12:38:58,333 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:38:58,333 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:38:58,333 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:38:58,334 INFO new 📞 Initiating call to +917061474588 with agent agent_580542b4db734644
+2026-01-08 12:38:58,334 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:38:58,334 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:38:58,334 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:38:58,335 INFO new 🔍 API Extracted - custom_first_message: 'hi how are you nitesh ...'
+2026-01-08 12:38:58,338 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:38:58,670 INFO new 💾 Stored call data for: CA43df1640667362a6cba1a31c12fdc4fa
+2026-01-08 12:38:58,670 INFO new 💾 - Agent ID: agent_580542b4db734644
+2026-01-08 12:38:58,670 INFO new 💾 - Custom voice: None
+2026-01-08 12:38:58,670 INFO new 💾 - Custom model: None
+2026-01-08 12:38:58,671 INFO new 💾 - Dynamic vars: 0 fields
+2026-01-08 12:38:58,680 INFO new ✅ Call initiated: CA43df1640667362a6cba1a31c12fdc4fa
+2026-01-08 12:39:04,571 ERROR new ❌ WebSocket error: name 'logger' is not defined
+2026-01-08 12:39:04,571 WARNING new ⚠️ No connection found on WebSocket disconnect for: CA43df1640667362a6cba1a31c12fdc4fa
+2026-01-08 12:39:41,114 INFO new ============================================================
+2026-01-08 12:39:41,114 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:39:41,114 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:39:41,114 INFO new    Count: 1
+2026-01-08 12:39:41,114 INFO new    Memory: 23.52 GB
+2026-01-08 12:39:41,114 INFO new    CUDA: 12.8
+2026-01-08 12:39:41,114 INFO new ============================================================
+2026-01-08 12:39:41,115 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:39:41,115 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:39:41,115 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:39:41,115 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:39:41,115 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:39:42,084 INFO new âœ… FP16 precision enabled
+2026-01-08 12:39:42,085 INFO new âœ… Model loaded in 0.97s
+2026-01-08 12:39:42,085 INFO new 🔥 Warming up GPU...
+2026-01-08 12:39:42,473 INFO new âœ… GPU warmed up
+2026-01-08 12:39:50,832 INFO new ============================================================
+2026-01-08 12:39:50,832 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:39:50,832 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:39:50,832 INFO new    Count: 1
+2026-01-08 12:39:50,832 INFO new    Memory: 23.52 GB
+2026-01-08 12:39:50,833 INFO new    CUDA: 12.8
+2026-01-08 12:39:50,833 INFO new ============================================================
+2026-01-08 12:39:50,833 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:39:50,833 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:39:50,833 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:39:50,833 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:39:50,834 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:39:51,763 INFO new âœ… FP16 precision enabled
+2026-01-08 12:39:51,763 INFO new âœ… Model loaded in 0.93s
+2026-01-08 12:39:51,763 INFO new 🔥 Warming up GPU...
+2026-01-08 12:39:52,148 INFO new âœ… GPU warmed up
+2026-01-08 12:40:07,562 INFO new ============================================================
+2026-01-08 12:40:07,562 INFO new 🚀 GPU DETECTED!
+2026-01-08 12:40:07,562 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 12:40:07,562 INFO new    Count: 1
+2026-01-08 12:40:07,562 INFO new    Memory: 23.52 GB
+2026-01-08 12:40:07,562 INFO new    CUDA: 12.8
+2026-01-08 12:40:07,563 INFO new ============================================================
+2026-01-08 12:40:07,563 INFO new âœ… TF32 enabled (Ampere+ GPU)
+2026-01-08 12:40:07,563 INFO new 🚀 Config: PUBLIC_URL=https://leonarda-unpresentative-maritza.ngrok-free.dev DEVICE=cuda
+2026-01-08 12:40:07,563 INFO new 🎯 Interrupt: ENABLED=True MIN_SPEECH=150ms MIN_ENERGY=1000 BASELINE_FACTOR=3.5
+2026-01-08 12:40:07,563 INFO new â±ï¸  Silence Threshold: 0.3s (utterance_end=300ms)
+2026-01-08 12:40:07,563 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 12:40:08,477 INFO new âœ… FP16 precision enabled
+2026-01-08 12:40:08,477 INFO new âœ… Model loaded in 0.91s
+2026-01-08 12:40:08,478 INFO new 🔥 Warming up GPU...
+2026-01-08 12:40:08,857 INFO new âœ… GPU warmed up
+2026-01-08 12:40:09,228 INFO new 🔍 API Debug - client_data keys: ['additionalProp1']
+2026-01-08 12:40:09,228 INFO new 🔍 API Debug - config_override: {}
+2026-01-08 12:40:09,229 INFO new 🔍 API Debug - tts section: {}
+2026-01-08 12:40:09,229 INFO new 📞 Initiating call to +917061474588 with agent agent_240935f0c0754685
+2026-01-08 12:40:09,229 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:40:09,229 INFO new 🔍 API Extracted - custom_voice_id: 'None'
+2026-01-08 12:40:09,229 INFO new 🔍 API Extracted - custom_model: 'None'
+2026-01-08 12:40:09,229 INFO new 🔍 API Extracted - custom_first_message: 'HOW ARE YOU...'
+2026-01-08 12:40:09,232 INFO new 📞 Using phone number from database (ID: pn_15fc56f209c647cb): +18047075486
+2026-01-08 12:40:09,533 INFO new 💾 Stored call data for: CA6f0b2c9b39a0a0e45f70b3254a4da899
+2026-01-08 12:40:09,533 INFO new 💾 - Agent ID: agent_240935f0c0754685
+2026-01-08 12:40:09,534 INFO new 💾 - Custom voice: None
+2026-01-08 12:40:09,534 INFO new 💾 - Custom model: None
+2026-01-08 12:40:09,534 INFO new 💾 - Dynamic vars: 0 fields
+2026-01-08 12:40:09,543 INFO new ✅ Call initiated: CA6f0b2c9b39a0a0e45f70b3254a4da899
+2026-01-08 12:40:15,727 INFO new 🔗 WebSocket connected for call_sid: CA6f0b2c9b39a0a0e45f70b3254a4da899
+2026-01-08 12:40:15,727 INFO new 🔍 WebSocket Debug - call_sid: CA6f0b2c9b39a0a0e45f70b3254a4da899
+2026-01-08 12:40:15,727 INFO new 🔍 Pending call data found: True
+2026-01-08 12:40:15,728 INFO new 🔍 Agent ID: agent_240935f0c0754685
+2026-01-08 12:40:15,728 INFO new 🔍 Direction: outbound
+2026-01-08 12:40:15,728 INFO new 🔍 Custom voice_id: None
+2026-01-08 12:40:15,728 INFO new 🔍 Custom model: None
+2026-01-08 12:40:15,729 INFO new 🔧 Overrides loaded:
+2026-01-08 12:40:15,729 INFO new    - custom_voice_id: None (will use agent/default)
+2026-01-08 12:40:15,729 INFO new    - custom_model: None (will use agent/default)
+2026-01-08 12:40:15,729 INFO new    - custom_first_message: Yes (HOW ARE YOU...)
+2026-01-08 12:40:15,733 INFO new ✅ Loaded agent: agent_240935f0c0754685 (stringsdf)
+2026-01-08 12:40:15,733 INFO new 📊 Dynamic variables: 0 fields
+2026-01-08 12:40:15,733 INFO new 💬 Using custom first message: HOW ARE YOU...
+2026-01-08 12:40:15,744 INFO new ✅ Conversation status updated to 'in-progress': CA6f0b2c9b39a0a0e45f70b3254a4da899
+2026-01-08 12:40:15,746 INFO new ðŸŽµ Resampler pre-initialized for this connection
+2026-01-08 12:40:15,746 INFO new ✅ Connection setup complete for call: CA6f0b2c9b39a0a0e45f70b3254a4da899
+2026-01-08 12:40:16,307 INFO new âœ… Streaming STT initialized
+2026-01-08 12:40:16,308 INFO new ✅ Streaming STT setup complete for call: CA6f0b2c9b39a0a0e45f70b3254a4da899
+2026-01-08 12:40:16,308 INFO new ✅ TTS worker started for call: CA6f0b2c9b39a0a0e45f70b3254a4da899
+2026-01-08 12:40:16,408 INFO new 🔍 WebSocket Debug - Preparing greeting for call_sid: CA6f0b2c9b39a0a0e45f70b3254a4da899
+2026-01-08 12:40:16,408 INFO new 💬 Using agent's first_message for greeting
+2026-01-08 12:40:16,409 INFO new 🎯 BEFORE GREETING - conn.custom_voice_id: 'None'
+2026-01-08 12:40:16,409 INFO new 🎯 BEFORE GREETING - conn.agent_config voice: 'aura-2-thalia-en'
+2026-01-08 12:40:16,410 INFO new ðŸŽ¤ TTS sentence (11 chars): 'HOW ARE YOU...'
+2026-01-08 12:40:16,410 INFO new 🎤 TTS Voice: aura-2-thalia-en (source: agent_config) for text: 'HOW ARE YOU...'
+2026-01-08 12:40:16,472 INFO new ✅ Greeting captured in conversation history
+2026-01-08 12:40:17,870 INFO new âœ… Sentence completed in 1460ms (49 chunks, 7.5 chars/sec)
+2026-01-08 12:40:18,002 INFO new ðŸŽ¤ VAD: Speech trigger (needs validation)
+2026-01-08 12:40:18,308 INFO new âœ… VAD validated after 305ms (energy: 2128)
+2026-01-08 12:40:18,775 INFO new ðŸŽ™ï¸ STT interim: 'Hello?'
+2026-01-08 12:40:18,776 INFO new ðŸ“ Interim as buffer: 'Hello?'
+2026-01-08 12:40:19,094 INFO new ðŸŽ™ï¸ STT interim: 'Hello?'
+2026-01-08 12:40:19,094 INFO new ðŸ“ Interim as buffer: 'Hello?'
+2026-01-08 12:40:20,073 INFO new ðŸŽ™ï¸ STT interim: 'Hello?'
+2026-01-08 12:40:20,074 INFO new ðŸ“ Interim as buffer: 'Hello?'
+2026-01-08 12:40:20,762 INFO new ðŸŽ¤ VAD: Speech trigger (needs validation)
+2026-01-08 12:40:20,783 INFO new ðŸŽ™ï¸ STT FINAL: 'Hello?'
+2026-01-08 12:40:20,783 INFO new ðŸ”„ New sentence: 'Hello?'
+2026-01-08 12:40:20,783 INFO new ðŸ“ Complete buffer: 'Hello?'
+2026-01-08 12:40:21,043 INFO new ðŸŽ™ï¸ STT FINAL: 'Hello?'
+2026-01-08 12:40:21,043 INFO new ðŸ”„ New sentence: 'Hello?'
+2026-01-08 12:40:21,044 INFO new ðŸ“ Complete buffer: 'Hello?'
+2026-01-08 12:40:21,482 INFO new ðŸŽ¤ VAD: Speech trigger (needs validation)
+2026-01-08 12:40:22,020 INFO new ðŸŽ™ï¸ STT interim: 'Hi.'
+2026-01-08 12:40:22,118 INFO new ðŸŽ™ï¸ STT interim: 'Hi.'
+2026-01-08 12:40:22,517 INFO new ðŸŽ™ï¸ STT FINAL: 'Hi.'
+2026-01-08 12:40:22,517 INFO new ðŸ”„ New sentence: 'Hi.'
+2026-01-08 12:40:22,518 INFO new ðŸ“ Complete buffer: 'Hi.'
+2026-01-08 12:40:23,242 INFO new ðŸŽ¤ VAD: Speech trigger (needs validation)
+2026-01-08 12:40:23,497 INFO new ðŸŽ™ï¸ STT interim: 'Hello?'
+2026-01-08 12:40:24,157 INFO new ðŸŽ™ï¸ STT FINAL: 'Hello?'
+2026-01-08 12:40:24,157 INFO new ðŸ”„ New sentence: 'Hello?'
+2026-01-08 12:40:24,157 INFO new ðŸ“ Complete buffer: 'Hello?'
+2026-01-08 12:40:25,067 INFO new âœ… VAD cleared naturally (low energy: 1.5s, no text: 1.6s)
+2026-01-08 12:40:25,118 INFO new âœ… 0.3s silence threshold met (0.96s)
+2026-01-08 12:40:25,118 INFO new 🎯 Detected intent: QUESTION | text='Hello?'
+2026-01-08 12:40:25,119 INFO new 📝 USER INPUT: 'Hello?'
+2026-01-08 12:40:25,137 INFO new ðŸŽ™ï¸ STT interim: 'Hello.'
+2026-01-08 12:40:25,137 INFO new ðŸ“ Interim as buffer: 'Hello.'
+2026-01-08 12:40:25,148 INFO new ✅ Using agent prompt with 0 dynamic variables
+2026-01-08 12:40:25,148 INFO new 🤖 Model: llama3:8b-instruct-q4_K_ (source: agent_config)
+2026-01-08 12:40:25,180 INFO new 🎯 Sentence 1: 'I'm having trouble responding right now. Could you repeat that?'
+2026-01-08 12:40:25,180 INFO new ðŸŽ¤ TTS sentence (63 chars): 'I'm having trouble responding right now. Could you repeat that?...'
+2026-01-08 12:40:25,181 INFO new 🎤 TTS Voice: aura-2-thalia-en (source: agent_config) for text: 'I'm having trouble responding right now. Could you...'
+2026-01-08 12:40:25,242 INFO new ✅ Added to conversation_history BEFORE TTS: user='Hello?...', assistant='I'm having trouble responding right now. Could you...'
+2026-01-08 12:40:25,242 INFO new    Total history entries: 2
+2026-01-08 12:40:25,242 INFO new ⏳ Waiting for TTS...
+2026-01-08 12:40:25,242 INFO new ✅ TTS completed
+2026-01-08 12:40:25,242 INFO new âœ… TOTAL PROCESSING TIME: 123.5ms
+2026-01-08 12:40:26,322 INFO new ðŸŽ¤ VAD: Speech trigger (needs validation)
+2026-01-08 12:40:26,858 INFO new ðŸŽ™ï¸ STT interim: 'Hi.'
+2026-01-08 12:40:26,858 INFO new ðŸ“ Interim as buffer: 'Hi.'
+2026-01-08 12:40:27,156 INFO new ðŸŽ™ï¸ STT interim: 'Hi.'
+2026-01-08 12:40:27,156 INFO new ðŸ“ Interim as buffer: 'Hi.'
+2026-01-08 12:40:27,327 WARNING new âš ï¸ VAD timeout - false positive (duration: 1.0s)
+2026-01-08 12:40:27,659 INFO new ðŸŽ™ï¸ STT FINAL: 'Hi.'
+2026-01-08 12:40:27,660 INFO new ðŸ”„ New sentence: 'Hi.'
+2026-01-08 12:40:27,660 INFO new ðŸ“ Complete buffer: 'Hi.'
+2026-01-08 12:40:28,907 INFO new âœ… Sentence completed in 3726ms (165 chunks, 16.9 chars/sec)
+2026-01-08 12:40:28,959 INFO new âœ… 0.3s silence threshold met (1.30s)
+2026-01-08 12:40:28,959 INFO new 🎯 Detected intent: QUESTION | text='Hi.'
+2026-01-08 12:40:28,959 INFO new 📝 USER INPUT: 'Hi.'
+2026-01-08 12:40:28,960 INFO new ✅ Using agent prompt with 0 dynamic variables
+2026-01-08 12:40:28,960 INFO new 🤖 Model: llama3:8b-instruct-q4_K_ (source: agent_config)
+2026-01-08 12:40:28,984 INFO new 🎯 Sentence 1: 'I'm having trouble responding right now. Could you repeat that?'
+2026-01-08 12:40:28,984 INFO new ðŸŽ¤ TTS sentence (63 chars): 'I'm having trouble responding right now. Could you repeat that?...'
+2026-01-08 12:40:28,985 INFO new 🎤 TTS Voice: aura-2-thalia-en (source: agent_config) for text: 'I'm having trouble responding right now. Could you...'
+2026-01-08 12:40:29,063 INFO new ✅ Added to conversation_history BEFORE TTS: user='Hi....', assistant='I'm having trouble responding right now. Could you...'
+2026-01-08 12:40:29,064 INFO new    Total history entries: 3
+2026-01-08 12:40:29,064 INFO new ⏳ Waiting for TTS...
+2026-01-08 12:40:29,064 INFO new ✅ TTS completed
+2026-01-08 12:40:29,065 INFO new âœ… TOTAL PROCESSING TIME: 105.2ms
+2026-01-08 12:40:29,705 INFO new ðŸŽ¤ VAD: Speech trigger (needs validation)
+2026-01-08 12:40:30,527 INFO new âœ… VAD validated after 822ms (energy: 1012)
+2026-01-08 12:40:30,528 INFO new ðŸ›‘ INTERRUPT! VAD: 822ms | Energy: 100% | Peak: 1012 | Threshold: 1000
+2026-01-08 12:40:30,535 INFO new ðŸ›' TTS interrupted at chunk 46
+2026-01-08 12:40:30,536 INFO new ðŸ›‘ INTERRUPT - Stopping playback and clearing buffers
+2026-01-08 12:40:30,537 INFO new âœ… Interrupt handled:
+   Cleared TTS items: 0
+   Cleared STT buffer: '(empty)'
+   Ready for new input
+2026-01-08 12:40:30,603 INFO new ðŸŽ¤ VAD: Speech trigger (needs validation)
+2026-01-08 12:40:31,278 INFO new ðŸŽ™ï¸ STT interim: 'Please,'
+2026-01-08 12:40:31,278 INFO new ðŸ“ Interim as buffer: 'Please,'
+2026-01-08 12:40:32,275 INFO new ðŸŽ™ï¸ STT interim: 'Please,'
+2026-01-08 12:40:32,276 INFO new ðŸ“ Interim as buffer: 'Please,'
+2026-01-08 12:40:32,657 INFO new ðŸŽ™ï¸ STT FINAL: 'Please,'
+2026-01-08 12:40:32,657 INFO new âž• Appending to sentence: 'Please,'
+2026-01-08 12:40:32,657 INFO new ðŸ“ Complete buffer: 'Please, Please,'
+2026-01-08 12:40:33,262 INFO new ðŸŽ¤ VAD: Speech trigger (needs validation)
+2026-01-08 12:40:33,288 INFO new âœ… VAD cleared naturally (low energy: 1.5s, no text: 1.0s)
+2026-01-08 12:40:33,339 INFO new âœ… 0.3s silence threshold met (0.68s)
+2026-01-08 12:40:33,339 INFO new 🎯 Detected intent: QUESTION | text='Please, Please,'
+2026-01-08 12:40:33,339 INFO new 📝 USER INPUT: 'Please, Please,'
+2026-01-08 12:40:33,339 INFO new ✅ Using agent prompt with 0 dynamic variables
+2026-01-08 12:40:33,340 INFO new 🤖 Model: llama3:8b-instruct-q4_K_ (source: agent_config)
+2026-01-08 12:40:33,360 INFO new 🎯 Sentence 1: 'I'm having trouble responding right now. Could you repeat that?'
+2026-01-08 12:40:33,360 INFO new ðŸŽ¤ TTS sentence (63 chars): 'I'm having trouble responding right now. Could you repeat that?...'
+2026-01-08 12:40:33,360 INFO new 🎤 TTS Voice: aura-2-thalia-en (source: agent_config) for text: 'I'm having trouble responding right now. Could you...'
+2026-01-08 12:40:33,423 INFO new ✅ Added to conversation_history BEFORE TTS: user='Please, Please,...', assistant='I'm having trouble responding right now. Could you...'
+2026-01-08 12:40:33,423 INFO new    Total history entries: 4
+2026-01-08 12:40:33,423 INFO new ⏳ Waiting for TTS...
+2026-01-08 12:40:33,423 INFO new ✅ TTS completed
+2026-01-08 12:40:33,423 INFO new âœ… TOTAL PROCESSING TIME: 84.2ms
+2026-01-08 12:40:34,640 INFO new ðŸŽ™ï¸ STT interim: 'okay.'
+2026-01-08 12:40:34,640 INFO new ðŸ“ Interim as buffer: 'okay.'
+2026-01-08 12:40:35,580 INFO new ðŸŽ™ï¸ STT interim: 'okay. Please tell me'
+2026-01-08 12:40:35,580 INFO new ðŸ“ Interim as buffer: 'okay. Please tell me'
+2026-01-08 12:40:36,583 INFO new ðŸŽ™ï¸ STT interim: 'Okay. Please tell me what is the name.'
+2026-01-08 12:40:36,583 INFO new ðŸ“ Interim as buffer: 'Okay. Please tell me what is the name.'
+2026-01-08 12:40:36,947 INFO new ðŸŽ™ï¸ STT FINAL: 'Okay. Please tell me what is the name.'
+2026-01-08 12:40:36,948 INFO new ðŸ”„ New sentence: 'Okay. Please tell me what is the name.'
+2026-01-08 12:40:36,948 INFO new ðŸ“ Complete buffer: 'Okay. Please tell me what is the name.'
+2026-01-08 12:40:36,991 INFO new âœ… Sentence completed in 3631ms (163 chunks, 17.4 chars/sec)
+2026-01-08 12:40:37,019 INFO new 💾 Saving transcript on WebSocket disconnect for: CA6f0b2c9b39a0a0e45f70b3254a4da899
+2026-01-08 12:40:37,019 INFO new    - conversation_history entries: 4
+2026-01-08 12:40:37,019 INFO new 💾 save_conversation_transcript called for CA6f0b2c9b39a0a0e45f70b3254a4da899
+2026-01-08 12:40:37,019 INFO new    - conn exists: True
+2026-01-08 12:40:37,019 INFO new    - conversation_history length: 4
+2026-01-08 12:40:37,028 INFO new ✅ Saved transcript for CA6f0b2c9b39a0a0e45f70b3254a4da899
+2026-01-08 12:40:37,028 INFO new    - Exchanges: 4
+2026-01-08 12:40:37,031 INFO new    - Duration: 21s
+2026-01-08 12:40:37,032 INFO new    - Transcript length: 313 chars
+2026-01-08 12:40:37,062 INFO new ðŸŽ¤ VAD: Speech trigger (needs validation)
+2026-01-08 13:28:53,556 INFO new ============================================================
+2026-01-08 13:28:53,556 INFO new 🚀 GPU DETECTED!
+2026-01-08 13:28:53,556 INFO new    Device: NVIDIA GeForce RTX 4090
+2026-01-08 13:28:53,556 INFO new    Count: 1
+2026-01-08 13:28:53,556 INFO new    Memory: 23.52 GB
+2026-01-08 13:28:53,557 INFO new    CUDA: 12.8
+2026-01-08 13:28:53,557 INFO new ============================================================
+2026-01-08 13:28:53,557 INFO new ✅ TF32 enabled (Ampere+ GPU)
+2026-01-08 13:28:53,557 INFO new 📦 Loading SentenceTransformer on cuda...
+2026-01-08 13:28:54,547 INFO new ✅ FP16 precision enabled
+2026-01-08 13:28:54,547 INFO new ✅ Model loaded in 0.99s
+2026-01-08 13:28:54,547 INFO new 🔥 Warming up GPU...
+2026-01-08 13:28:54,928 INFO new ✅ GPU warmed up
