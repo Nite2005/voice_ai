@@ -48,6 +48,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import create_engine, Column, String, Text, Integer, Float, Boolean, DateTime, JSON
 from sqlalchemy.orm import sessionmaker, Session, declarative_base
 from datetime import datetime as dt
+from connection_manager import ConnectionManager
 
 load_dotenv()
 
@@ -133,6 +134,7 @@ except Exception:
 
 async def stream_tts_worker(call_sid: str):
     """âš¡ OPTIMIZED TTS - Fast first response + smooth playback + no clicks"""
+    manager = ConnectionManager()
     conn = manager.get(call_sid)
     if not conn:
         return
@@ -388,6 +390,7 @@ async def stream_tts_worker(call_sid: str):
 
 async def speak_text_streaming(call_sid: str, text: str):
     """âš¡ Queue text with smart sentence splitting"""
+    manager = ConnectionManager()
     conn = manager.get(call_sid)
     if not conn or not conn.stream_sid:
         return

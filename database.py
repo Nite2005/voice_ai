@@ -47,7 +47,6 @@ from sqlalchemy import create_engine, Column, String, Text, Integer, Float, Bool
 from sqlalchemy.orm import sessionmaker, Session, declarative_base
 from datetime import datetime as dt
 
-
 # ================================
 # DATABASE MODELS (Agent Management)
 # ================================

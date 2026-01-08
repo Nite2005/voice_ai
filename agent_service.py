@@ -3687,7 +3687,7 @@ async def media_ws(websocket: WebSocket):
 
                 if not current_call_sid:
                     break
-
+                logger.info(f"🔗 WebSocket connected for call_sid: {current_call_sid}")
                 await manager.connect(current_call_sid, websocket)
                 conn = manager.get(current_call_sid)
                 if conn:
@@ -3788,6 +3788,7 @@ async def media_ws(websocket: WebSocket):
                                 should_send = True  # Agent-specific webhook
                             
                             if should_send and ("call.started" in webhook.events or not webhook.events):
+                                logger.info(f"🌐 Preparing to send 'call.started' webhook to {webhook.webhook_url} for call {current_call_sid}")
                                 # ✅ For inbound: send caller's number (from_number in call_data)
                                 # ✅ For outbound: send recipient's number (to_number in call_data)
                                 caller_phone = call_data.get("from_number") if call_direction == "inbound" else call_data.get("to_number")
@@ -3829,6 +3830,7 @@ async def media_ws(websocket: WebSocket):
                                                 _logger.warning("⚠️ Cannot apply first_message - agent_config not loaded yet")
                                 else:
                                     # For OUTBOUND calls: Fire-and-forget webhook
+                                    logger.info(f"🌐 Sending 'call.started' webhook to {webhook.webhook_url} for outbound call {current_call_sid}")
                                     asyncio.create_task(send_webhook(
                                         webhook.webhook_url,
                                         "call.started",
@@ -3854,18 +3856,21 @@ async def media_ws(websocket: WebSocket):
                         _logger.info("ðŸŽµ Resampler pre-initialized for this connection")
                     except Exception as e:
                         _logger.warning("Failed to pre-init resampler: %s", e)
-
+                    logger.info(f"✅ Connection setup complete for call: {current_call_sid}")
                     await setup_streaming_stt(current_call_sid)
+                    logger.info(f"✅ Streaming STT setup complete for call: {current_call_sid}")
                     conn.tts_task = asyncio.create_task(
                         stream_tts_worker(current_call_sid))
-
+                    logger.info(f"✅ TTS worker started for call: {current_call_sid}")
                 await asyncio.sleep(0.1)
                 greeting = None
-
+                conn = manager.get(current_call_sid)
+                logger.info(f"🔍 WebSocket Debug - Preparing greeting for call_sid: {current_call_sid}")
                 # ✨ Use agent's first_message or default greeting
                 if conn and conn.agent_config and conn.agent_config.get("first_message"):
                     # Replace {{variable}} placeholders in first_message
                     greeting = conn.agent_config["first_message"]
+                    logger.info(f"💬 Using agent's first_message for greeting")
                     if conn.dynamic_variables:
                         for key, value in conn.dynamic_variables.items():
                             greeting = greeting.replace(f"{{{{{key}}}}}", str(value))

@@ -29,6 +29,7 @@ from sqlalchemy import create_engine, Column, String, Text, Integer, Float, Bool
 from sqlalchemy.orm import sessionmaker, Session, declarative_base
 from datetime import datetime as dt
 from dotenv import load_dotenv
+
 load_dotenv()
 
 class CallRequest(BaseModel):
